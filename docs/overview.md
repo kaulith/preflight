@@ -63,20 +63,24 @@ erpnext here is on a branch cut from `version-15-hotfix`, which counts as frappe
 
 ## Options
 
-| Option | Default | What it does |
-|---|---|---|
-| `--site` | | Site to scan, on the bench whose env runs Preflight. Either this or `--path` |
-| `--path` | | Scan the app in this directory, its repository root or its package (the directory holding `hooks.py`), with no site or bench. Can be repeated |
-| `--target` | required | Version to check against: `v16` |
-| `--app` | all apps except frappe | Scan only this app of the site. Can be repeated |
-| `--severity` | `info` | Lowest level to print |
-| `--fail-on` | `error` | Lowest level that fails the command. `never` always passes |
-| `--format` | `text` | `text`, `json`, `sarif` for code scanning tools, or `html`: one page to open in a browser (`--format html > report.html`) |
-| `--open` | | Also write the `html` report to a temporary file, print its path to stderr and open it in the browser. Nothing opens when the scan does not run |
-| `--baseline` | | A report written earlier with `--format json`. Findings already in it are left out and counted apart, matched on rule, app, file and snippet, so a line that moves still matches |
-| `--online` | off | Also run the checks that ask the network and the machine: the app's remote has the target's branch, its dependencies have wheels for the target's Python, and node is new enough |
-| `--skip-tests` | off | Leave out test files: `test_*`, `*.spec.*`, `*.test.*`, `*.cy.*`, and anything under `tests/`, `cypress/` or `e2e/` |
-| `--version` | | Print the Preflight version and exit |
+- `--site`: the site to scan, on the bench whose env runs Preflight. Either this or `--path`.
+- `--path`: scan the app in this directory, its repository root or its package (the directory
+  holding `hooks.py`), with no site or bench. Can be repeated.
+- `--target`: the version to check against, `v16`. Required.
+- `--app`: scan only this app of the site. Can be repeated. Default: every app except frappe.
+- `--severity`: the lowest level to print. Default `info`.
+- `--fail-on`: the lowest level that fails the command; `never` always passes. Default `error`.
+- `--format`: `text`, `json`, `sarif` for code scanning tools, or `html`: one page to open in a
+  browser (`--format html > report.html`). Default `text`.
+- `--open`: also write the `html` report to a temporary file, print its path to stderr and open it
+  in the browser. Nothing opens when the scan does not run.
+- `--baseline`: a report written earlier with `--format json`. Findings already in it are left out
+  and counted apart, matched on rule, app, file and snippet, so a line that moves still matches.
+- `--online`: also run the checks that ask the network and the machine: the app's remote has the
+  target's branch, its dependencies have wheels for the target's Python, and node is new enough.
+- `--skip-tests`: leave out test files: `test_*`, `*.spec.*`, `*.test.*`, `*.cy.*`, and anything
+  under `tests/`, `cypress/` or `e2e/`.
+- `--version`: print the Preflight version and exit.
 
 A `preflight: ignore[rule-id]` comment on a line leaves that finding out. See [Suppressing a finding](getting-started.md#suppressing-a-finding).
 
