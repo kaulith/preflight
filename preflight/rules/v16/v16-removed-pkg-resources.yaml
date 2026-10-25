@@ -1,0 +1,25 @@
+id: v16-removed-pkg-resources
+title: pkg_resources is missing from a v16 environment
+severity: error
+match:
+  type: import_path
+  paths:
+    - pkg_resources
+message: >
+  pkg_resources is part of setuptools, which neither frappe v15 nor v16 asks for, so a v15 bench
+  only has it because its environment was built with it or another package pulled it in. v16 needs
+  Python 3.14, so a bench on 3.10 to 3.13 builds a new environment for the upgrade. A new
+  environment on 3.14 gets no setuptools at all, or setuptools 82 or later when a package asks for
+  it, and setuptools 82 no longer ships pkg_resources. Importing it then raises ModuleNotFoundError.
+replacement: >
+  Read installed versions and entry points with importlib.metadata, files shipped inside a package
+  with importlib.resources, and version and requirement strings with packaging, declared as a
+  dependency of the app. An app that cannot drop pkg_resources yet can declare setuptools<82 in its
+  pyproject.toml.
+fix: before
+references:
+  - https://github.com/pypa/setuptools/blob/v82.0.0/NEWS.rst#L1-L7
+  - https://github.com/python/cpython/blob/v3.12.0/Doc/whatsnew/3.12.rst#L1486-L1505
+  - https://github.com/frappe/bench/blob/4f56e02d4a07368bb241f48b1aa69d21498984ae/bench/bench.py#L368-L378
+  - https://github.com/astral-sh/uv/blob/0.9.28/crates/uv-cli/src/lib.rs#L3093-L3096
+  - https://github.com/frappe/frappe/blob/v16.53.0/pyproject.toml#L7

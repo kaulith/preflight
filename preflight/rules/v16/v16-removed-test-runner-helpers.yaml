@@ -1,0 +1,24 @@
+id: v16-removed-test-runner-helpers
+title: The test running functions left frappe.test_runner
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.test_runner.run_all_tests
+    - frappe.test_runner.run_tests_for_doctype
+    - frappe.test_runner.run_tests_for_module
+    - frappe.test_runner.TimeLoggingTestResult
+    - frappe.test_runner.xmlrunner_wrapper
+    - frappe.test_runner._run_unittest
+    - frappe.test_runner._add_test
+message: >
+  v16 rewrote the test runner as frappe.testing and cut frappe.test_runner down to a few
+  re-exports. The functions that ran a suite are gone from it, and xmlrunner_wrapper is now
+  xml_runner_wrapper, so importing one raises ImportError after the upgrade.
+replacement: >
+  Run the tests with bench run-tests and its --app, --module and --doctype options, which drive
+  the runner on v15 and v16 both.
+fix: before
+references:
+  - https://github.com/frappe/frappe/blob/486ecf9e4a1daaa0027512bfab2947b8cde1502b/frappe/test_runner.py#L24-L330
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/test_runner.py#L1-L41

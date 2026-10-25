@@ -1,0 +1,47 @@
+id: v16-erpnext-tax-withholding
+title: ERPNext TDS and TCS calculation functions removed
+severity: error
+match:
+  type: import_path
+  paths:
+    - erpnext.accounts.doctype.advance_tax
+    - erpnext.accounts.doctype.tax_withheld_vouchers
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.get_party_details
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.get_party_tax_withholding_details
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.get_cost_center
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.get_tax_withholding_details
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.get_tax_withholding_rates
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.get_tax_row_for_tcs
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.get_tax_row_for_tds
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.get_lower_deduction_certificate
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.get_tax_amount
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.is_tax_deducted_on_the_basis_of_inv
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.get_invoice_vouchers
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.get_payment_entry_vouchers
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.get_advance_vouchers
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.get_taxes_deducted_on_advances_allocated
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.get_deducted_tax
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.get_advance_tax_across_fiscal_year
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.get_tds_amount
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.get_tcs_amount
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.get_advance_adjusted_in_invoice
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.get_invoice_total_without_tcs
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.get_limit_consumed
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.get_lower_deduction_amount
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.is_valid_certificate
+    - erpnext.accounts.doctype.tax_withholding_category.tax_withholding_category.normal_round
+message: >
+  ERPNext v16 rebuilt TDS and TCS around the Tax Withholding Entry table, and the functions that
+  worked out the withholding for an invoice, such as get_party_tax_withholding_details and
+  get_tax_withholding_details, are gone from the Tax Withholding Category module along with the
+  Advance Tax and Tax Withheld Vouchers controllers. Importing one, or naming one in frappe.call
+  or frappe.enqueue, raises ImportError after the upgrade.
+replacement: >
+  Let the invoice or payment compute its own withholding on v16 and read the rows of its
+  tax_withholding_entries table. For a category's rate, thresholds and account on a date, v16 has
+  TaxWithholdingDetails(categories, group, posting_date, party_type, party, company).get() in the
+  same module.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/51099
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/accounts/doctype/tax_withholding_category/tax_withholding_category.py

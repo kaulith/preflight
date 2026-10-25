@@ -1,0 +1,18 @@
+id: v16-removed-backup-integrations
+title: Offsite backup integrations removed
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.integrations.doctype.dropbox_settings
+    - frappe.integrations.doctype.s3_backup_settings
+    - frappe.integrations.doctype.google_drive
+message: >
+  The Dropbox, S3 and Google Drive backup integrations were moved out of the framework in v16.
+  Importing these modules raises ImportError after the upgrade.
+replacement: >
+  Install the Offsite Backups app (https://github.com/frappe/offsite_backups), or move the
+  backups to another target and drop the references from custom code and scheduled jobs.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/pull/32351

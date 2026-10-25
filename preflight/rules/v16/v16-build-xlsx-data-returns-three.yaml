@@ -1,0 +1,25 @@
+id: v16-build-xlsx-data-returns-three
+title: build_xlsx_data returns three values
+severity: error
+match:
+  type: call
+  paths:
+    - frappe.desk.query_report.build_xlsx_data
+  returns: 3
+message: >
+  v15's build_xlsx_data returns the rows and the column widths. From v16.0.0 it returns a third
+  value as well, the header row's index, which v16.17.0 replaced with the Excel styles (None unless
+  build_styles is passed). Code that unpacks the result into two names, as every v15 caller in
+  frappe does, raises ValueError after the upgrade. A call whose result is indexed or sliced,
+  unpacked into three names, or unpacked with a starred name is not reported, since it runs on
+  v16; any other use, such as holding the result in one name, is.
+replacement: >
+  Take the first two values, xlsx_data, column_widths = build_xlsx_data(...)[:2], which runs on
+  v15 and v16 both.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/34703
+  - https://github.com/frappe/frappe/pull/38773
+  - https://github.com/frappe/frappe/blob/486ecf9e4a1daaa0027512bfab2947b8cde1502b/frappe/desk/query_report.py#L639
+  - https://github.com/frappe/frappe/blob/v16.0.0/frappe/desk/query_report.py#L555
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/desk/query_report.py#L790

@@ -1,0 +1,21 @@
+id: v16-erpnext-lead-source-doctype
+title: ERPNext Lead Source replaced by the framework's UTM Source
+severity: error
+match:
+  type: doctype
+  doctypes:
+    - Lead Source
+message: >
+  ERPNext v16 tracks where a lead or sale came from with the framework's UTM doctypes, and its
+  migration copies every Lead Source into UTM Source and deletes the Lead Source doctype. A
+  custom field, property setter or link field on Lead Source points at a doctype the site no
+  longer has, and code that reads it raises DoesNotExistError, or ImportError where it loads a
+  document with frappe.get_doc. The table survives the migration, so raw SQL still returns rows
+  while every read through the ORM fails.
+replacement: >
+  Link to UTM Source instead, which the framework installs on v16 with the same names the
+  migration copied over, and read the utm_source field of the Lead, Opportunity or transaction.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/42074
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/patches/v15_0/migrate_to_utm_analytics.py#L13-L31

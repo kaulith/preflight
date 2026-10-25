@@ -1,0 +1,28 @@
+id: v16-app-workspaces-apps-screen
+title: An app's workspaces drop out of the desk's navigation without add_to_apps_screen
+severity: warning
+match:
+  type: missing_hook
+  keys:
+    - add_to_apps_screen
+  paths:
+    - "*/workspace/*/*.json"
+message: >
+  v15 lists every public workspace in the sidebar, whatever app ships it. v16 reaches an app's
+  workspaces only from its tile on the Apps screen, which shows only the apps that declare
+  add_to_apps_screen in hooks.py, and from the app's rail, which lists the rows of the Dock record
+  the app ships. With no tile, the app's workspaces are on no page anyone navigates from; they
+  still open by their URL and from the search bar. Nothing raises.
+replacement: >
+  Declare add_to_apps_screen in hooks.py with the app's name, title and the route of its main
+  workspace, as erpnext's hooks.py does; the tile opens that workspace. For a rail that switches
+  between the app's modules on v16, also ship a Dock record at <app>/dock/<app>/<app>.json with one
+  Sidebar row per module, as erpnext/dock/erpnext/erpnext.json does.
+fix: before
+references:
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/boot.py#L291-L336
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/desk/page/desktop/desktop.js#L170-L183
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/public/js/frappe/ui/sidebar/sidebar.js#L1043-L1054
+  - https://github.com/frappe/erpnext/blob/v16.52.1/erpnext/hooks.py#L13-L23
+  - https://github.com/frappe/erpnext/blob/v16.52.1/erpnext/dock/erpnext/erpnext.json
+  - https://github.com/frappe/frappe/blob/v15.124.0/frappe/desk/desktop.py#L463-L478

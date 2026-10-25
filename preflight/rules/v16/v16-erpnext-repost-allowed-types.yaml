@@ -1,0 +1,32 @@
+id: v16-erpnext-repost-allowed-types
+title: ERPNext repost types left unchecked on v15 become allowed on v16
+severity: warning
+match:
+  type: site_record
+  doctypes:
+    - Repost Allowed Types
+  filters:
+    parenttype: Repost Accounting Ledger Settings
+    allowed: 0
+  title_field: document_type
+message: >
+  On v15 a doctype can be reposted only when its row in Repost Accounting Ledger Settings has
+  Allowed checked. ERPNext v16 drops the checkbox and reads every Repost Allowed Types row as
+  allowed, whatever settings it belongs to, and the merge patch leaves the v15 rows in place, so
+  each doctype listed here can be reposted after the upgrade. The patch also adds the
+  repost_allowed_doctypes hook's doctypes to Accounts Settings: Sales Invoice, Purchase Invoice,
+  Journal Entry, Payment Entry and Purchase Receipt. Nothing raises; Repost Accounting Ledger
+  accepts the wider set and its voucher type dropdown offers it.
+replacement: >
+  Keep only the doctypes that may be reposted in the Allowed DocTypes table of Accounts Settings,
+  then delete the rows left under the old settings, which v16 still reads:
+  frappe.db.delete("Repost Allowed Types", {"parenttype": "Repost Accounting Ledger Settings"}).
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/54301
+  - https://github.com/frappe/erpnext/blob/v16.52.1/erpnext/patches/v16_0/merge_repost_settings_to_accounts_settings.py
+  - https://github.com/frappe/erpnext/blob/v16.52.1/erpnext/hooks.py#L724-L730
+  - https://github.com/frappe/erpnext/blob/v16.52.1/erpnext/accounts/doctype/repost_accounting_ledger/repost_accounting_ledger.py#L442-L456
+  - https://github.com/frappe/erpnext/blob/v16.52.1/erpnext/accounts/doctype/repost_accounting_ledger/repost_accounting_ledger.py#L517-L535
+  - https://github.com/frappe/erpnext/blob/v15.124.1/erpnext/accounts/doctype/repost_allowed_types/repost_allowed_types.json#L21-L27
+  - https://github.com/frappe/erpnext/blob/v15.124.1/erpnext/accounts/doctype/repost_accounting_ledger/repost_accounting_ledger.py#L444-L462

@@ -1,0 +1,102 @@
+id: v16-app-dependency-pins
+title: App's dependency pin clashes with frappe v16's
+severity: error
+match:
+  type: dependency_pins
+  dependencies:
+    - Babel~=2.18.0
+    - Click~=8.4.1
+    - filelock~=3.20.1
+    - filetype~=1.2.0
+    - GitPython~=3.1.45
+    - Jinja2~=3.1.6
+    - Pillow~=12.3.0
+    - PyJWT~=2.15.0
+    - duckdb~=1.4.3
+    - pyarrow~=25.0.0
+    - PyMySQL==1.1.2
+    - pypdf==6.19.0
+    - PyPika @ git+https://github.com/frappe/pypika@7ef6e40215d46cd531e8c4e58650b84c11abbd04
+    - mysqlclient==2.2.7
+    - PyQRCode~=1.2.1
+    - PyYAML~=6.0.3
+    - RestrictedPython~=8.5
+    - WeasyPrint==70.0
+    - typst~=0.15.0
+    - pydyf==0.12.1
+    - Werkzeug==3.1.9
+    - Whoosh~=2.7.4
+    - beautifulsoup4~=4.13.5
+    - bleach-allowlist~=1.0.3
+    - chardet~=5.2.0
+    - croniter~=6.0.0
+    - cryptography~=50.0.0
+    - cssutils~=2.11.1
+    - distro~=1.9.0
+    - email-reply-parser~=0.5.12
+    - gunicorn @ git+https://github.com/frappe/gunicorn@54b59ca884c79dcf04d4882658a32bbaf17e999f
+    - html5lib~=1.1
+    - ipython~=8.37.0
+    - ldap3~=2.9.1
+    - markdown2~=2.5.4
+    - MarkupSafe~=3.0.3
+    - nh3~=0.3.2
+    - num2words~=0.5.14
+    - oauthlib~=4.0.0
+    - openpyxl~=3.1.5
+    - xlsxwriter~=3.2.9
+    - orjson~=3.11.5
+    - passlib~=1.7.4
+    - pdfkit~=1.0.0
+    - phonenumbers~=9.0.23
+    - premailer~=3.10.0
+    - psutil~=7.0.0
+    - psycopg2-binary~=2.9.11
+    - pyOpenSSL~=26.4.0
+    - pydantic~=2.12.5
+    - pyotp~=2.9.0
+    - python-dateutil~=2.9.0.post0
+    - pytz==2025.2
+    - rauth~=0.7.3
+    - redis~=7.1.0
+    - hiredis~=3.3.0
+    - requests-oauthlib~=2.0.0
+    - requests~=2.33.0
+    - rq==2.6.1
+    - rsa~=4.9.1
+    - semantic-version~=2.10.0
+    - sentry-sdk~=1.45.1
+    - sqlparse~=0.6.0
+    - sql_metadata~=3.0.1
+    - tenacity~=9.1.2
+    - terminaltables~=3.1.10
+    - traceback-with-variables~=2.2.1
+    - typing_extensions>=4.15.0,<5
+    - tzdata~=2026.5
+    - xlrd~=2.0.2
+    - zxcvbn~=4.5.0
+    - markdownify~=1.2.2
+    - google-api-python-client~=2.188.0
+    - google-auth-oauthlib~=1.2.4
+    - google-auth~=2.48.0
+    - vobject~=0.9.9
+    - pycountry~=24.6.1
+    - websockets~=15.0.1
+    - python-socketio~=5.17.0
+    - python-engineio~=4.14.0
+    - uvicorn~=0.54.0
+    - a2wsgi~=1.10.10
+    - httpx~=0.28.1
+message: >
+  The app's pyproject.toml pins a package that frappe 16.53.0 also pins, and no version satisfies
+  both. bench installs each app with pip or uv into the env that holds frappe, and neither refuses
+  the clash: the later install replaces the version the earlier one put in (pip prints a dependency
+  conflict, uv only lists the swap) and exits 0, so frappe or the app ends up on a version outside
+  its own pin. The app stays on this branch through the upgrade, so the pin goes with it.
+replacement: >
+  Widen the pin in the app's [project] dependencies to take in frappe's, which the finding shows,
+  and test the app with it.
+fix: before
+references:
+  - https://github.com/frappe/frappe/blob/e8d41dd0061a32ee781caefe5d0b0d2bb7c15362/pyproject.toml#L10-L106
+  - https://github.com/frappe/bench/blob/4f56e02d4a07368bb241f48b1aa69d21498984ae/bench/app.py#L935-L950

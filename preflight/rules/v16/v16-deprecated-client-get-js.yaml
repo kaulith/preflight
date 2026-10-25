@@ -1,0 +1,15 @@
+id: v16-deprecated-client-get-js
+title: frappe.client.get_js is deprecated
+severity: warning
+match:
+  type: string_contains
+  paths:
+    - frappe.client.get_js
+message: >
+  frappe.client.get_js moved to the deprecation dumpster in v16. Calls still work and log a
+  deprecation warning; the endpoint is removed in v17.
+replacement: >
+  Ship the file as an app asset and load it with frappe.require.
+fix: before
+references:
+  - https://github.com/frappe/frappe/blob/version-16/frappe/deprecation_dumpster.py

@@ -1,0 +1,26 @@
+id: v16-erpnext-scrap-item-doctypes
+title: ERPNext scrap item tables replaced by secondary item tables
+severity: error
+match:
+  type: doctype
+  doctypes:
+    - BOM Scrap Item
+    - Job Card Scrap Item
+message: >
+  ERPNext v16 added co-products and by-products, and scrap became one kind of secondary item.
+  The BOM's Scrap Items table is now Secondary Items (child doctype BOM Secondary Item) and the
+  Job Card's is Job Card Secondary Item; the migration copies each scrap row across with
+  secondary_item_type set to Scrap. A custom field, property setter or link field on BOM Scrap
+  Item or Job Card Scrap Item points at a doctype the site no longer has, and code that reads it
+  raises DoesNotExistError, or ImportError where it loads a document with frappe.get_doc. The
+  tables survive the migration, so raw SQL still returns rows while every read through the ORM
+  fails.
+replacement: >
+  Move the customisation to BOM Secondary Item or Job Card Secondary Item, read the
+  secondary_items table of the BOM or Job Card, and filter on secondary_item_type = "Scrap" where
+  only scrap is meant.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/52979
+  - https://github.com/frappe/erpnext/pull/53975
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/patches/v16_0/co_by_product_patch.py#L24-L63

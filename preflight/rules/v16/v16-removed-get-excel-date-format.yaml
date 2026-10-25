@@ -1,0 +1,19 @@
+id: v16-removed-get-excel-date-format
+title: get_excel_date_format removed from xlsxutils
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.utils.xlsxutils.get_excel_date_format
+message: >
+  v16.17.0 rewrote the Excel export on xlsxwriter and removed
+  frappe.utils.xlsxutils.get_excel_date_format. Importing it raises ImportError after the
+  upgrade.
+replacement: >
+  Read date_format and time_format with frappe.get_system_settings, which is what the v16
+  export does through XLSXStyleBuilder.get_date_format and get_time_format.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/38773
+  - https://github.com/frappe/frappe/blob/v15.124.0/frappe/utils/xlsxutils.py#L24-L31
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/utils/xlsxutils.py#L429-L436

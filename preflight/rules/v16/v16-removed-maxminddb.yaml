@@ -1,0 +1,27 @@
+id: v16-removed-maxminddb
+title: frappe no longer installs maxminddb
+severity: error
+match:
+  type: undeclared_import
+  paths:
+    - maxminddb
+  dependencies:
+    - maxminddb
+    - maxminddb-geolite2
+message: >
+  The app imports maxminddb without declaring it, or maxminddb-geolite2, which requires it, in
+  pyproject.toml or requirements.txt. That works on v15 because frappe installs
+  maxminddb-geolite2 to look up the country of an IP address, and it brings maxminddb, the reader
+  for the database. v16 dropped the database, so a new v16 environment, like the one Frappe Cloud
+  builds or the one bench builds on Python 3.14, does not have maxminddb, and the import raises
+  ModuleNotFoundError. An environment upgraded in place keeps the package until it is rebuilt.
+replacement: >
+  Declare maxminddb in the app's [project] dependencies, or maxminddb-geolite2 if the app reads
+  its database as well. Nothing in frappe v15 pins a maxminddb version, so any range installs on
+  both versions.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/29213
+  - https://github.com/frappe/frappe/blob/486ecf9e4a1daaa0027512bfab2947b8cde1502b/pyproject.toml#L50
+  - https://github.com/rr2do2/maxminddb-geolite2/blob/d65a9960402b8f50291d683b8d93c901887710d7/setup.py#L20-L21
+  - https://github.com/frappe/frappe/blob/v16.53.0/pyproject.toml#L10-L106

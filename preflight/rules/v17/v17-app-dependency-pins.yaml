@@ -1,0 +1,108 @@
+id: v17-app-dependency-pins
+title: App's dependency pin clashes with frappe v17's
+severity: error
+match:
+  type: dependency_pins
+  dependencies:
+    - Babel~=2.18.0
+    - Click~=8.5.0
+    - filelock~=4.1.1
+    - filetype~=1.2.0
+    - GitPython~=3.2.0
+    - Jinja2~=3.1.6
+    - Pillow~=13.0.0
+    - plutoprint~=0.22.0; (sys_platform == 'linux' and platform_machine == 'x86_64') or (sys_platform == 'darwin' and platform_machine == 'arm64') or sys_platform == 'win32'
+    - PyJWT~=2.15.1
+    - duckdb~=1.4.3
+    - pyarrow~=26.0.0
+    - PyMySQL==1.1.2
+    - pypdf==6.20.1
+    - PyPika @ git+https://github.com/frappe/pypika@054ffb18a0a60f3c3f472dcce86116fd86db1188
+    - mysqlclient==2.3.0
+    - PyQRCode~=1.2.1
+    - PyYAML~=6.0.3
+    - RestrictedPython~=8.5
+    - Werkzeug==3.1.9
+    - beautifulsoup4~=4.15.0
+    - bleach-allowlist~=1.0.3
+    - chardet~=7.6.0
+    - croniter~=6.2.4
+    - cryptography~=50.0.2
+    - cssutils~=2.15.0
+    - email-reply-parser~=0.5.12
+    - Faker~=40.43.0
+    - gunicorn @ git+https://github.com/frappe/gunicorn@f189de0ec3143581d8826f707343fa36c3fb0184
+    - html5lib~=1.1
+    - ipython~=9.17.1
+    - ldap3~=2.9.1
+    - markdown2~=2.5.5
+    - MarkupSafe~=3.0.4
+    - nh3~=0.3.7
+    - num2words~=0.5.14
+    - oauthlib~=4.0.0
+    - openpyxl~=3.1.5
+    - xlsxwriter~=3.2.9
+    - orjson~=3.13.0
+    - passlib~=1.7.4
+    - phonenumbers~=9.0.41
+    - premailer~=3.10.0
+    - psutil~=7.2.2
+    - psycopg2-binary~=2.9.13
+    - pyOpenSSL~=26.4.0
+    - pydantic~=2.14.1
+    - pyotp~=2.10.0
+    - python-dateutil~=2.9.0.post0
+    - pytz==2026.5
+    - rauth~=0.7.3
+    - redis~=7.4.1
+    - hiredis~=3.4.2
+    - requests-oauthlib~=2.0.0
+    - requests~=2.34.2
+    - rq==2.6.1
+    - rsa~=4.9.1
+    - semantic-version~=2.10.0
+    - sentry-sdk~=2.72.0
+    - sqlglot~=30.22.0
+    - sqlparse~=0.6.0
+    - sql_metadata~=3.0.1
+    - tenacity~=9.2.1
+    - terminaltables~=3.1.10
+    - traceback-with-variables~=2.2.1
+    - typst~=0.15.0
+    - typing_extensions>=4.15.0,<5
+    - tzdata~=2026.5
+    - xlrd~=2.0.2
+    - zxcvbn~=4.5.0
+    - markdownify~=1.2.3
+    - litellm==1.103.2
+    - json_repair~=0.59
+    - frappe-flow==0.1.20
+    - lancedb~=0.33
+    - onnxruntime~=1.27
+    - pdfplumber~=0.11
+    - python-docx~=1.1
+    - rapidocr~=3.0
+    - google-api-python-client~=2.201.0
+    - google-auth-oauthlib~=1.5.0
+    - google-auth~=2.62.0
+    - vobject~=0.9.9
+    - pycountry~=26.2.16
+    - websockets~=17.2
+    - python-socketio~=5.17.0
+    - python-engineio~=4.14.0
+    - uvicorn~=0.54.0
+    - a2wsgi~=1.10.10
+    - httpx~=0.28.1
+message: >
+  The app's pyproject.toml pins a package that frappe develop, which becomes v17, also pins
+  (checked 2026-10-25), and no version satisfies both. bench installs each app with pip or uv into
+  the env that holds frappe, and neither refuses the clash: the later install replaces the version
+  the earlier one put in (pip prints a dependency conflict, uv only lists the swap) and exits 0, so
+  frappe or the app ends up on a version outside its own pin. The app stays on this branch through
+  the upgrade, so the pin goes with it.
+replacement: >
+  Widen the pin in the app's [project] dependencies to take in frappe's, which the finding shows,
+  and test the app with it.
+references:
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/pyproject.toml#L10-L114
+  - https://github.com/frappe/bench/blob/4f56e02d4a07368bb241f48b1aa69d21498984ae/bench/app.py#L935-L950

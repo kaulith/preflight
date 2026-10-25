@@ -1,0 +1,22 @@
+id: v16-bench-node
+title: The bench runs a node v16 cannot install with
+severity: error
+fix: before
+match:
+  type: bench_node
+  node: ">=24"
+message: >
+  Frappe v16's package.json requires node >=24 in its engines, and the node on the bench's PATH is
+  older. bench update and bench switch-to-branch --upgrade run yarn install in every app before they
+  migrate anything, and yarn refuses a package whose engines leave out the running node ("The engine
+  "node" is incompatible with this module") and exits 1, so the upgrade stops before the sites are
+  migrated or the assets built.
+replacement: >
+  Install node 24 and put it first on the PATH bench runs with before switching to v16, for example
+  nvm install 24 && nvm alias default 24. v15 asks for node >=18, so the bench keeps building in
+  between.
+references:
+  - https://github.com/frappe/frappe/blob/v16.53.0/package.json#L18-L20
+  - https://github.com/frappe/frappe/pull/35387
+  - https://github.com/frappe/bench/blob/4f56e02d4a07368bb241f48b1aa69d21498984ae/bench/app.py#L960-L964
+  - https://github.com/frappe/bench/blob/4f56e02d4a07368bb241f48b1aa69d21498984ae/bench/utils/bench.py#L498-L504

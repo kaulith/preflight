@@ -1,0 +1,23 @@
+id: v16-removed-bleach
+title: frappe no longer installs bleach
+severity: error
+match:
+  type: undeclared_import
+  paths:
+    - bleach
+  dependencies:
+    - bleach
+message: >
+  The app imports bleach without declaring it in pyproject.toml or requirements.txt. That works on
+  v15 because frappe installs bleach itself, for sanitize_html. v16.32.0 dropped it, after
+  sanitize_html moved to nh3, so a new v16 environment, like the one Frappe Cloud builds or the one
+  bench builds on Python 3.14, does not have it, and the import raises ModuleNotFoundError. An
+  environment upgraded in place keeps the package until it is rebuilt.
+replacement: >
+  Declare bleach in the app's [project] dependencies, in a range that takes in the bleach~=6.4.0
+  frappe v15 pins, so the app installs on both versions.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/41960
+  - https://github.com/frappe/frappe/blob/486ecf9e4a1daaa0027512bfab2947b8cde1502b/pyproject.toml#L36
+  - https://github.com/frappe/frappe/blob/v16.53.0/pyproject.toml#L10-L106

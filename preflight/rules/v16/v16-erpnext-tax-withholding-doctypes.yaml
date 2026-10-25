@@ -1,0 +1,24 @@
+id: v16-erpnext-tax-withholding-doctypes
+title: ERPNext Advance Tax and Tax Withheld Vouchers replaced by Tax Withholding Entry
+severity: error
+match:
+  type: doctype
+  doctypes:
+    - Advance Tax
+    - Tax Withheld Vouchers
+message: >
+  ERPNext v16 rebuilt TDS and TCS around the Tax Withholding Entry table, which records every
+  amount withheld on a Purchase Invoice, Sales Invoice, Payment Entry or Journal Entry. The
+  Advance Tax and Tax Withheld Vouchers tables of the Purchase Invoice are gone, and the
+  migration moves their history into Tax Withholding Entry rows. A custom field, property setter
+  or link field on either points at a doctype the site no longer has, and code that reads it
+  raises DoesNotExistError, or ImportError where it loads a document with frappe.get_doc. The
+  tables survive the migration, so raw SQL still returns rows while every read through the ORM
+  fails.
+replacement: >
+  Read the withholding from the tax_withholding_entries table of the invoice or payment (child
+  doctype Tax Withholding Entry), and move the customisation there.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/51099
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/patches/v16_0/migrate_tax_withholding_data.py

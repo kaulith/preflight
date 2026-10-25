@@ -1,0 +1,23 @@
+id: v16-removed-workspace-sidebar-items-import
+title: get_workspace_sidebar_items removed from frappe.desk.desktop
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.desk.desktop.get_workspace_sidebar_items
+message: >
+  v16.21.0 renamed frappe.desk.desktop.get_workspace_sidebar_items to get_workspaces, so importing
+  the old name in server code raises ImportError after the upgrade.
+replacement: >
+  Import get_workspaces from frappe.desk.desktop instead. It returns the same pages, has_access and
+  has_create_access as before.
+fix: with-upgrade
+shim: |
+  try:
+  	from frappe.desk.desktop import get_workspaces
+  except ImportError:
+  	from frappe.desk.desktop import get_workspace_sidebar_items as get_workspaces
+references:
+  - https://github.com/frappe/frappe/pull/39838
+  - https://github.com/frappe/frappe/blob/v15.124.0/frappe/desk/desktop.py#L425-L489
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/desk/desktop.py#L429-L524

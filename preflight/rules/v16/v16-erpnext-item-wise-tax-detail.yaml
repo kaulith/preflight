@@ -1,0 +1,30 @@
+id: v16-erpnext-item-wise-tax-detail
+title: ERPNext item_wise_tax_detail JSON replaced by the Item Wise Tax Detail table
+severity: warning
+match:
+  type: doctype_field
+  fields:
+    - Sales Taxes and Charges.item_wise_tax_detail
+    - Purchase Taxes and Charges.item_wise_tax_detail
+message: >
+  ERPNext v16 stores the tax on each item in a child table, Item Wise Tax Detail, under the
+  item_wise_tax_details field of the invoice, order, quotation, delivery note or receipt, in
+  place of the JSON text each tax row kept in item_wise_tax_detail. The migration converts
+  submitted documents only and leaves the old column behind with nothing writing it again. On
+  an upgraded site frappe.get_all and frappe.db.get_value return the JSON as it stood at the
+  upgrade and nothing for documents made after it; frappe.get_list and the browser's
+  frappe.db.get_value leave the field out of the result, and raise a PermissionError when it
+  filters or sorts the query. On a site installed on v16 the column does not exist, and
+  frappe.get_all and frappe.db.get_value on it raise. Code that reads item_wise_tax_detail off
+  a tax row needs the same change; this rule does not see it there, since a row is not followed
+  out of its parent's table.
+  A Custom Field placed after one of them moves to the end of the form.
+replacement: >
+  Read the parent document's item_wise_tax_details rows: item_row and tax_row name the item and
+  tax rows, with rate, amount and taxable_amount. Rows are keyed by the item row's name, not by
+  item code.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/48692
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/patches/v15_0/migrate_old_item_wise_tax_detail_data_to_table.py#L31-L41
+  - https://github.com/frappe/frappe/blob/4f40f4acbb3cc296f0e9cbc69ce2bb49ccd8208a/frappe/database/query.py#L1392-L1476

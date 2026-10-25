@@ -1,0 +1,30 @@
+id: v16-erpnext-removed-methods
+title: ERPNext methods removed with nothing in their place
+severity: error
+match:
+  type: import_path
+  paths:
+    - erpnext.accounts.doctype.payment_entry.payment_entry.get_party_and_account_balance
+    - erpnext.accounts.doctype.bank_account.bank_account.make_bank_account
+    - erpnext.accounts.doctype.pricing_rule.pricing_rule.make_pricing_rule
+message: >
+  ERPNext v16 removed three whitelisted methods its forms no longer call: the Payment Entry's
+  get_party_and_account_balance, which went with the form's balance fields, and the
+  make_bank_account and make_pricing_rule that returned a new Bank Account or Pricing Rule for a
+  customer or supplier, which the forms now open in the browser. Importing one, or naming one in
+  frappe.call or frappe.enqueue, raises an error after the upgrade.
+replacement: >
+  Each has a replacement that already works on v15. For a balance, call
+  erpnext.accounts.utils.get_balance_on(party_type=..., party=..., cost_center=...) or
+  get_balance_on(account, date, cost_center=...) from the app's own server code, as the removed
+  method did; it is not whitelisted. For a new record, frappe.new_doc("Bank Account", {party_type,
+  party}) or frappe.new_doc("Pricing Rule", {applicable_for: "Customer", customer, selling: 1}) in
+  the browser, or erpnext.utils.make_bank_account(doctype, name), which v15 and v16 both have.
+fix: before
+references:
+  - https://github.com/frappe/erpnext/pull/45630
+  - https://github.com/frappe/erpnext/pull/49001
+  - https://github.com/frappe/erpnext/pull/49285
+  - https://github.com/frappe/erpnext/blob/31803451f1cfb27087f8e9c9ddc8798c19844427/erpnext/accounts/doctype/payment_entry/payment_entry.py#L3556-L3573
+  - https://github.com/frappe/erpnext/blob/31803451f1cfb27087f8e9c9ddc8798c19844427/erpnext/public/js/utils.js#L228-L233
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/selling/doctype/customer/customer.js#L291-L297

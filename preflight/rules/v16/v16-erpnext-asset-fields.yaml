@@ -1,0 +1,55 @@
+id: v16-erpnext-asset-fields
+title: ERPNext asset fields renamed or removed
+severity: warning
+match:
+  type: doctype_field
+  fields:
+    - Asset.gross_purchase_amount
+    - Asset Depreciation Schedule.gross_purchase_amount
+    - Asset.is_existing_asset
+    - Asset.is_composite_asset
+    - Asset Capitalization.capitalization_method
+    - Asset Capitalization.target_item_name
+    - Asset Capitalization.target_is_fixed_asset
+    - Asset Capitalization.target_qty
+    - Asset Capitalization.target_batch_no
+    - Asset Capitalization.target_has_batch_no
+    - Asset Capitalization.target_serial_no
+    - Asset Capitalization.target_has_serial_no
+    - Asset Capitalization.target_asset_location
+    - Asset Repair.purchase_invoice
+    - Asset Repair.stock_consumption
+message: >
+  ERPNext v16 reworked the asset forms. gross_purchase_amount on Asset and Asset Depreciation
+  Schedule is net_purchase_amount; the Existing Asset and Composite Asset checks became one
+  asset_type select; Asset Capitalization no longer creates a new asset, so its method and the
+  target item, quantity, batch, serial and location fields are gone and it always capitalizes
+  into the WIP composite asset named in target_asset; and an Asset Repair takes several
+  purchase invoices in its invoices table instead of one purchase_invoice. The migration copies
+  the purchase amount and the asset type across, copies nothing for the repair invoice, and
+  leaves the old columns behind with nothing writing them again. On an upgraded site
+  frappe.get_all and frappe.db.get_value return what they held at the upgrade; frappe.get_list
+  and the browser's frappe.db.get_value leave the field out of the result, and raise a
+  PermissionError when it filters or sorts the query. On a site installed on v16 the columns do
+  not exist, and frappe.get_all and frappe.db.get_value on them raise.
+  A Custom Field placed after one of them moves to the end of the form.
+replacement: >
+  Read net_purchase_amount; asset_type = "Existing Asset" or "Composite Asset"; the
+  Asset Capitalization's target_asset; and the purchase_invoice of each row of the Asset
+  Repair's invoices table (Asset Repair Purchase Invoice). Whether a repair consumed stock is
+  whether its stock_items table has rows.
+fix: with-upgrade
+shim: |
+  purchase_amount_field = "net_purchase_amount"
+  if not frappe.get_meta("Asset").has_field(purchase_amount_field):
+  	purchase_amount_field = "gross_purchase_amount"
+  amount = frappe.db.get_value("Asset", asset, purchase_amount_field)
+references:
+  - https://github.com/frappe/erpnext/pull/49084
+  - https://github.com/frappe/erpnext/pull/52393
+  - https://github.com/frappe/erpnext/pull/47676
+  - https://github.com/frappe/erpnext/pull/43460
+  - https://github.com/frappe/erpnext/pull/45251
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/patches/v15_0/rename_gross_purchase_amount_to_net_purchase_amount.py
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/patches/v16_0/migrate_asset_type_checkboxes_to_select.py
+  - https://github.com/frappe/frappe/blob/4f40f4acbb3cc296f0e9cbc69ce2bb49ccd8208a/frappe/model/utils/rename_field.py#L36-L43

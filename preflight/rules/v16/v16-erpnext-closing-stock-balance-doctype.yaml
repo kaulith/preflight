@@ -1,0 +1,22 @@
+id: v16-erpnext-closing-stock-balance-doctype
+title: ERPNext Closing Stock Balance replaced by Stock Closing Entry
+severity: error
+match:
+  type: doctype
+  doctypes:
+    - Closing Stock Balance
+message: >
+  ERPNext v16 replaced Closing Stock Balance with Stock Closing Entry, whose balances are rows of
+  the new Stock Closing Balance doctype. The migration creates one Stock Closing Entry per
+  company from its submitted Closing Stock Balance entries, and the old doctype is gone. A custom
+  field, property setter or link field on Closing Stock Balance points at a doctype the site no
+  longer has, and code that reads it raises DoesNotExistError, or ImportError where it loads a
+  document with frappe.get_doc. The table survives the migration, so raw SQL still returns rows
+  while every read through the ORM fails.
+replacement: >
+  Move the customisation to Stock Closing Entry, and read the closing balances from Stock
+  Closing Balance rows instead of the old doctype's attached file.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/44489
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/patches/v15_0/refactor_closing_stock_balance.py#L52-L63

@@ -1,0 +1,20 @@
+id: v16-removed-changelog-feed-js
+title: What's New and Marketplace search data removed from the desk
+severity: error
+match:
+  type: pattern
+  patterns:
+    - \bfrappe\.boot\.changelog_feed\b
+    - \bfrappe\.boot\.marketplace_apps\b
+    - \bfrappe\.search\.utils\.get_marketplace_apps\b
+message: >
+  v16.50.0 removed the What's New panel and the Marketplace results in the awesome bar.
+  frappe.boot no longer carries changelog_feed or marketplace_apps, and
+  frappe.search.utils.get_marketplace_apps is gone, so client code that reads them gets
+  undefined or a TypeError.
+replacement: >
+  Remove the dependency.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/40472
+  - https://github.com/frappe/frappe/commit/9380434912690a6f09c7b80ab0872d3e6718886b

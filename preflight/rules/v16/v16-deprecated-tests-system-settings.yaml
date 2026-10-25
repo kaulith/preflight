@@ -1,0 +1,25 @@
+id: v16-deprecated-tests-system-settings
+title: The system settings test helpers are deprecated
+severity: warning
+match:
+  type: import_path
+  paths:
+    - frappe.tests.get_system_setting
+    - frappe.tests.update_system_settings
+message: >
+  frappe.tests.get_system_setting and frappe.tests.update_system_settings are deprecated in v16
+  and marked for removal in v17.
+replacement: >
+  Read the value with frappe.db.get_single_value("System Settings", key), and set it inside the
+  self.change_settings(...) context manager.
+fix: with-upgrade
+shim: |
+  try:
+  	from frappe.tests import change_settings
+  except ImportError:
+  	from frappe.tests.utils import change_settings
+
+  with change_settings("System Settings", {"float_precision": 3}):
+  	...
+references:
+  - https://github.com/frappe/frappe/blob/version-16/frappe/deprecation_dumpster.py

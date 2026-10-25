@@ -1,0 +1,16 @@
+id: v16-removed-newsletter
+title: Newsletter moved out of the framework
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.email.doctype.newsletter
+message: >
+  Newsletter was moved out of the framework into its own app in v16.
+  Importing this module raises ImportError after the upgrade.
+replacement: >
+  Install the Newsletter app (https://github.com/frappe/newsletter) and import from it,
+  or remove the dependency.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/pull/32971

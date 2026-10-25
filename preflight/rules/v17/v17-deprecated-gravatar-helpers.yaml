@@ -1,0 +1,20 @@
+id: v17-deprecated-gravatar-helpers
+title: The Gravatar helpers are marked for removal in v17
+severity: warning
+match:
+  type: import_path
+  paths:
+    - frappe.utils.has_gravatar
+    - frappe.utils.get_gravatar_url
+    - frappe.utils.get_gravatar
+message: >
+  Frappe dropped its Gravatar integration in v15.112.0 and v16.23.0, where the helpers stayed
+  behind returning an empty string or an identicon, and their dumpster entries name v17 as the
+  removal. They are still present on develop (checked 2026-10-25); the import fails once the
+  removal lands.
+replacement: >
+  Call frappe.utils.get_identicon, or drop the avatar lookup.
+references:
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/deprecation_dumpster.py#L1023-L1043
+  - https://github.com/frappe/frappe/pull/39946
+  - https://github.com/frappe/frappe/pull/39947

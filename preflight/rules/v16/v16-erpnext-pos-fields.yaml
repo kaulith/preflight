@@ -1,0 +1,30 @@
+id: v16-erpnext-pos-fields
+title: ERPNext POS Profile and POS Closing Entry fields changed
+severity: warning
+match:
+  type: doctype_field
+  fields:
+    - POS Profile.disable_grand_total_to_default_mop
+    - POS Closing Entry Taxes.rate
+    - POS Closing Entry.pos_transactions
+message: >
+  ERPNext v16 reworked the POS so it can bill through Sales Invoice as well as POS Invoice. POS
+  Profile's disable_grand_total_to_default_mop became set_grand_total_to_default_mop with the
+  meaning turned around, and the POS Closing Entry's tax rows lost their rate. The migration
+  leaves the old columns behind with nothing writing them again. On an upgraded site
+  frappe.get_all and frappe.db.get_value return what they held at the upgrade; frappe.get_list
+  and the browser's frappe.db.get_value leave the field out of the result, and raise a
+  PermissionError when it filters or sorts the query. On a site installed on v16 the columns do
+  not exist, and frappe.get_all and frappe.db.get_value on them raise. The closing entry's
+  pos_transactions table is now pos_invoices, next to a new sales_invoices table; code that
+  reads doc.pos_transactions needs the same change.
+  A Custom Field placed after one of them moves to the end of the form.
+replacement: >
+  Read POS Profile.set_grand_total_to_default_mop, which is set where the old check was clear,
+  and take a tax's rate from the POS Invoice or Sales Invoice it came from.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/47092
+  - https://github.com/frappe/erpnext/pull/47713
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/patches/v15_0/set_grand_total_to_default_mop.py
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/patches/v15_0/rename_pos_closing_entry_fields.py

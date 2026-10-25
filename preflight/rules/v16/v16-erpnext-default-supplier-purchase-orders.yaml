@@ -1,0 +1,28 @@
+id: v16-erpnext-default-supplier-purchase-orders
+title: ERPNext default supplier Purchase Order methods removed
+severity: error
+match:
+  type: import_path
+  paths:
+    - erpnext.selling.doctype.sales_order.sales_order.make_purchase_order_for_default_supplier
+    - erpnext.stock.doctype.material_request.material_request.get_default_supplier_query
+message: >
+  ERPNext v16 reworked how a Sales Order or a Material Request makes one Purchase Order per
+  supplier. The Sales Order's make_purchase_order_for_default_supplier is gone, its work taken
+  over by make_purchase_order, and v16.10.0 removed the Material Request's supplier dialog along
+  with get_default_supplier_query, the search behind its supplier field. Importing one, or naming
+  one in frappe.call, frappe.enqueue or a link field's query, raises an error after the upgrade.
+replacement: >
+  For a Sales Order, call make_purchase_order(source_name, selected_items) in the same module. On
+  v16 it saves one Purchase Order per supplier set on the selected items and returns the list, as
+  the default supplier one did; on v15 it returns one unsaved Purchase Order with no supplier. For a
+  Material Request, v16.31.0 added get_item_default_suppliers(source_name), which lists the
+  pending items with their default supplier, and make_purchase_orders_by_supplier(source_name,
+  item_suppliers), which makes the orders.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/50736
+  - https://github.com/frappe/erpnext/pull/53391
+  - https://github.com/frappe/erpnext/pull/57676
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/selling/doctype/sales_order/sales_order.py#L1624-L1778
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/stock/doctype/material_request/material_request.py#L664-L765

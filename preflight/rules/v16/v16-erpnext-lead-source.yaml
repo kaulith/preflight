@@ -1,0 +1,21 @@
+id: v16-erpnext-lead-source
+title: ERPNext sales funnel's get_opp_by_lead_source replaced by UTM methods
+severity: error
+match:
+  type: import_path
+  paths:
+    - erpnext.selling.page.sales_funnel.sales_funnel.get_opp_by_lead_source
+message: >
+  ERPNext v16 tracks where an opportunity came from with the framework's UTM fields, and the
+  Sales Funnel page's get_opp_by_lead_source, which summed open opportunities by their source and
+  sales stage, is gone. Importing it, or naming it in frappe.call or frappe.enqueue, raises an
+  error after the upgrade.
+replacement: >
+  Call get_opp_by_utm_source(from_date, to_date, company) in the same module, which takes the same
+  arguments and returns the same shape keyed by utm_source; get_opp_by_utm_campaign and
+  get_opp_by_utm_medium key it by the other two.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/42074
+  - https://github.com/frappe/erpnext/blob/31803451f1cfb27087f8e9c9ddc8798c19844427/erpnext/selling/page/sales_funnel/sales_funnel.py#L62-L111
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/selling/page/sales_funnel/sales_funnel.py#L62-L74

@@ -1,0 +1,19 @@
+id: v17-deprecated-sendmail-retry
+title: sendmail(retry=...) is marked for removal in v17
+severity: warning
+match:
+  type: call
+  paths:
+    - frappe.sendmail
+    - frappe.email.sendmail
+  with_kwargs:
+    - retry
+message: >
+  frappe.sendmail never read its retry argument, and passing it is now deprecated and marked for
+  removal in v17. It is still accepted on develop (checked 2026-10-25) with a deprecation warning
+  on every call.
+replacement: >
+  Drop the argument.
+references:
+  - https://github.com/frappe/frappe/pull/44443
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/email/__init__.py#L227-L234

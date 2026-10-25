@@ -1,0 +1,45 @@
+[project]
+name = "prefly"
+authors = [
+    { name = "Kaushal Shriwas", email = "64089478+kaulith@users.noreply.github.com" },
+]
+description = "Scan a Frappe site for APIs removed or renamed in the next major version, before upgrading"
+requires-python = ">=3.10"
+readme = "README.md"
+license = { file = "license.txt" }
+dynamic = ["version"]
+dependencies = [
+    "click",
+    "packaging",
+    "pyyaml",
+    "semantic-version",
+    'tomli; python_version < "3.11"',
+]
+
+[project.scripts]
+preflight = "preflight.commands:preflight_command"
+
+[project.urls]
+Documentation = "https://github.com/kaulith/preflight/blob/main/docs/overview.md"
+Source = "https://github.com/kaulith/preflight"
+Issues = "https://github.com/kaulith/preflight/issues"
+
+[build-system]
+requires = ["flit_core >=3.4,<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.module]
+name = "preflight"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+# testing/ holds the probe app, whose tests are frappe's own runner, not pytest's.
+norecursedirs = ["testing", "*.egg", ".*", "build", "dist", "node_modules", "venv"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.format]
+indent-style = "tab"

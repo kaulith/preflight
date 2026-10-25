@@ -1,0 +1,16 @@
+id: v17-deprecated-gzip-helpers
+title: The frappe.utils gzip helpers are marked for removal in v17
+severity: warning
+match:
+  type: import_path
+  paths:
+    - frappe.utils.gzip_compress
+    - frappe.utils.gzip_decompress
+message: >
+  These Python 2 compatibility helpers are deprecated and their dumpster entries name v17 as the
+  removal. They are still present on develop (checked 2026-10-25), so they keep working with a
+  deprecation warning; the import fails once the removal lands.
+replacement: >
+  Use gzip.compress and gzip.decompress from the standard library.
+references:
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/deprecation_dumpster.py#L308-L322

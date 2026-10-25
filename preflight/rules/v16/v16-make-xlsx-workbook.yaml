@@ -1,0 +1,22 @@
+id: v16-make-xlsx-workbook
+title: make_xlsx takes an xlsxwriter workbook
+severity: error
+match:
+  type: call
+  paths:
+    - frappe.utils.xlsxutils.make_xlsx
+  with_kwargs:
+    - wb
+  with_positional_args: 3
+message: >
+  v16.17.0 rewrote make_xlsx on xlsxwriter. A workbook passed as wb must now be an
+  xlsxwriter Workbook, so the openpyxl Workbook a v15 app passes raises AttributeError, and
+  with a workbook passed make_xlsx returns None instead of the file.
+replacement: >
+  Create the workbook with xlsxwriter.Workbook(buffer, {"constant_memory": True}), add each
+  sheet with make_xlsx, then close the workbook and read the buffer yourself.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/pull/38773
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/utils/xlsxutils.py#L482-L522
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/utils/xlsxutils.py#L614-L619

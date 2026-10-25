@@ -1,0 +1,15 @@
+id: v16-bench-python
+title: The bench runs a Python v16 cannot install on
+severity: error
+match:
+  type: bench_python
+  python: ">=3.14,<3.15"
+message: >
+  Frappe v16 requires Python >=3.14,<3.15, and the bench environment runs a Python outside that
+  range, so pip will not install frappe v16 into it and the upgrade stops at the first update.
+replacement: >
+  Rebuild the environment on Python 3.14 before switching to v16: bench setup env --python python3.14.
+  v15 runs on 3.14 too, so the bench keeps working in between.
+fix: before
+references:
+  - https://github.com/frappe/frappe/blob/v16.53.0/pyproject.toml

@@ -1,0 +1,15 @@
+id: v16-deprecated-get-test-records
+title: frappe.get_test_records deprecated
+severity: warning
+match:
+  type: import_path
+  paths:
+    - frappe.get_test_records
+message: >
+  frappe.get_test_records moved to the deprecation dumpster in v16 and is removed in v17.
+replacement: >
+  Read cls.globalTestRecords["Some Doctype"] inside an IntegrationTestCase, or call
+  frappe.tests.utils.load_test_records_for.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/blob/version-16/frappe/deprecation_dumpster.py

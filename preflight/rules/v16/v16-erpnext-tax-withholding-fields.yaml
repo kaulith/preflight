@@ -1,0 +1,42 @@
+id: v16-erpnext-tax-withholding-fields
+title: ERPNext TDS fields removed from purchases and payments
+severity: warning
+match:
+  type: doctype_field
+  fields:
+    - Purchase Invoice.tax_withholding_category
+    - Purchase Invoice.tax_withholding_net_total
+    - Purchase Invoice.base_tax_withholding_net_total
+    - Purchase Order.apply_tds
+    - Purchase Order.tax_withholding_category
+    - Purchase Order.tax_withholding_net_total
+    - Purchase Order.base_tax_withholding_net_total
+    - Purchase Order Item.apply_tds
+    - Purchase Receipt.tax_withholding_net_total
+    - Purchase Receipt.base_tax_withholding_net_total
+    - Purchase Receipt Item.apply_tds
+    - Payment Entry.apply_tax_withholding_amount
+    - Advance Taxes and Charges.allocated_amount
+    - Tax Withholding Category.consider_party_ledger_amount
+message: >
+  ERPNext v16 rebuilt TDS and TCS around the Tax Withholding Entry table. Withholding now applies
+  only to invoices, payments and journal entries, so Purchase Order and Purchase Receipt lost
+  their TDS fields; the Purchase Invoice's category moved to its items and its net totals to the
+  entries; Payment Entry's apply_tax_withholding_amount became apply_tds; and the advance tax
+  allocated_amount and the category's consider_party_ledger_amount are gone. The migration
+  leaves the old columns behind with nothing writing them again. On an upgraded site
+  frappe.get_all and frappe.db.get_value return what they held at the upgrade; frappe.get_list
+  and the browser's frappe.db.get_value leave the field out of the result, and raise a
+  PermissionError when it filters or sorts the query. On a site installed on v16 the columns do
+  not exist, and frappe.get_all and frappe.db.get_value on them raise.
+  A Custom Field placed after one of them moves to the end of the form.
+replacement: >
+  Read the withholding from the document's tax_withholding_entries table (Tax Withholding Entry:
+  tax_withholding_category, taxable_amount, tax_rate, withholding_amount), the category from
+  Purchase Invoice Item.tax_withholding_category or the invoice's tax_withholding_group, and
+  Payment Entry.apply_tds in place of apply_tax_withholding_amount.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/51099
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/patches/v16_0/update_tax_withholding_field_in_payment_entry.py
+  - https://github.com/frappe/frappe/blob/4f40f4acbb3cc296f0e9cbc69ce2bb49ccd8208a/frappe/database/query.py#L1392-L1476

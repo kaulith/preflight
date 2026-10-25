@@ -1,0 +1,18 @@
+id: v16-removed-changelog-feed-hook
+title: get_changelog_feed hook removed with the What's New panel
+severity: error
+match:
+  type: hook_key
+  keys:
+    - get_changelog_feed
+message: >
+  v16.50.0 removed the What's New panel, and nothing reads the get_changelog_feed hook any
+  more. The entry stays valid Python, so nothing raises; the release notes the app feeds into
+  the panel stop appearing.
+replacement: >
+  Drop the hook and the function it points at, or publish the release notes somewhere users
+  already look, such as the app's website or a notification.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/40472
+  - https://github.com/frappe/frappe/blob/v15.124.0/frappe/desk/doctype/changelog_feed/changelog_feed.py#L31-L62

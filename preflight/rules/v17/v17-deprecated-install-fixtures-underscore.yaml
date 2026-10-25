@@ -1,0 +1,16 @@
+id: v17-deprecated-install-fixtures-underscore
+title: The setup wizard's _ marker is deprecated
+severity: warning
+match:
+  type: import_path
+  paths:
+    - frappe.desk.page.setup_wizard.install_fixtures._
+message: >
+  install_fixtures._, the no-op marker setup wizard fixtures import to tag strings for
+  translation, moved to the deprecation dumpster on develop with v17 named as its removal. It
+  still returns its argument and now emits a deprecation warning.
+replacement: >
+  Mark the strings with N_, imported from frappe, instead.
+references:
+  - https://github.com/frappe/frappe/pull/42580
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/deprecation_dumpster.py#L1055

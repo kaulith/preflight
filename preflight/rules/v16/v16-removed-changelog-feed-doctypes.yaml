@@ -1,0 +1,20 @@
+id: v16-removed-changelog-feed-doctypes
+title: Changelog Feed doctype removed
+severity: error
+match:
+  type: doctype
+  doctypes:
+    - Changelog Feed
+message: >
+  v16.50.0 removed the What's New panel and the Changelog Feed doctype behind it. A custom
+  field, property setter or link field on it points at a doctype the site no longer has, and
+  code that reads it raises DoesNotExistError, or ImportError where it loads a document with
+  frappe.get_doc. The table survives the migration, so raw SQL still returns rows while every
+  read through the ORM fails.
+replacement: >
+  Drop the customisation and the code that reads it.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/40472
+  - https://github.com/frappe/frappe/commit/9380434912690a6f09c7b80ab0872d3e6718886b
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/model/sync.py#L213-L238

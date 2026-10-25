@@ -1,0 +1,23 @@
+id: v16-erpnext-make-pricing-rule-js
+title: ERPNext's erpnext.utils.make_pricing_rule removed
+severity: error
+match:
+  type: pattern
+  patterns:
+    - \berpnext\.utils\.make_pricing_rule\b
+message: >
+  erpnext.utils.make_pricing_rule(doctype, docname), the browser helper that opened a new Pricing
+  Rule for a customer or supplier through the server's make_pricing_rule, left ERPNext v16 along
+  with that method, so it is undefined after the upgrade and calling it raises a TypeError in the
+  browser.
+replacement: >
+  Open the Pricing Rule with frappe.new_doc("Pricing Rule", {applicable_for: "Customer", customer:
+  name, selling: 1}), or applicable_for "Supplier" with supplier and buying for a supplier, as the
+  v16 Customer and Supplier forms do. frappe.new_doc fills those defaults on v15 too, the way v15's
+  own erpnext.utils.make_bank_account uses it.
+fix: before
+references:
+  - https://github.com/frappe/erpnext/pull/49285
+  - https://github.com/frappe/erpnext/blob/31803451f1cfb27087f8e9c9ddc8798c19844427/erpnext/public/js/utils.js#L309-L321
+  - https://github.com/frappe/erpnext/blob/31803451f1cfb27087f8e9c9ddc8798c19844427/erpnext/public/js/utils.js#L228-L233
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/selling/doctype/customer/customer.js#L291-L297

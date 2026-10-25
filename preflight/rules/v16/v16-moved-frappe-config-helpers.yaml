@@ -1,0 +1,27 @@
+id: v16-moved-frappe-config-helpers
+title: Module helpers moved out of frappe.config
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.config.get_modules_from_all_apps_for_user
+    - frappe.config.get_modules_from_all_apps
+    - frappe.config.get_modules_from_app
+    - frappe.config.get_all_empty_tables_by_module
+    - frappe.config.is_domain
+    - frappe.config.is_module
+message: >
+  The frappe.config module was emptied in v16 and its helpers moved to frappe.utils.modules.
+  Importing one from frappe.config raises ImportError after the upgrade, which is how this
+  surfaced in upgrade support tickets. get_all_empty_tables_by_module did not move and is gone.
+replacement: >
+  Import the helper from frappe.utils.modules.
+fix: with-upgrade
+shim: |
+  try:
+  	from frappe.utils.modules import get_modules_from_all_apps_for_user
+  except ImportError:
+  	from frappe.config import get_modules_from_all_apps_for_user
+references:
+  - https://github.com/frappe/frappe/pull/27738
+  - https://github.com/frappe/frappe/blob/version-16/frappe/utils/modules.py

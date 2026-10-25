@@ -1,0 +1,15 @@
+id: v16-deprecated-read-multi-pdf
+title: read_multi_pdf deprecated
+severity: warning
+match:
+  type: import_path
+  paths:
+    - frappe.utils.print_format.read_multi_pdf
+message: >
+  frappe.utils.print_format.read_multi_pdf moved to the deprecation dumpster in v16 and is
+  removed in v17.
+replacement: >
+  Write the PdfWriter output into a BytesIO buffer and read its value.
+fix: before
+references:
+  - https://github.com/frappe/frappe/blob/version-16/frappe/deprecation_dumpster.py

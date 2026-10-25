@@ -1,0 +1,21 @@
+id: v16-removed-octicons-import
+title: Importing frappe's Octicons stylesheet fails the build
+severity: error
+match:
+  type: pattern
+  patterns:
+    - '@(?:import|use|forward)\b.*\bfrappe/public/css/octicons/'
+message: >
+  v16.50.0 deleted the Octicons files from frappe/public/css/octicons. A stylesheet that imports
+  one, as v15's own desk and web form bundles import frappe/public/css/octicons/octicons.css, fails
+  bench build: esbuild reports Could not resolve "frappe/public/css/octicons/octicons.css", and
+  Sass reports "Can't find stylesheet to import" for the form without .css.
+replacement: >
+  Drop the import. frappe v15's desk and web form bundles already load the font, and on v16 the
+  icons it served are gone; draw them with frappe.utils.icon instead.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/43291
+  - https://github.com/frappe/frappe/commit/ff4a8597ded31205d185afb1990fe84341224418
+  - https://github.com/frappe/frappe/blob/486ecf9e4a1daaa0027512bfab2947b8cde1502b/frappe/public/scss/desk.bundle.scss#L2
+  - https://github.com/frappe/frappe/blob/486ecf9e4a1daaa0027512bfab2947b8cde1502b/frappe/public/scss/web_form.bundle.scss#L2

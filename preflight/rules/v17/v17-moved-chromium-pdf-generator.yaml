@@ -1,0 +1,19 @@
+id: v17-moved-chromium-pdf-generator
+title: Chrome PDF generator modules moved to frappe.utils.chromium
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.utils.pdf_generator.chrome_pdf_generator
+    - frappe.utils.pdf_generator.cdp_connection
+    - frappe.utils.pdf_generator.page
+message: >
+  The headless Chromium stack moved out of frappe.utils.pdf_generator into frappe.utils.chromium
+  in v17, and ChromePDFGenerator became ChromiumManager. Importing the old modules raises
+  ImportError after the upgrade.
+replacement: >
+  Import cdp_connection and page from frappe.utils.chromium, and ChromiumManager from
+  frappe.utils.chromium.process.
+references:
+  - https://github.com/frappe/frappe/pull/40089
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/utils/chromium/process.py#L19

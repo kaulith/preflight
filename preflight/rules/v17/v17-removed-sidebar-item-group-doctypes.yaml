@@ -1,0 +1,17 @@
+id: v17-removed-sidebar-item-group-doctypes
+title: Sidebar Item Group doctypes removed
+severity: error
+match:
+  type: doctype
+  doctypes:
+    - Sidebar Item Group
+    - Sidebar Item Group Link
+message: >
+  Sidebar Item Group and its child table Sidebar Item Group Link were removed in v17 when
+  navigation was simplified. A custom field, property setter or link field on one of them points
+  at a doctype the site no longer has, and code that reads it raises DoesNotExistError.
+replacement: >
+  Drop the customisation; v17 sidebars are converted by the upgrade patches and have no item
+  groups.
+references:
+  - https://github.com/frappe/frappe/pull/39927

@@ -1,0 +1,18 @@
+id: v16-has-permission-raise-exception
+title: has_permission() no longer accepts raise_exception
+severity: error
+match:
+  type: call
+  paths:
+    - frappe.permissions.has_permission
+  with_kwargs:
+    - raise_exception
+  with_positional_args: 5
+message: >
+  frappe.permissions.has_permission dropped the raise_exception argument in v16; passing it
+  raises TypeError, as does passing it positionally. It never raised; it only controlled whether
+  denial logs were printed.
+replacement: Pass print_logs instead.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/pull/24266

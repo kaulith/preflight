@@ -1,0 +1,14 @@
+id: v16-deprecated-make-esc
+title: frappe.utils.make_esc deprecated
+severity: warning
+match:
+  type: import_path
+  paths:
+    - frappe.utils.make_esc
+message: >
+  frappe.utils.make_esc moved to the deprecation dumpster in v16 ("Not used anymore") and is
+  removed in v17. It still works in v16 but emits a DeprecationWarning.
+replacement: Escape the characters in your own code.
+fix: before
+references:
+  - https://github.com/frappe/frappe/blob/version-16/frappe/deprecation_dumpster.py

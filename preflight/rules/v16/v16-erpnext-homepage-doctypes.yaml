@@ -1,0 +1,21 @@
+id: v16-erpnext-homepage-doctypes
+title: ERPNext Homepage doctypes removed
+severity: error
+match:
+  type: doctype
+  doctypes:
+    - Homepage
+    - Homepage Section
+    - Homepage Section Card
+message: >
+  ERPNext v16 removed the Homepage settings and their sections, which built the /home page of
+  the website, with no app to install in their place. A custom field, property setter or link
+  field on one of them points at a doctype the site no longer has, and code that reads it raises
+  DoesNotExistError, or ImportError where it loads a document with frappe.get_doc. The tables
+  survive the migration, so raw SQL still returns rows while every read through the ORM fails.
+replacement: >
+  Build the home page as a Web Page and set it as the Home Page in Website Settings, which works
+  on v15 already, then drop the customisation and the code that reads the Homepage doctypes.
+fix: before
+references:
+  - https://github.com/frappe/erpnext/pull/39201

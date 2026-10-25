@@ -1,0 +1,23 @@
+id: v16-erpnext-asset-repair-cost
+title: ERPNext get_repair_cost_for_purchase_invoice replaced by get_unallocated_repair_cost
+severity: error
+match:
+  type: import_path
+  paths:
+    - erpnext.assets.doctype.asset_repair.asset_repair.get_repair_cost_for_purchase_invoice
+message: >
+  v15.101.0 added get_repair_cost_for_purchase_invoice to the Asset Repair module, to fill the
+  repair cost from the expense its one purchase_invoice booked. v16 never had it: an Asset Repair
+  there takes several purchase invoices in its invoices table, each row with an expense account
+  and a repair cost of its own. Importing it, or naming it in frappe.call or frappe.enqueue, raises
+  an error after the upgrade.
+replacement: >
+  Call get_unallocated_repair_cost(purchase_invoice, expense_account) in the same module, and pass
+  exclude_asset_repair to leave out the repair being edited. It reads one expense account of the
+  invoice where the v15 function summed them all, and it subtracts what other Asset Repairs
+  already claimed from that account.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/53258
+  - https://github.com/frappe/erpnext/blob/31803451f1cfb27087f8e9c9ddc8798c19844427/erpnext/assets/doctype/asset_repair/asset_repair.py#L495-L511
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/assets/doctype/asset_repair/asset_repair.py#L559-L574

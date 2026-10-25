@@ -1,0 +1,24 @@
+id: v16-removed-geolite2
+title: frappe no longer installs the GeoLite2 database
+severity: error
+match:
+  type: undeclared_import
+  paths:
+    - geolite2
+  dependencies:
+    - maxminddb-geolite2
+message: >
+  The app imports geolite2 without declaring maxminddb-geolite2, the package that provides it, in
+  pyproject.toml or requirements.txt. That works on v15 because frappe installs
+  maxminddb-geolite2 itself, to look up the country of an IP address. v16 dropped the database, so
+  a new v16 environment, like the one Frappe Cloud builds or the one bench builds on Python 3.14,
+  does not have it, and the import raises ModuleNotFoundError. An environment upgraded in place
+  keeps the package until it is rebuilt.
+replacement: >
+  Declare maxminddb-geolite2 in the app's [project] dependencies, in a range that takes in the
+  maxminddb-geolite2==2018.703 frappe v15 pins, so the app installs on both versions.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/29213
+  - https://github.com/frappe/frappe/blob/486ecf9e4a1daaa0027512bfab2947b8cde1502b/pyproject.toml#L50
+  - https://github.com/frappe/frappe/blob/v16.53.0/pyproject.toml#L10-L106

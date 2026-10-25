@@ -1,0 +1,15 @@
+id: v16-value-cache-nested
+title: frappe.db.value_cache is nested
+severity: warning
+match:
+  type: import_path
+  paths:
+    - frappe.db.value_cache
+message: >
+  frappe.db.value_cache changed from a flat dict keyed by (doctype, name, fieldname) tuples to
+  a nested dict in v16. Code that reads or clears entries by tuple key silently misses them.
+replacement: >
+  Use the nested form, such as frappe.db.value_cache["User"]["Administrator"].
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/blob/version-16/frappe/database/database.py

@@ -1,0 +1,22 @@
+id: v16-erpnext-pos-closing-invoices
+title: ERPNext POS Closing Entry's get_pos_invoices replaced by get_invoices
+severity: error
+match:
+  type: import_path
+  paths:
+    - erpnext.accounts.doctype.pos_closing_entry.pos_closing_entry.get_pos_invoices
+message: >
+  ERPNext v16 lets the POS bill through Sales Invoice as well as POS Invoice, and the POS Closing
+  Entry's get_pos_invoices, which returned a cashier's unconsolidated POS Invoices for the period
+  as full documents, is gone. Importing it, or naming it in frappe.call or frappe.enqueue, raises
+  an error after the upgrade.
+replacement: >
+  Call get_invoices(start, end, pos_profile, user) in the same module, which takes the same
+  arguments and returns a dict instead of a list of documents: invoices holds the period's POS
+  Sales Invoices, and its POS Invoices when POS Settings bills through them, as rows with their
+  totals, and payments and taxes hold the amounts summed by mode of payment and by tax account.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/47713
+  - https://github.com/frappe/erpnext/blob/31803451f1cfb27087f8e9c9ddc8798c19844427/erpnext/accounts/doctype/pos_closing_entry/pos_closing_entry.py#L154-L175
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/accounts/doctype/pos_closing_entry/pos_closing_entry.py#L261-L281

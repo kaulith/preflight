@@ -1,0 +1,26 @@
+id: v16-erpnext-advance-payment-doctypes-hook
+title: ERPNext advance_payment_doctypes hook split in two
+severity: error
+match:
+  type: hook_key
+  keys:
+    - advance_payment_doctypes
+message: >
+  ERPNext v16 reads the doctypes that take advance payments from two hooks,
+  advance_payment_receivable_doctypes and advance_payment_payable_doctypes, and nothing reads
+  advance_payment_doctypes any more. Nothing raises: the app's doctypes stop being treated
+  as advance payment doctypes, so a Payment Entry against one no longer books an advance or
+  updates its advance paid amount.
+replacement: >
+  Move each doctype to advance_payment_receivable_doctypes (paid by a customer, like Sales Order)
+  or advance_payment_payable_doctypes (paid to a supplier or employee, like Purchase Order). v15
+  reads only the old hook, so declare both until the site is on v16, then drop
+  advance_payment_doctypes.
+fix: with-upgrade
+shim: |
+  advance_payment_doctypes = ["Service Order"]
+  advance_payment_receivable_doctypes = ["Service Order"]
+references:
+  - https://github.com/frappe/erpnext/pull/39535
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/accounts/utils.py#L2576-L2586
+  - https://github.com/frappe/erpnext/blob/31803451f1cfb27087f8e9c9ddc8798c19844427/erpnext/accounts/utils.py#L2387-L2393

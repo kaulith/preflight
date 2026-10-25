@@ -1,0 +1,24 @@
+id: v16-erpnext-repost-settings-doctype
+title: ERPNext Repost Accounting Ledger Settings merged into Accounts Settings
+severity: error
+match:
+  type: doctype
+  doctypes:
+    - Repost Accounting Ledger Settings
+message: >
+  ERPNext v16 merged Repost Accounting Ledger Settings into Accounts Settings: the list of
+  doctypes allowed for reposting is now the repost_allowed_types table of Accounts Settings, and
+  a row being there means allowed, so the allowed checkbox is gone too. Code that opens the old
+  settings, such as an install step that appends a doctype to its allowed_types, raises
+  ImportError ("Module import failed") after the upgrade, and a custom field or property setter
+  on it no longer applies to anything.
+replacement: >
+  Append the doctype to the repost_allowed_types table of Accounts Settings instead. Declaring it
+  in the repost_allowed_doctypes hook is not enough on its own: v16 copies the hook into that
+  table only when ERPNext is installed and when the merge patch runs.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/54301
+  - https://github.com/frappe/erpnext/pull/54321
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/patches/v16_0/merge_repost_settings_to_accounts_settings.py
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/setup/install.py#L80-L84

@@ -1,0 +1,34 @@
+id: v16-erpnext-secondary-items-fields
+title: ERPNext scrap fields renamed to secondary item fields
+severity: warning
+match:
+  type: doctype_field
+  fields:
+    - BOM.scrap_material_cost
+    - BOM.base_scrap_material_cost
+    - Stock Entry Detail.is_scrap_item
+    - Subcontracting Receipt Item.is_scrap_item
+    - Subcontracting Receipt Item.scrap_cost_per_qty
+message: >
+  ERPNext v16 turned scrap into one kind of secondary item, next to co-products and by-products,
+  and renamed the fields: BOM.scrap_material_cost is secondary_items_cost (base_ likewise), and
+  Subcontracting Receipt Item.scrap_cost_per_qty is secondary_items_cost_per_qty. A Stock Entry
+  Detail or Subcontracting Receipt Item row is marked by secondary_item_type instead of
+  is_scrap_item. The migration copies the values across but leaves the old columns behind with
+  nothing writing them again. On an upgraded site frappe.get_all and frappe.db.get_value return
+  what they held at the upgrade; frappe.get_list and the browser's frappe.db.get_value leave the
+  field out of the result, and raise a PermissionError when it filters or sorts the query. On a
+  site installed on v16 the columns do not exist, and frappe.get_all and frappe.db.get_value on
+  them raise.
+  A Custom Field placed after one of them moves to the end of the form.
+replacement: >
+  Read the new field names. For scrap rows, filter on secondary_item_type = "Scrap"; rows
+  migrated from v15 have it empty and carry valuation_type = "Valuation Rate" instead, which is
+  what v16 itself reads them by.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/52979
+  - https://github.com/frappe/erpnext/pull/53975
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/patches/v16_0/co_by_product_patch.py#L104-L124
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/stock/doctype/stock_entry/stock_entry.py#L112
+  - https://github.com/frappe/frappe/blob/4f40f4acbb3cc296f0e9cbc69ce2bb49ccd8208a/frappe/model/utils/rename_field.py#L36-L43

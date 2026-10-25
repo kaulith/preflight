@@ -1,0 +1,28 @@
+{
+	"tree": "hrms",
+	"commit": "f3bd97d93912080291d286c4f2f4c200ce4a2f4a",
+	"counts": {
+		"v16-deprecated-get-number-format-info": 1,
+		"v16-erpnext-repost-settings-doctype": 1
+	},
+	"counts_with_tests": {
+		"v16-deprecated-get-number-format-info": 1,
+		"v16-deprecated-get-test-records": 2,
+		"v16-erpnext-repost-settings-doctype": 1
+	},
+	"unparsable": [],
+	"findings": [
+		[
+			"v16-deprecated-get-number-format-info",
+			"hrms/hr/utils.py",
+			25,
+			"get_number_format_info,"
+		],
+		[
+			"v16-erpnext-repost-settings-doctype",
+			"hrms/patches/v14_0/add_expense_claim_to_repost_settings.py",
+			9,
+			"repost_settings = frappe.get_doc(\"Repost Accounting Ledger Settings\")"
+		]
+	]
+}

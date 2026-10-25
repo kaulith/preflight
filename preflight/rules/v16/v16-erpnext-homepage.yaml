@@ -1,0 +1,20 @@
+id: v16-erpnext-homepage
+title: ERPNext Homepage modules removed
+severity: error
+match:
+  type: import_path
+  paths:
+    - erpnext.portal.doctype.homepage
+    - erpnext.portal.doctype.homepage_section
+    - erpnext.portal.doctype.homepage_section_card
+    - erpnext.templates.pages.home
+message: >
+  ERPNext v16 removed the Homepage settings, their sections and the /home page template they
+  fed. Importing one of these modules, or naming one of their functions in frappe.call or
+  frappe.enqueue, raises an error after the upgrade.
+replacement: >
+  Build the home page as a Web Page and set it as the Home Page in Website Settings, which works
+  on v15 already, and drop the import.
+fix: before
+references:
+  - https://github.com/frappe/erpnext/pull/39201

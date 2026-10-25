@@ -1,0 +1,23 @@
+id: v16-deprecated-gravatar-helpers
+title: Gravatar helpers return nothing
+severity: warning
+match:
+  type: import_path
+  paths:
+    - frappe.utils.has_gravatar
+    - frappe.utils.get_gravatar_url
+    - frappe.utils.get_gravatar
+message: >
+  Frappe dropped its Gravatar integration in v15.112.0 and v16.23.0. has_gravatar and
+  get_gravatar_url now always return an empty string and get_gravatar always returns an
+  identicon, so avatars fall back silently instead of failing. A site already on v15.112.0 or
+  later behaves this way today; on an older v15 the avatars change with the upgrade. The
+  helpers are removed in v17.
+replacement: >
+  Call frappe.utils.get_identicon, or drop the avatar lookup.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/39946
+  - https://github.com/frappe/frappe/pull/39947
+  - https://github.com/frappe/frappe/blob/v15.112.0/frappe/utils/__init__.py#L299-L315
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/deprecation_dumpster.py#L1023-L1052

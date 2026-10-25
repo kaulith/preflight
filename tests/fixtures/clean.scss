@@ -1,0 +1,7 @@
+// Octicons left frappe in v16, so the digest draws its badges with frappe.utils.icon
+@import "frappe/public/scss/desk/variables";
+@import "./icons/octicons";
+
+.digest-summary {
+	padding: var(--padding-md);
+}

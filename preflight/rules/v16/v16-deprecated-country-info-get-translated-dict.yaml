@@ -1,0 +1,15 @@
+id: v16-deprecated-country-info-get-translated-dict
+title: country_info.get_translated_dict deprecated
+severity: warning
+match:
+  type: import_path
+  paths:
+    - frappe.geo.country_info.get_translated_dict
+message: >
+  frappe.geo.country_info.get_translated_dict moved to the deprecation dumpster in v16 and is
+  removed in v17.
+replacement: >
+  Use frappe.geo.country_info.get_translated_countries.
+fix: before
+references:
+  - https://github.com/frappe/frappe/blob/version-16/frappe/deprecation_dumpster.py

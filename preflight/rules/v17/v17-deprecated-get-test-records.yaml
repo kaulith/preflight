@@ -1,0 +1,17 @@
+id: v17-deprecated-get-test-records
+title: frappe.get_test_records is marked for removal in v17
+severity: warning
+match:
+  type: import_path
+  paths:
+    - frappe.get_test_records
+message: >
+  frappe.get_test_records is deprecated and its dumpster entry names v17 as the removal. It is
+  still present on develop (checked 2026-10-25), so it keeps working with a deprecation warning;
+  every test that reads records through it fails at the call once the removal lands.
+replacement: >
+  Read cls.globalTestRecords["Some Doctype"] inside an IntegrationTestCase, or call
+  frappe.tests.utils.load_test_records_for.
+references:
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/deprecation_dumpster.py#L940
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/__init__.py#L112

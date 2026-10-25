@@ -1,0 +1,19 @@
+id: v17-removed-slack-webhook-url
+title: Slack Webhook URL replaced by Notification Webhook URL
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.integrations.doctype.slack_webhook_url
+message: >
+  v17 renames the Slack Webhook URL doctype to Notification Webhook URL, which also posts to
+  Teams, Discord, Google Chat and other services, and drops the slack_webhook_url module with its
+  send_slack_message function. Importing the module raises ImportError after the upgrade.
+replacement: >
+  Load the webhook with frappe.get_doc("Notification Webhook URL", name) and call its
+  send(message, reference_doctype, reference_name). The upgrade renames the existing records, so
+  their names carry over; code that names the Slack Webhook URL doctype needs the new name too.
+references:
+  - https://github.com/frappe/frappe/pull/44113
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/patches/v16_0/rename_slack_webhook_url.py#L4-L6
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/integrations/doctype/notification_webhook_url/notification_webhook_url.py#L209

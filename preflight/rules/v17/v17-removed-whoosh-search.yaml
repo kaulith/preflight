@@ -1,0 +1,15 @@
+id: v17-removed-whoosh-search
+title: Whoosh-backed website search removed
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.search.full_text_search
+    - frappe.search.website_search
+message: >
+  The Whoosh-backed website search was removed in v17, and with it FullTextSearch and
+  WebsiteSearch. Importing either module raises ImportError after the upgrade.
+replacement: >
+  Build the index on frappe.search.sqlite_search.SQLiteSearch.
+references:
+  - https://github.com/frappe/frappe/pull/43318

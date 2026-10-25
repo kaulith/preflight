@@ -1,0 +1,27 @@
+id: v16-erpnext-subcontracted-quantity
+title: ERPNext Purchase Order Item subcontracted_quantity renamed
+severity: warning
+match:
+  type: doctype_field
+  fields:
+    - Purchase Order Item.subcontracted_quantity
+message: >
+  ERPNext v16 renamed the Subcontracted Quantity of a Purchase Order Item from
+  subcontracted_quantity to subcontracted_qty, when it added subcontracting inward. The
+  migration copies the values across and leaves the old column behind with nothing writing it
+  again. On an upgraded site frappe.get_all and frappe.db.get_value return what it held at the
+  upgrade; frappe.get_list and the browser's frappe.db.get_value leave the field out of the
+  result, and raise a PermissionError when it filters or sorts the query. On a site installed
+  on v16 the column does not exist, and frappe.get_all and frappe.db.get_value on it raise.
+  A Custom Field placed after it moves to the end of the form.
+replacement: >
+  Read subcontracted_qty.
+fix: with-upgrade
+shim: |
+  subcontracted_field = "subcontracted_qty"
+  if not frappe.get_meta("Purchase Order Item").has_field(subcontracted_field):
+  	subcontracted_field = "subcontracted_quantity"
+references:
+  - https://github.com/frappe/erpnext/pull/47728
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/patches/v16_0/rename_subcontracted_quantity.py
+  - https://github.com/frappe/frappe/blob/4f40f4acbb3cc296f0e9cbc69ce2bb49ccd8208a/frappe/model/utils/rename_field.py#L36-L43

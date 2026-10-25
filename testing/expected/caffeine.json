@@ -1,0 +1,19 @@
+{
+	"tree": "caffeine",
+	"commit": "50d7dea24993b02bdbee0446e16ac100f1374eec",
+	"counts": {
+		"v16-value-cache-nested": 1
+	},
+	"counts_with_tests": {
+		"v16-value-cache-nested": 1
+	},
+	"unparsable": [],
+	"findings": [
+		[
+			"v16-value-cache-nested",
+			"caffeine/microbenchmarks/bench_orm.py",
+			80,
+			"frappe.db.value_cache.clear()  # Avoid reusing local validations"
+		]
+	]
+}

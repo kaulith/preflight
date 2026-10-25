@@ -1,0 +1,42 @@
+id: v16-erpnext-utm-fields
+title: ERPNext source and campaign fields replaced by UTM fields
+severity: warning
+match:
+  type: doctype_field
+  fields:
+    - Lead.source
+    - Lead.campaign_name
+    - Opportunity.source
+    - Opportunity.campaign
+    - Quotation.source
+    - Quotation.campaign
+    - Sales Order.source
+    - Sales Order.campaign
+    - Sales Invoice.source
+    - Sales Invoice.campaign
+    - Delivery Note.source
+    - Delivery Note.campaign
+    - POS Invoice.source
+    - POS Invoice.campaign
+    - POS Profile.campaign
+message: >
+  ERPNext v16 records where a lead or sale came from in UTM fields: utm_source (a UTM Source)
+  replaces source, and utm_campaign (a UTM Campaign) replaces campaign, and campaign_name on the
+  Lead. The migration copies Lead Sources and Campaigns into the UTM doctypes but not the values
+  on existing documents, and it leaves the old columns behind with nothing writing them again.
+  On an upgraded site frappe.get_all and frappe.db.get_value return what they held at the
+  upgrade and nothing for documents made after it; frappe.get_list and the browser's
+  frappe.db.get_value leave the field out of the result, and raise a PermissionError when it
+  filters or sorts the query. On a site installed on v16 the columns do not exist, and
+  frappe.get_all and frappe.db.get_value on them raise.
+  A Custom Field placed after one of them moves to the end of the form.
+replacement: >
+  Read utm_source and utm_campaign, and utm_medium where it helps. The UTM Campaign keeps the
+  old Campaign in its crm_campaign field. Copy the old values into the new fields once after
+  the upgrade if reports need the history.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/42074
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/patches/v15_0/migrate_to_utm_analytics.py
+  - https://github.com/frappe/frappe/blob/4f40f4acbb3cc296f0e9cbc69ce2bb49ccd8208a/frappe/database/query.py#L1392-L1476
+  - https://github.com/frappe/frappe/blob/4f40f4acbb3cc296f0e9cbc69ce2bb49ccd8208a/frappe/database/query.py#L965-L1002

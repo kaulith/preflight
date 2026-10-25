@@ -1,0 +1,176 @@
+{
+	"tree": "erpnext-v16",
+	"commit": "69063c402427590168c217a29ca9f6e03c0d3d05",
+	"counts": {
+		"v16-deprecated-country-info-get-translated-dict": 1,
+		"v16-deprecated-get-number-format-info": 1,
+		"v16-deprecated-read-multi-pdf": 1,
+		"v16-erpnext-budget-fields": 1,
+		"v16-erpnext-closing-stock-balance-doctype": 1,
+		"v16-erpnext-lead-source-doctype": 1,
+		"v16-erpnext-moved-settings": 6,
+		"v16-erpnext-repost-settings-doctype": 1,
+		"v16-erpnext-scrap-item-doctypes": 1,
+		"v16-erpnext-tax-withholding-doctypes": 2,
+		"v16-removed-leaderboards-hook": 1,
+		"v16-removed-newsletter-doctypes": 2,
+		"v16-sanitize-html-strips-tags": 1,
+		"v16-sql-function-string-fields": 2
+	},
+	"counts_with_tests": {
+		"v16-deprecated-country-info-get-translated-dict": 1,
+		"v16-deprecated-get-number-format-info": 1,
+		"v16-deprecated-get-test-records": 1,
+		"v16-deprecated-read-multi-pdf": 1,
+		"v16-deprecated-test-runner": 1,
+		"v16-erpnext-asset-fields": 1,
+		"v16-erpnext-budget-fields": 1,
+		"v16-erpnext-closing-stock-balance-doctype": 1,
+		"v16-erpnext-lead-source-doctype": 1,
+		"v16-erpnext-moved-settings": 6,
+		"v16-erpnext-removed-fields": 1,
+		"v16-erpnext-repost-settings-doctype": 1,
+		"v16-erpnext-scrap-item-doctypes": 1,
+		"v16-erpnext-tax-withholding-doctypes": 2,
+		"v16-removed-leaderboards-hook": 1,
+		"v16-removed-newsletter-doctypes": 2,
+		"v16-sanitize-html-strips-tags": 1,
+		"v16-sql-function-string-fields": 2,
+		"v16-value-cache-nested": 1
+	},
+	"unparsable": [],
+	"findings": [
+		[
+			"v16-deprecated-country-info-get-translated-dict",
+			"erpnext/hooks.py",
+			513,
+			"get_translated_dict = {(\"doctype\", \"Global Defaults\"): \"frappe.geo.country_info.get_translated_dict\"}"
+		],
+		[
+			"v16-deprecated-get-number-format-info",
+			"erpnext/accounts/utils.py",
+			26,
+			"get_number_format_info,"
+		],
+		[
+			"v16-deprecated-read-multi-pdf",
+			"erpnext/regional/report/irs_1099/irs_1099.py",
+			12,
+			"from frappe.utils.print_format import read_multi_pdf"
+		],
+		[
+			"v16-erpnext-budget-fields",
+			"erpnext/patches/v16_0/migrate_budget_records_to_new_structure.py",
+			57,
+			"budget_doc.fiscal_year,"
+		],
+		[
+			"v16-erpnext-closing-stock-balance-doctype",
+			"erpnext/patches/v15_0/refactor_closing_stock_balance.py",
+			53,
+			"for row in frappe.get_all("
+		],
+		[
+			"v16-erpnext-lead-source-doctype",
+			"erpnext/patches/v15_0/migrate_to_utm_analytics.py",
+			16,
+			"ls = frappe.qb.DocType(\"Lead Source\")"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/patches/v13_0/modify_invalid_gain_loss_gl_entries.py",
+			48,
+			"acc_frozen_upto = frappe.db.get_single_value(\"Accounts Settings\", \"acc_frozen_upto\")"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/patches/v13_0/modify_invalid_gain_loss_gl_entries.py",
+			50,
+			"frappe.db.set_single_value(\"Accounts Settings\", \"acc_frozen_upto\", None)"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/patches/v13_0/modify_invalid_gain_loss_gl_entries.py",
+			68,
+			"frappe.db.set_single_value(\"Accounts Settings\", \"acc_frozen_upto\", acc_frozen_upto)"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/patches/v14_0/single_to_multi_dunning.py",
+			67,
+			"\"Accounts Settings\", \"acc_frozen_upto\""
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/patches/v15_0/recalculate_amount_difference_field.py",
+			61,
+			"acc_frozen_upto = frappe.db.get_single_value(\"Accounts Settings\", \"acc_frozen_upto\")"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/patches/v16_0/set_company_wise_warehouses.py",
+			7,
+			"[\"default_wip_warehouse\", \"default_fg_warehouse\", \"default_scrap_warehouse\"],"
+		],
+		[
+			"v16-erpnext-repost-settings-doctype",
+			"erpnext/patches/v14_0/add_default_for_repost_settings.py",
+			9,
+			"repost_settings = frappe.get_doc(\"Repost Accounting Ledger Settings\")"
+		],
+		[
+			"v16-erpnext-scrap-item-doctypes",
+			"erpnext/patches/v16_0/co_by_product_patch.py",
+			26,
+			"data = frappe.get_all("
+		],
+		[
+			"v16-erpnext-tax-withholding-doctypes",
+			"erpnext/patches/v16_0/migrate_tax_withholding_data.py",
+			357,
+			"twv = frappe.qb.DocType(\"Tax Withheld Vouchers\")"
+		],
+		[
+			"v16-erpnext-tax-withholding-doctypes",
+			"erpnext/patches/v16_0/migrate_tax_withholding_data.py",
+			358,
+			"at = frappe.qb.DocType(\"Advance Tax\")"
+		],
+		[
+			"v16-removed-leaderboards-hook",
+			"erpnext/hooks.py",
+			74,
+			"leaderboards = \"erpnext.startup.leaderboard.get_leaderboards\""
+		],
+		[
+			"v16-removed-newsletter-doctypes",
+			"erpnext/hooks.py",
+			42,
+			"\"Newsletter\": \"public/js/newsletter.js\","
+		],
+		[
+			"v16-removed-newsletter-doctypes",
+			"erpnext/public/js/newsletter.js",
+			4,
+			"frappe.ui.form.on(\"Newsletter\", {"
+		],
+		[
+			"v16-sanitize-html-strips-tags",
+			"erpnext/templates/pages/search_help.py",
+			5,
+			"from frappe.utils import sanitize_html"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/patches/v13_0/update_response_by_variance.py",
+			16,
+			"\"timestampdiff(Second, `first_responded_on`, `response_by`) as variance\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/patches/v13_0/update_response_by_variance.py",
+			39,
+			"\"timestampdiff(Second, `resolution_date`, `resolution_by`) as variance\","
+		]
+	]
+}

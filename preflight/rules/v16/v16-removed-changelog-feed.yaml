@@ -1,0 +1,17 @@
+id: v16-removed-changelog-feed
+title: Changelog Feed removed with the What's New panel
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.desk.doctype.changelog_feed
+message: >
+  v16.50.0 removed the What's New panel and the Changelog Feed doctype behind it. Importing
+  its module, or naming one of its functions in frappe.call or frappe.enqueue, raises an error
+  after the upgrade.
+replacement: >
+  Remove the dependency. To tell users about a release, link to the app's own release notes.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/40472
+  - https://github.com/frappe/frappe/commit/9380434912690a6f09c7b80ab0872d3e6718886b

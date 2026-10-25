@@ -1,0 +1,10 @@
+{
+	"tree": "crm",
+	"commit": "1b93aa89c863b85e2f30da4a2a692b77776d2971",
+	"counts": {},
+	"counts_with_tests": {
+		"v16-deprecated-frappe-test-case": 7
+	},
+	"unparsable": [],
+	"findings": []
+}

@@ -1,0 +1,25 @@
+{
+	"tree": "telephony",
+	"commit": "58d32184e44b193e27498d3dd156085c793b7528",
+	"counts": {
+		"v16-removed-bleach": 2
+	},
+	"counts_with_tests": {
+		"v16-removed-bleach": 2
+	},
+	"unparsable": [],
+	"findings": [
+		[
+			"v16-removed-bleach",
+			"telephony/exotel/handler.py",
+			1,
+			"import bleach"
+		],
+		[
+			"v16-removed-bleach",
+			"telephony/exotel/handler.py",
+			128,
+			"bleach.linkify(exc.get(\"Message\")), title=_(\"Exotel Exception\")"
+		]
+	]
+}

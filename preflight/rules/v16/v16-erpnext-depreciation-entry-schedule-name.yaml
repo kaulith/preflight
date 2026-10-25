@@ -1,0 +1,23 @@
+id: v16-erpnext-depreciation-entry-schedule-name
+title: make_depreciation_entry's asset_depr_schedule_name renamed to depr_schedule_name
+severity: error
+match:
+  type: call
+  paths:
+    - erpnext.assets.doctype.asset.depreciation.make_depreciation_entry
+    - erpnext.assets.doctype.asset.depreciation._make_depreciation_entry
+  with_kwargs:
+    - asset_depr_schedule_name
+message: >
+  ERPNext v16 renamed the first argument of make_depreciation_entry and _make_depreciation_entry
+  from asset_depr_schedule_name to depr_schedule_name. Passing it by its v15 name raises TypeError
+  after the upgrade; a call that passes it first, by position, keeps working.
+replacement: >
+  Pass the Asset Depreciation Schedule's name as the first positional argument, which works on v15
+  and v16 both.
+fix: before
+references:
+  - https://github.com/frappe/erpnext/pull/45251
+  - https://github.com/frappe/erpnext/pull/57563
+  - https://github.com/frappe/erpnext/blob/31803451f1cfb27087f8e9c9ddc8798c19844427/erpnext/assets/doctype/asset/depreciation.py#L187-L219
+  - https://github.com/frappe/erpnext/blob/v16.52.1/erpnext/assets/doctype/asset/depreciation.py#L166-L189

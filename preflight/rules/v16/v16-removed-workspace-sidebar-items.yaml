@@ -1,0 +1,21 @@
+id: v16-removed-workspace-sidebar-items
+title: get_workspace_sidebar_items endpoint removed
+severity: error
+match:
+  type: string_contains
+  paths:
+    - frappe.desk.desktop.get_workspace_sidebar_items
+message: >
+  v16.21.0 renamed frappe.desk.desktop.get_workspace_sidebar_items to get_workspaces, and
+  v16.50.0 stopped whitelisting get_workspaces, so neither name is an endpoint any more. A
+  frappe.call or frappe.xcall to the old name fails after the upgrade.
+replacement: >
+  Read the same list from frappe.boot.workspaces in the browser, or call
+  frappe.desk.desktop.get_workspaces from server code.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/pull/39838
+  - https://github.com/frappe/frappe/blob/v15.124.0/frappe/desk/desktop.py#L425-L426
+  - https://github.com/frappe/frappe/blob/v16.21.0/frappe/desk/desktop.py#L349-L350
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/desk/desktop.py#L429-L430
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/desk/desk_views.py#L35-L39

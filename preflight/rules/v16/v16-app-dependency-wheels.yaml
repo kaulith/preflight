@@ -1,0 +1,23 @@
+id: v16-app-dependency-wheels
+title: App's dependency has no wheel or release for Python 3.14
+severity: warning
+fix: before
+match:
+  type: dependency_wheels
+  python: ">=3.14,<3.15"
+message: >
+  The newest release of this dependency that the app's pyproject.toml allows ships wheels for older
+  Pythons and none pip can use on Python 3.14, which frappe v16 requires. bench installs the app into
+  the v16 env with pip or uv, and both then build the release from its source distribution: that
+  needs a compiler and the library's headers on the server, and the install fails where they are
+  missing. Where every release the app allows has a Requires-Python that leaves out 3.14, pip finds
+  no matching distribution and the install stops. PyPI was read when the scan ran; a release with no
+  wheels at all is taken for pure Python and not reported.
+replacement: >
+  Move the requirement to a release that takes Python 3.14, with wheels for it, and still installs on
+  the Python the bench runs now, so the change goes in on v15. Where only the wheels are missing,
+  install the build tools and the library's headers on the server before the upgrade instead.
+references:
+  - https://github.com/frappe/frappe/blob/v16.53.0/pyproject.toml
+  - https://packaging.python.org/en/latest/specifications/platform-compatibility-tags/
+  - https://github.com/frappe/bench/blob/4f56e02d4a07368bb241f48b1aa69d21498984ae/bench/app.py#L935-L950

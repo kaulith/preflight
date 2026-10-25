@@ -1,0 +1,27 @@
+id: v16-erpnext-budget-fields
+title: ERPNext Budget restructured to one account per budget
+severity: warning
+match:
+  type: doctype_field
+  fields:
+    - Budget.fiscal_year
+    - Budget.monthly_distribution
+message: >
+  ERPNext v16 made a Budget cover one account over a range of fiscal years: fiscal_year became
+  from_fiscal_year and to_fiscal_year, the accounts table became one account and budget_amount,
+  and the Monthly Distribution link became the budget_distribution table with a
+  distribution_frequency. The migration creates a new Budget for each account row, cancels the
+  submitted originals, deletes the drafts and their Budget Account rows, and leaves the old
+  columns behind. On an upgraded site a query for the submitted budgets of a fiscal year finds
+  nothing; frappe.get_list and the browser's frappe.db.get_value leave the old fields out of the
+  result, and raise a PermissionError when one filters or sorts the query. On a site installed
+  on v16 the columns do not exist, and frappe.get_all and frappe.db.get_value on them raise.
+  A Custom Field placed after one of them moves to the end of the form.
+replacement: >
+  Filter budgets on account, and on from_fiscal_year and to_fiscal_year around the year wanted;
+  read budget_amount, and the budget_distribution rows (start_date, end_date, amount, percent)
+  for the split over the period.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/50286
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/patches/v16_0/migrate_budget_records_to_new_structure.py#L9-L68

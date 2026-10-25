@@ -1,0 +1,23 @@
+id: v16-removed-newsletter-doctypes
+title: Newsletter doctypes moved out of the framework
+severity: error
+match:
+  type: doctype
+  doctypes:
+    - Newsletter
+    - Newsletter Attachment
+    - Newsletter Email Group
+message: >
+  The Newsletter doctypes were moved out of the framework into their own app in v16.
+  A custom field, property setter or link field on one of them points at a doctype the
+  site no longer has, and code that reads it raises DoesNotExistError, or ImportError where it
+  loads a document with frappe.get_doc. The table survives the migration, so raw SQL still
+  returns rows while every read through the ORM fails.
+replacement: >
+  Install the Newsletter app (https://github.com/frappe/newsletter) to keep the doctypes,
+  or drop the customisation and the code that reads it. Email Group and Email Group Member
+  stay in the framework.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/pull/32971
+  - frappe/patches/v16_0/add_module_deprecation_warning.py

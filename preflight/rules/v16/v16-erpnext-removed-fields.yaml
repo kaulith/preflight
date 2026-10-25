@@ -1,0 +1,46 @@
+id: v16-erpnext-removed-fields
+title: ERPNext fields removed with nothing in their place
+severity: warning
+match:
+  type: doctype_field
+  fields:
+    - Company.expenses_included_in_valuation
+    - Company.expenses_included_in_asset_valuation
+    - Customer.salutation
+    - Item.customer
+    - Payment Entry.party_balance
+    - Payment Entry.paid_from_account_balance
+    - Payment Entry.paid_to_account_balance
+    - Job Card.job_started
+    - Job Card.started_time
+    - Job Card.current_time
+    - Journal Entry.paid_loan
+message: >
+  ERPNext v16 removed these fields without a replacement field: the Company's Expenses Included
+  In Valuation and Expenses Included In Asset Valuation accounts, the Customer's salutation, the
+  Item's customer for customer provided items, the Payment Entry's Party Balance and Account
+  Balance (From) and (To), the Job Card's hidden timer fields, and the Journal Entry's hidden
+  paid_loan. The migration leaves the old columns behind with nothing writing them again. On an
+  upgraded site frappe.get_all and frappe.db.get_value return what they held at the upgrade and
+  nothing for documents made after it; frappe.get_list and the browser's frappe.db.get_value
+  leave the field out of the result, and raise a PermissionError when it filters or sorts the
+  query. On a site installed on v16 the columns do not exist, and frappe.get_all and
+  frappe.db.get_value on them raise.
+  A Custom Field placed after one of them moves to the end of the form.
+replacement: >
+  Each has another source that already works on v15: the expense account on the transaction's
+  own tax or landed cost row, where ERPNext books those expenses; the salutation of the
+  customer's Contact; the customer on the Material Request, or the item's customer_items table;
+  erpnext.accounts.utils.get_balance_on(party_type=..., party=...) or
+  get_balance_on(account=..., date=...) for a balance; and the Job Card's time_logs and status
+  for whether a job is running.
+fix: before
+references:
+  - https://github.com/frappe/erpnext/pull/37632
+  - https://github.com/frappe/erpnext/pull/52399
+  - https://github.com/frappe/erpnext/pull/55277
+  - https://github.com/frappe/erpnext/pull/45630
+  - https://github.com/frappe/erpnext/pull/38341
+  - https://github.com/frappe/erpnext/pull/52508
+  - https://github.com/frappe/erpnext/pull/48418
+  - https://github.com/frappe/frappe/blob/4f40f4acbb3cc296f0e9cbc69ce2bb49ccd8208a/frappe/database/query.py#L1392-L1476

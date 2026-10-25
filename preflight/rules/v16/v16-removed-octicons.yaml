@@ -1,0 +1,17 @@
+id: v16-removed-octicons
+title: Octicons icon font removed
+severity: warning
+match:
+  type: pattern
+  patterns:
+    - \bocticon\b
+message: >
+  v16.50.0 dropped the Octicons font from the desk and web form bundles. Markup that uses an
+  octicon class still renders, but the icon is blank. Nothing raises, so each use needs a look.
+replacement: >
+  Use frappe.utils.icon with an icon from the Frappe icon set.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/39836
+  - https://github.com/frappe/frappe/commit/ff4a8597ded31205d185afb1990fe84341224418
+  - https://github.com/frappe/frappe/blob/v15.124.0/frappe/public/scss/desk.bundle.scss#L2

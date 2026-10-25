@@ -1,0 +1,28 @@
+id: v17-removed-wkhtmltopdf-helpers
+title: The wkhtmltopdf helpers in frappe.utils.pdf removed
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.utils.pdf.prepare_options
+    - frappe.utils.pdf.read_options_from_html
+    - frappe.utils.pdf.get_cookie_options
+    - frappe.utils.pdf.cleanup
+    - frappe.utils.pdf.get_file_data_from_writer
+    - frappe.utils.pdf.inline_private_images
+    - frappe.utils.pdf.prepare_header_footer
+    - frappe.utils.pdf.get_wkhtmltopdf_version
+    - frappe.utils.pdf.is_wkhtmltopdf_valid
+    - frappe.utils.pdf.FrappePDFKit
+    - frappe.utils.pdf.PDF_CONTENT_ERRORS
+message: >
+  v17 renders every PDF with Chromium and dropped wkhtmltopdf, and with it the helpers in
+  frappe.utils.pdf that built its options, read them out of the HTML and cleaned up after it.
+  get_file_data_from_writer went with them. Importing any of them raises ImportError after the
+  upgrade.
+replacement: >
+  Pass the HTML and the options to frappe.utils.pdf.get_pdf, which reads the page options from
+  both itself. Where get_file_data_from_writer turned a PdfWriter into bytes, write the PdfWriter
+  into an io.BytesIO buffer and read its value.
+references:
+  - https://github.com/frappe/frappe/pull/44253

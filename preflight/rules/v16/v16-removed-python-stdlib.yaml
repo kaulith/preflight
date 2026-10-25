@@ -1,0 +1,127 @@
+id: v16-removed-python-stdlib
+title: Standard library modules and names removed by Python 3.14
+severity: error
+match:
+  type: import_path
+  paths:
+    - distutils
+    - asynchat
+    - asyncore
+    - smtpd
+    - aifc
+    - audioop
+    - cgi
+    - cgitb
+    - imghdr
+    - lib2to3
+    - mailcap
+    - nis
+    - nntplib
+    - ossaudiodev
+    - sndhdr
+    - spwd
+    - sunau
+    - telnetlib
+    - uu
+    - xdrlib
+    # imp, chunk, crypt and pipes are listed by name: a bare name is read as the module, and
+    # code commonly names a variable imp (a Data Import) or chunk (a streamed reply).
+    - imp.NullImporter
+    - imp.acquire_lock
+    - imp.cache_from_source
+    - imp.find_module
+    - imp.get_magic
+    - imp.get_suffixes
+    - imp.get_tag
+    - imp.init_builtin
+    - imp.load_compiled
+    - imp.load_dynamic
+    - imp.load_module
+    - imp.load_package
+    - imp.load_source
+    - imp.lock_held
+    - imp.new_module
+    - imp.release_lock
+    - imp.reload
+    - imp.source_from_cache
+    - chunk.Chunk
+    - crypt.METHOD_BLOWFISH
+    - crypt.METHOD_CRYPT
+    - crypt.METHOD_MD5
+    - crypt.METHOD_SHA256
+    - crypt.METHOD_SHA512
+    - crypt.crypt
+    - crypt.methods
+    - crypt.mksalt
+    - pipes.Template
+    - pipes.quote
+    - configparser.SafeConfigParser
+    - importlib.abc.Finder
+    - importlib.util.module_for_loader
+    - importlib.util.set_loader
+    - importlib.util.set_package
+    - io.OpenWrapper
+    - locale.format
+    - pkgutil.ImpImporter
+    - pkgutil.ImpLoader
+    - sqlite3.OptimizedUnicode
+    - sqlite3.enable_shared_cache
+    - ssl.RAND_pseudo_bytes
+    - ssl.match_hostname
+    - ssl.wrap_socket
+    - configparser.LegacyInterpolation
+    - locale.resetlocale
+    - re.TEMPLATE
+    - re.template
+    - typing.io
+    - typing.re
+    - unittest.findTestCases
+    - unittest.getTestCaseNames
+    - unittest.makeSuite
+    - ast.Bytes
+    - ast.Ellipsis
+    - ast.NameConstant
+    - ast.Num
+    - ast.Str
+    - asyncio.AbstractChildWatcher
+    - asyncio.FastChildWatcher
+    - asyncio.MultiLoopChildWatcher
+    - asyncio.PidfdChildWatcher
+    - asyncio.SafeChildWatcher
+    - asyncio.ThreadedChildWatcher
+    - asyncio.get_child_watcher
+    - asyncio.set_child_watcher
+    - importlib.abc.ResourceReader
+    - importlib.abc.Traversable
+    - importlib.abc.TraversableResources
+    - pkgutil.find_loader
+    - pkgutil.get_loader
+    - pty.master_open
+    - pty.slave_open
+    - sqlite3.version
+    - sqlite3.version_info
+    - urllib.parse.Quoter
+    - urllib.request.FancyURLopener
+    - urllib.request.URLopener
+message: >
+  v16 needs Python 3.14, and a v15 bench can run 3.10 to 3.13. Python 3.12 removed distutils, imp,
+  asynchat, asyncore and smtpd, 3.13 removed lib2to3 and the old modules PEP 594 retired (cgi,
+  crypt, imghdr, pipes, telnetlib, uu and others), and 3.12 to 3.14 removed names such as ast.Num,
+  ast.Str, pkgutil.find_loader and ssl.wrap_socket. Code that imports or uses one raises ImportError
+  or AttributeError after the upgrade. distutils still imports while setuptools is installed, and a
+  new v16 environment does not install it.
+replacement: >
+  Use what Python's What's New pages and PEP 632 name for each: importlib for imp
+  (importlib.util.find_spec, importlib.import_module, importlib.reload), setuptools, sysconfig,
+  shutil or packaging for distutils, asyncio for asyncore and asynchat, shlex.quote for pipes.quote,
+  email.message or urllib.parse for cgi, base64 for uu, hashlib, bcrypt or passlib for crypt,
+  ast.Constant for ast.Num and ast.Str, importlib.util.find_spec for pkgutil.find_loader, and
+  ssl.SSLContext.wrap_socket for ssl.wrap_socket.
+fix: before
+references:
+  - https://github.com/python/cpython/blob/v3.12.0/Doc/whatsnew/3.12.rst#L1452-L1759
+  - https://github.com/python/cpython/blob/v3.13.0/Doc/whatsnew/3.13.rst#L1484-L1741
+  - https://github.com/python/cpython/blob/v3.14.0/Doc/whatsnew/3.14.rst#L2296-L2562
+  - https://github.com/python/peps/blob/018ddd7eb73daef5b31ccc557cafdda97bf387ba/peps/pep-0632.rst#L154-L192
+  - https://github.com/frappe/frappe/blob/v15.124.0/pyproject.toml#L7
+  - https://github.com/frappe/frappe/blob/v16.53.0/pyproject.toml#L7

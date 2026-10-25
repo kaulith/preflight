@@ -1,0 +1,32 @@
+id: v16-erpnext-replaced-reports
+title: ERPNext reports replaced by new ones
+severity: error
+match:
+  type: import_path
+  paths:
+    - erpnext.projects.report.billing_summary
+    - erpnext.projects.report.employee_billing_summary
+    - erpnext.projects.report.project_billing_summary
+    - erpnext.manufacturing.report.bom_stock_report
+    - erpnext.manufacturing.report.bom_stock_calculated
+    - erpnext.stock.report.supplier_wise_sales_analytics
+message: >
+  ERPNext v16 replaced five reports with new ones and removed their modules: Employee Billing
+  Summary and Project Billing Summary, with the billing_summary helpers they shared, became
+  Timesheet Billing Summary; BOM Stock Report and BOM Stock Calculated became BOM Stock Analysis;
+  Supplier-Wise Sales Analytics was renamed Item Wise Consumption. A custom report that imports
+  their execute or helper functions, or a frappe.call that names one, raises ImportError after
+  the upgrade.
+replacement: >
+  Import from the replacement report's module:
+  erpnext.projects.report.timesheet_billing_summary.timesheet_billing_summary,
+  erpnext.manufacturing.report.bom_stock_analysis.bom_stock_analysis or
+  erpnext.stock.report.item_wise_consumption.item_wise_consumption, which keeps the old
+  report's function names. None of the three is installed on v15, so copy the function into the
+  app to stay on both.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/37451
+  - https://github.com/frappe/erpnext/pull/53704
+  - https://github.com/frappe/erpnext/pull/54835
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/stock/report/item_wise_consumption/item_wise_consumption.py

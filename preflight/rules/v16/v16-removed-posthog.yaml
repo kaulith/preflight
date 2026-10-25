@@ -1,0 +1,24 @@
+id: v16-removed-posthog
+title: frappe no longer installs posthog
+severity: error
+match:
+  type: undeclared_import
+  paths:
+    - posthog
+  dependencies:
+    - posthog
+message: >
+  The app imports posthog without declaring it in pyproject.toml or requirements.txt. That works on
+  v15 because frappe installs posthog itself, for its telemetry. v16.23.0 dropped the PostHog
+  integration and the package with it, so a new v16 environment, like the one Frappe Cloud builds
+  or the one bench builds on Python 3.14, does not have it, and the import raises
+  ModuleNotFoundError. An environment upgraded in place keeps the package until it is rebuilt.
+replacement: >
+  Declare posthog in the app's [project] dependencies, in a range that takes in the posthog~=3.21.0
+  frappe v15 pins, so the app installs on both versions.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/40028
+  - https://github.com/frappe/frappe/pull/39990
+  - https://github.com/frappe/frappe/blob/486ecf9e4a1daaa0027512bfab2947b8cde1502b/pyproject.toml#L91
+  - https://github.com/frappe/frappe/blob/v16.53.0/pyproject.toml#L10-L106

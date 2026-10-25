@@ -1,0 +1,22 @@
+id: v16-deprecated-frappe-test-case
+title: FrappeTestCase deprecated
+severity: warning
+match:
+  type: import_path
+  paths:
+    - frappe.tests.utils.FrappeTestCase
+message: >
+  frappe.tests.utils.FrappeTestCase is a compatibility shim in v16 and is removed in v17.
+  Test suites built on it emit a DeprecationWarning.
+replacement: >
+  Subclass frappe.tests.UnitTestCase or frappe.tests.IntegrationTestCase, depending on whether
+  the test needs a database.
+fix: with-upgrade
+shim: |
+  try:
+  	from frappe.tests import IntegrationTestCase
+  except ImportError:
+  	from frappe.tests.utils import FrappeTestCase as IntegrationTestCase
+references:
+  - https://github.com/frappe/frappe/blob/version-16/frappe/deprecation_dumpster.py
+  - https://github.com/frappe/frappe/wiki#testing-guide

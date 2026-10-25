@@ -1,0 +1,17 @@
+id: v17-deprecated-get-number-format-info
+title: get_number_format_info is marked for removal
+severity: warning
+match:
+  type: import_path
+  paths:
+    - frappe.utils.data.get_number_format_info
+    - frappe.utils.get_number_format_info
+message: >
+  get_number_format_info is the one dumpster entry marked for removal from v16 onwards rather than
+  v17, yet it is still present on develop (checked 2026-10-25) and still exposed to server
+  scripts. It keeps working with a deprecation warning; the import fails once the removal lands.
+replacement: >
+  Use NumberFormat.from_string() from frappe.utils.number_format.
+references:
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/deprecation_dumpster.py#L989
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/utils/data.py#L1515

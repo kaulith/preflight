@@ -1,0 +1,22 @@
+id: v17-removed-weasyprint
+title: frappe.utils.weasyprint removed
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.utils.weasyprint
+message: >
+  WeasyPrint was replaced by Chromium for print formats made in the print format builder, and
+  frappe.utils.weasyprint was removed in v17. Importing it raises ImportError after the upgrade.
+replacement: >
+  Import download_pdf, get_html and PrintFormatGenerator from
+  frappe.utils.print_format_generator, which v16 already has. For the PDF itself, call
+  frappe.get_print(doctype, name, print_format, as_pdf=True): it renders with the print format's
+  own PDF generator, or the one in Print Settings when the format names none, and the
+  frappe.utils.print_format.download_pdf endpoint goes through it too.
+references:
+  - https://github.com/frappe/frappe/pull/39406
+  - https://github.com/frappe/frappe/blob/e8d41dd0061a32ee781caefe5d0b0d2bb7c15362/frappe/utils/print_format_generator.py#L36-L43
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/utils/print_format_generator.py#L36-L63
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/utils/print_utils.py#L39-L62
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/utils/print_format.py#L385-L412

@@ -1,0 +1,18 @@
+id: v16-erpnext-closing-stock-balance
+title: ERPNext Closing Stock Balance module replaced by Stock Closing Entry
+severity: error
+match:
+  type: import_path
+  paths:
+    - erpnext.stock.doctype.closing_stock_balance
+message: >
+  ERPNext v16 replaced Closing Stock Balance with Stock Closing Entry. Importing its module,
+  such as its controller or prepare_closing_stock_balance, or naming one of its functions in
+  frappe.call or frappe.enqueue, raises an error after the upgrade.
+replacement: >
+  Import from erpnext.stock.doctype.stock_closing_entry.stock_closing_entry, which holds
+  StockClosingEntry and a prepare_closing_stock_balance of its own on v16.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/44489
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/stock/doctype/stock_closing_entry/stock_closing_entry.py#L208

@@ -1,0 +1,21 @@
+id: v17-deprecated-query-page-length
+title: page_length on get_all and get_list is marked for removal in v17
+severity: warning
+match:
+  type: call
+  paths:
+    - frappe.get_all
+    - frappe.get_list
+    - frappe.db.get_all
+    - frappe.db.get_list
+  with_kwargs:
+    - page_length
+message: >
+  frappe.get_all and frappe.get_list run on the query builder engine, where page_length is
+  deprecated and marked for removal in v17. It is still accepted on develop (checked 2026-10-25)
+  with a deprecation warning on every call.
+replacement: >
+  Pass limit instead.
+references:
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/model/qb_query.py#L178
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/__init__.py#L1294-L1296

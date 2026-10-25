@@ -1,0 +1,23 @@
+id: v16-erpnext-scrap-items
+title: ERPNext scrap item modules renamed to secondary items
+severity: error
+match:
+  type: import_path
+  paths:
+    - erpnext.manufacturing.doctype.bom_scrap_item
+    - erpnext.manufacturing.doctype.job_card_scrap_item
+    - erpnext.manufacturing.doctype.bom.bom.get_scrap_items_from_sub_assemblies
+message: >
+  ERPNext v16 turned scrap into one kind of secondary item, next to co-products and by-products.
+  The BOM Scrap Item and Job Card Scrap Item controllers are gone, and the BOM's
+  get_scrap_items_from_sub_assemblies is now get_secondary_items_from_sub_assemblies. Importing
+  one, or naming one in frappe.call or frappe.enqueue, raises ImportError after the upgrade.
+replacement: >
+  Import erpnext.manufacturing.doctype.bom.bom.get_secondary_items_from_sub_assemblies, whose
+  last argument is secondary_items, and the BOM Secondary Item or Job Card Secondary Item
+  controller.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/52979
+  - https://github.com/frappe/erpnext/pull/53975
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/manufacturing/doctype/bom/bom.py#L2078

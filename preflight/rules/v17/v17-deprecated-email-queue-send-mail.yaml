@@ -1,0 +1,15 @@
+id: v17-deprecated-email-queue-send-mail
+title: email_queue.send_mail is marked for removal in v17
+severity: warning
+match:
+  type: import_path
+  paths:
+    - frappe.email.doctype.email_queue.email_queue.send_mail
+message: >
+  send_mail is deprecated and its dumpster entry names v17 as the removal. It is still present on
+  develop (checked 2026-10-25), so it keeps working with a deprecation warning; the import fails
+  once the removal lands.
+replacement: >
+  Call EmailQueue.send on the queue document instead.
+references:
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/deprecation_dumpster.py#L334

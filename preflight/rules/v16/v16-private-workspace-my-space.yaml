@@ -1,0 +1,24 @@
+id: v16-private-workspace-my-space
+title: Private workspaces drop out of the sidebar until their owner turns on My Space
+severity: warning
+match:
+  type: site_record
+  doctypes:
+    - Workspace
+  filters:
+    public: 0
+  title_field: for_user
+message: >
+  v15 lists each user's private workspaces in their sidebar. v16 lists them only under My Space,
+  which the user menu shows only when the user's Show My Space setting is on, and the upgrade
+  leaves it off for every user. The workspace still opens by its URL and from the search bar.
+  Nothing raises.
+replacement: >
+  After the upgrade, each owner named here turns on Show My Space in Settings, Preferences, then
+  opens the workspace from My Space in the user menu.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/patches/v16_0/backfill_workspace_module.py
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/public/js/frappe/ui/sidebar/sidebar.js#L429-L435
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/core/doctype/user/user.json#L807-L813
+  - https://github.com/frappe/frappe/blob/v15.124.0/frappe/desk/desktop.py#L463-L478

@@ -1,0 +1,30 @@
+id: v16-server-script-private-request
+title: Server Script requests to private addresses are blocked
+severity: error
+match:
+  type: call
+  paths:
+    - frappe.make_get_request
+    - frappe.make_post_request
+    - frappe.make_put_request
+    - frappe.make_patch_request
+    - frappe.make_delete_request
+  url_host: private
+message: >
+  From v16.50.0 the frappe.make_*_request helpers a Server Script calls resolve the URL's host and
+  refuse any address that is not public, such as loopback, a private range or link-local, and they
+  check again on every redirect. The call raises BlockedRequest, "Requests to internal network
+  addresses are not permitted", so a script that calls a service on the local network fails after
+  the upgrade. v15 sends these requests unchecked, and the backport to v15 was closed unmerged.
+replacement: >
+  Move the request into a custom app, as a whitelisted method or a doc event that calls
+  frappe.integrations.utils.make_get_request or make_post_request, which v16 leaves unguarded for
+  app code, or reach the service through a public address.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/43793
+  - https://github.com/frappe/frappe/pull/43792
+  - https://github.com/frappe/frappe/blob/486ecf9e4a1daaa0027512bfab2947b8cde1502b/frappe/utils/safe_exec.py#L548-L552
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/utils/safe_exec.py#L376-L385
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/utils/safe_exec.py#L575
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/utils/safe_exec.py#L654-L659

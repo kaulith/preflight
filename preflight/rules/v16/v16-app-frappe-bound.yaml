@@ -1,0 +1,16 @@
+id: v16-app-frappe-bound
+title: App's frappe bound leaves out v16
+severity: warning
+match:
+  type: frappe_bound
+  frappe: "16.53.0"
+message: >
+  The app pins frappe in [tool.bench.frappe-dependencies] to a range without v16, checked against
+  16.53.0. bench warns that the app "might not work as expected" when it installs it, and
+  bench validate-dependencies fails. The app stays on this branch through the upgrade, so the pin
+  goes with it.
+replacement: >
+  Test the app on v16, then widen the bound to take it in, for example frappe = ">=15.0.0,<17.0.0".
+fix: before
+references:
+  - https://github.com/frappe/bench/blob/4f56e02d4a07368bb241f48b1aa69d21498984ae/bench/app.py#L497

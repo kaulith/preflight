@@ -1,0 +1,18 @@
+id: v17-removed-weasyprint-download-pdf
+title: The frappe.utils.weasyprint.download_pdf endpoint removed
+severity: error
+match:
+  type: string_contains
+  paths:
+    - frappe.utils.weasyprint.download_pdf
+message: >
+  frappe.utils.weasyprint was removed in v17 together with WeasyPrint, so a link to
+  /api/method/frappe.utils.weasyprint.download_pdf, or a frappe.call to it, fails after the
+  upgrade.
+replacement: >
+  Point the link or the call at frappe.utils.print_format_generator.download_pdf, which takes the
+  same arguments and already exists on v16.
+references:
+  - https://github.com/frappe/frappe/pull/39406
+  - https://github.com/frappe/frappe/blob/e8d41dd0061a32ee781caefe5d0b0d2bb7c15362/frappe/utils/print_format_generator.py#L36-L43
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/utils/print_format_generator.py#L36-L63

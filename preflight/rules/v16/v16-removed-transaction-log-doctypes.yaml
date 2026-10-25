@@ -1,0 +1,20 @@
+id: v16-removed-transaction-log-doctypes
+title: Transaction Log doctype removed
+severity: error
+match:
+  type: doctype
+  doctypes:
+    - Transaction Log
+message: >
+  The Transaction Log doctype was removed from the framework in v16 and has no replacement
+  app. A custom field, property setter or link field on it points at a doctype the site no
+  longer has, and code that reads it raises DoesNotExistError, or ImportError where it loads a
+  document with frappe.get_doc. The table survives the migration, so raw SQL still returns rows
+  while every read through the ORM fails.
+replacement: >
+  Drop the customisation and the code that reads it. The French use moved to the
+  erpnext_france app (https://github.com/scopen-coop/erpnext_france); the German use is
+  obsolete.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/33844

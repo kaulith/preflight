@@ -1,0 +1,19 @@
+id: v16-override-doctype-class-subclass
+title: override_doctype_class names a class that does not subclass the controller
+severity: error
+match:
+  type: override_subclass
+  keys:
+    - override_doctype_class
+message: >
+  v16 checks the override against the doctype's own controller: get_controller throws
+  "must be a subclass of" and every read and save of that doctype fails. v15 accepted any
+  subclass of BaseDocument. The class this hook names inherits neither the controller nor
+  anything that does.
+replacement: >
+  Make the override inherit from the controller it replaces, or use the new extend_doctype_class
+  hook, which mixes a class in without replacing the controller.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/26152
+  - https://github.com/frappe/frappe/blob/version-16/frappe/model/base_document.py

@@ -1,0 +1,15 @@
+id: v16-renamed-is-column-missing
+title: frappe.db.is_column_missing renamed
+severity: warning
+match:
+  type: import_path
+  paths:
+    - frappe.db.is_column_missing
+message: >
+  frappe.db.is_column_missing was renamed to frappe.db.is_missing_column in v16. The old name
+  still works but emits a DeprecationWarning and is removed in v17.
+replacement: >
+  Use frappe.db.is_missing_column.
+fix: before
+references:
+  - https://github.com/frappe/frappe/blob/version-16/frappe/deprecation_dumpster.py

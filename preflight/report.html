@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preflight report</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23171717'/%3E%3Cpath d='M10 16.5l4 4 8-9' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root {
+	color-scheme: light dark;
+	--surface-base: #ffffff;
+	--surface-gray-1: #f8f8f8;
+	--surface-gray-2: #f3f3f3;
+	--surface-gray-3: #ededed;
+	--outline-gray-1: #ededed;
+	--outline-gray-2: #e2e2e2;
+	--outline-gray-3: #c7c7c7;
+	--ink-gray-9: #0f0f0f;
+	--ink-gray-8: #171717;
+	--ink-gray-7: #383838;
+	--ink-gray-6: #525252;
+	--ink-gray-5: #7c7c7c;
+	--surface-red-2: #ffe7e7;
+	--ink-red-8: #b41d1d;
+	--surface-yellow-1: #fcfbe8;
+	--surface-yellow-2: #fff7d3;
+	--ink-yellow-8: #9a6304;
+	--surface-blue-2: #e6f4ff;
+	--ink-blue-8: #0375d3;
+	--surface-green-2: #e4faeb;
+	--ink-green-8: #14804d;
+	--ink-blue-link: #0d8ef8;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--surface-base: #171717;
+		--surface-gray-1: #1f1f1f;
+		--surface-gray-2: #292929;
+		--surface-gray-3: #383838;
+		--outline-gray-1: #242424;
+		--outline-gray-2: #383838;
+		--outline-gray-3: #424242;
+		--ink-gray-9: #f8f8f8;
+		--ink-gray-8: #d9d9d9;
+		--ink-gray-7: #afafaf;
+		--ink-gray-6: #999999;
+		--ink-gray-5: #7a7a7a;
+		--surface-red-2: #592222;
+		--ink-red-8: #ff7575;
+		--surface-yellow-1: #261d03;
+		--surface-yellow-2: #3a2c04;
+		--ink-yellow-8: #f8d76a;
+		--surface-blue-2: #0a2e5c;
+		--ink-blue-8: #76bef9;
+		--surface-green-2: #0e3521;
+		--ink-green-8: #7dc5a2;
+		--ink-blue-link: #76bef9;
+	}
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+:focus-visible { outline: 2px solid var(--outline-gray-3); outline-offset: 2px; }
+
+body {
+	margin: 0;
+	background: var(--surface-base);
+	color: var(--ink-gray-8);
+	font-family: InterVariable, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	font-size: 14px;
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+}
+
+main { max-width: 960px; margin: 0 auto; padding: 32px 24px 48px; }
+code, kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+code { font-size: 12.5px; }
+a { color: var(--ink-blue-link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.eyebrow { font-size: 13px; font-weight: 500; color: var(--ink-gray-5); }
+h1 { margin: 0; font-size: 20px; font-weight: 600; color: var(--ink-gray-9); letter-spacing: -0.01em; }
+.meta { margin: 2px 0 0; font-size: 13px; color: var(--ink-gray-5); }
+
+.error { --tone-pill: var(--surface-red-2); --tone-ink: var(--ink-red-8); }
+.warning { --tone-pill: var(--surface-yellow-2); --tone-ink: var(--ink-yellow-8); }
+.info { --tone-pill: var(--surface-blue-2); --tone-ink: var(--ink-blue-8); }
+
+#not-scanned, #uncounted { margin-top: 16px; }
+.callout { margin-bottom: 8px; padding: 8px 12px; font-size: 13px; background: var(--surface-yellow-1); border-radius: 8px; }
+.callout p { margin: 0; color: var(--ink-gray-7); }
+.callout .callout-title { font-weight: 500; color: var(--ink-yellow-8); }
+.callout code { display: block; color: var(--ink-gray-8); overflow-wrap: anywhere; }
+#uncounted .callout { background: var(--surface-gray-1); }
+#uncounted .callout-title { color: var(--ink-gray-8); }
+
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 20px 0 12px; }
+.filters { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; }
+.chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	height: 28px;
+	padding: 0 10px;
+	font: inherit;
+	font-size: 13px;
+	font-variant-numeric: tabular-nums;
+	color: var(--ink-gray-7);
+	background: var(--surface-gray-2);
+	border: 0;
+	border-radius: 999px;
+	cursor: pointer;
+	transition: background 0.1s;
+}
+.chip strong { font-weight: 600; color: var(--ink-gray-9); }
+.chip .dot { width: 6px; height: 6px; background: var(--tone-ink); border-radius: 50%; }
+.chip:hover { background: var(--surface-gray-3); }
+.chip[aria-pressed="true"], .chip[aria-pressed="true"] strong { color: var(--tone-ink); }
+.chip[aria-pressed="true"] { background: var(--tone-pill); }
+.chip:disabled { cursor: default; opacity: 0.5; background: var(--surface-gray-2); }
+
+.search { position: relative; display: block; width: 220px; }
+.search svg {
+	position: absolute;
+	top: 50%;
+	left: 9px;
+	width: 14px;
+	height: 14px;
+	color: var(--ink-gray-5);
+	transform: translateY(-50%);
+	pointer-events: none;
+}
+.search input {
+	width: 100%;
+	height: 28px;
+	padding: 0 28px;
+	font: inherit;
+	font-size: 13px;
+	color: var(--ink-gray-8);
+	background: var(--surface-gray-2);
+	border: 1px solid transparent;
+	border-radius: 8px;
+	transition: background 0.1s, border-color 0.1s;
+}
+.search input:hover { background: var(--surface-gray-3); }
+.search input:focus { outline: none; background: var(--surface-base); border-color: var(--outline-gray-3); }
+.search input::placeholder { color: var(--ink-gray-5); }
+.search kbd {
+	position: absolute;
+	top: 50%;
+	right: 7px;
+	padding: 0 5px;
+	font-size: 11px;
+	line-height: 16px;
+	color: var(--ink-gray-5);
+	border: 1px solid var(--outline-gray-2);
+	border-radius: 4px;
+	transform: translateY(-50%);
+	pointer-events: none;
+}
+.search input:focus ~ kbd, .search input:not(:placeholder-shown) ~ kbd { display: none; }
+
+.rule { margin-bottom: 8px; background: var(--surface-base); border: 1px solid var(--outline-gray-2); border-radius: 10px; }
+.rule > summary {
+	list-style: none;
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	padding: 11px 14px;
+	border-radius: 9px;
+	cursor: pointer;
+	transition: background 0.1s;
+}
+.rule > summary::-webkit-details-marker { display: none; }
+.rule > summary::after {
+	content: "";
+	flex: none;
+	width: 7px;
+	height: 7px;
+	margin: 7px 2px 0 0;
+	border-right: 1.5px solid var(--ink-gray-5);
+	border-bottom: 1.5px solid var(--ink-gray-5);
+	transform: rotate(-45deg);
+	transition: transform 0.15s;
+}
+.rule[open] > summary::after { transform: rotate(45deg); }
+.rule > summary:hover { background: var(--surface-gray-1); }
+.rule[open] > summary { border-radius: 9px 9px 0 0; }
+
+.pill { flex: none; margin-top: 1px; padding: 1px 8px; font-size: 12px; font-weight: 500; color: var(--tone-ink); background: var(--tone-pill); border-radius: 999px; }
+.rule-head { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.rule-title { font-weight: 500; color: var(--ink-gray-9); }
+.rule-fix { font-size: 13px; color: var(--ink-gray-6); }
+.rule-fix strong { margin-right: 4px; font-weight: 600; color: var(--ink-gray-7); }
+.badge {
+	flex: none;
+	min-width: 22px;
+	margin-top: 1px;
+	padding: 1px 7px;
+	text-align: center;
+	font-size: 12px;
+	font-weight: 500;
+	font-variant-numeric: tabular-nums;
+	color: var(--ink-gray-7);
+	background: var(--surface-gray-2);
+	border-radius: 999px;
+}
+
+.rule-body { padding: 2px 14px 12px; }
+.locations {
+	list-style: none;
+	margin: 0 0 8px;
+	padding: 5px 0;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-size: 12.5px;
+	background: var(--surface-gray-1);
+	border-radius: 8px;
+}
+.locations li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 16px; padding: 3px 12px; }
+.path { min-width: 0; color: var(--ink-gray-9); overflow-wrap: break-word; }
+.path .dir { color: var(--ink-gray-5); }
+.tag {
+	flex: none;
+	align-self: center;
+	padding: 0 7px;
+	font: 500 11.5px/18px InterVariable, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	color: var(--ink-red-8);
+	background: var(--surface-red-2);
+	border-radius: 999px;
+}
+.lines {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	gap: 0 10px;
+	margin-left: auto;
+	font-variant-numeric: tabular-nums;
+	color: var(--ink-gray-7);
+}
+.lines span { position: relative; }
+.lines span[data-snippet] { cursor: default; }
+.lines span[data-snippet]:hover { color: var(--ink-gray-9); }
+.lines span[data-snippet]:hover::after {
+	content: attr(data-snippet);
+	position: absolute;
+	right: -8px;
+	bottom: calc(100% + 6px);
+	z-index: 1;
+	max-width: min(640px, 80vw);
+	padding: 4px 8px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: pre;
+	color: var(--surface-base);
+	background: var(--ink-gray-8);
+	border-radius: 6px;
+	pointer-events: none;
+}
+
+.shim { margin-bottom: 8px; }
+.shim-title { margin: 0 0 4px; font-size: 13px; font-weight: 500; color: var(--ink-gray-7); }
+.shim pre { margin: 0; padding: 8px 12px; overflow-x: auto; font-size: 12.5px; color: var(--ink-gray-8); background: var(--surface-gray-1); border-radius: 8px; tab-size: 4; }
+
+.why > summary {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	font-size: 13px;
+	color: var(--ink-gray-5);
+	border-radius: 4px;
+	cursor: pointer;
+	list-style: none;
+}
+.why > summary::-webkit-details-marker { display: none; }
+.why > summary::after {
+	content: "";
+	width: 5px;
+	height: 5px;
+	border-right: 1.5px solid currentColor;
+	border-bottom: 1.5px solid currentColor;
+	transform: rotate(-45deg);
+	transition: transform 0.15s;
+}
+.why[open] > summary::after { transform: rotate(45deg); }
+.why > summary:hover { color: var(--ink-gray-8); }
+.why-body { margin-top: 6px; padding-left: 10px; border-left: 2px solid var(--outline-gray-2); }
+.why-body p { margin: 0; font-size: 13px; color: var(--ink-gray-7); }
+.why-body .source { margin-top: 4px; font-size: 12.5px; color: var(--ink-gray-5); }
+.why-body .source code { font-size: 12px; }
+
+.clean { padding: 10px 14px; font-weight: 500; color: var(--ink-green-8); background: var(--surface-green-2); border-radius: 10px; }
+.clean::before { content: "✓"; margin-right: 8px; }
+.empty { padding: 24px 0; text-align: center; color: var(--ink-gray-5); }
+footer { margin-top: 24px; font-size: 12.5px; color: var(--ink-gray-5); }
+footer p { margin: 0 0 4px; }
+
+@media (max-width: 640px) {
+	main { padding: 24px 16px 40px; }
+	.search { width: 100%; }
+}
+
+@media print {
+	body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+	.toolbar, .why > summary { display: none; }
+	.rule { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<main>
+	<header>
+		<div class="eyebrow" id="eyebrow">Preflight</div>
+		<h1 id="title"></h1>
+		<p class="meta" id="meta"></p>
+	</header>
+	<section id="not-scanned"></section>
+	<div class="toolbar">
+		<div class="filters" id="filters"></div>
+		<label class="search" id="search-box">
+			<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+				<circle cx="7" cy="7" r="4.5"/>
+				<path d="m10.5 10.5 3 3" stroke-linecap="round"/>
+			</svg>
+			<input type="search" id="search" placeholder="Filter" aria-label="Filter findings">
+			<kbd>/</kbd>
+		</label>
+	</div>
+	<div id="rules"></div>
+	<p class="empty" id="empty" hidden>No findings match the filter.</p>
+	<section id="uncounted"></section>
+	<footer>
+		<p id="not-counted" hidden></p>
+		<p>Only APIs covered by the rules are checked; a clean report does not make the upgrade safe.</p>
+	</footer>
+</main>
+<script id="report-data" type="application/json">{{ report }}</script>
+<script>
+const report = JSON.parse(document.getElementById("report-data").textContent);
+const SEVERITIES = ["error", "warning", "info"];
+const LABELS = { error: "Error", warning: "Warning", info: "Info" };
+const NOUNS = { error: ["error", "errors"], warning: ["warning", "warnings"], info: ["info", "info"] };
+const URL_PATTERN = /(https?:\/\/[^\s)]+)/;
+const FIX_LABELS = { before: "Fix before upgrading", "with-upgrade": "Fix with the upgrade" };
+
+function element(tag, className, text) {
+	const node = document.createElement(tag);
+	if (className) node.className = className;
+	if (text !== undefined) node.textContent = text;
+	return node;
+}
+
+function link(url, label) {
+	const anchor = element("a", "", label);
+	anchor.href = url;
+	anchor.title = url;
+	anchor.target = "_blank";
+	anchor.rel = "noopener noreferrer";
+	return anchor;
+}
+
+function withLinks(text) {
+	const fragment = document.createDocumentFragment();
+	text.split(URL_PATTERN).forEach((part, index) => {
+		fragment.append(index % 2 ? link(part, part.replace(/^https?:\/\//, "")) : part);
+	});
+	return fragment;
+}
+
+function referenceLabel(url) {
+	const pull = url.match(/github\.com\/([^/]+\/[^/]+)\/pull\/(\d+)/);
+	return pull ? `${pull[1]}#${pull[2]}` : url.split("/").pop() || url;
+}
+
+function fileLabel(finding) {
+	return finding.app ? `${finding.app}/${finding.file}` : finding.file;
+}
+
+const scope = report.site || "code only";
+const heading = report.frappe_version
+	? `${scope}: frappe ${report.frappe_version} → ${report.target}`
+	: `${scope} → ${report.target}`;
+document.title = `Preflight ${heading}`;
+document.getElementById("eyebrow").textContent = `Preflight ${report.preflight_version}`;
+document.getElementById("title").textContent = heading;
+const metaParts = [report.apps.join(", ") || "no apps scanned", `Python ${report.python}`];
+if (report.severity !== "info") {
+	const below = report.summary.below_severity;
+	metaParts.push(`${report.severity} and above${below ? `, ${below} below not shown` : ""}`);
+}
+if (report.rules) metaParts.push(`Rules checked ${report.rules.checked} against ${report.rules.against}`);
+document.getElementById("meta").textContent = metaParts.join(" · ");
+
+function addCallout(sectionId, heading, items, note) {
+	if (!items.length) return;
+	const callout = element("div", "callout");
+	const list = element("p");
+	list.append(...items.map((item) => element("code", "", item)));
+	callout.append(element("p", "callout-title", heading), list, element("p", "", note));
+	document.getElementById(sectionId).append(callout);
+}
+
+addCallout(
+	"not-scanned",
+	"Not scanned, no code on this bench",
+	report.missing_apps,
+	"Their customisations and site scripts were still checked.",
+);
+addCallout(
+	"not-scanned",
+	`Not scanned, python ${report.python} could not parse them`,
+	report.unparsable_files,
+	"The counts leave out whatever these files hold.",
+);
+addCallout(
+	"not-scanned",
+	"Not scanned, could not be read",
+	report.unreadable_files,
+	"The counts leave out whatever these hold; an app is listed here when importing it fails.",
+);
+addCallout(
+	"not-scanned",
+	"Not checked",
+	report.not_checked,
+	"Each names what was skipped and why.",
+);
+
+addCallout(
+	"uncounted",
+	"Upstream apps, not counted",
+	report.upstream.map((upstream) => `${upstream.app} on ${upstream.branch}: ${upstream.findings.length} found`),
+	`These apps are on frappe's own version branch: switching them to the ${report.target} branch replaces this` +
+		" code, so what is found in it is upstream's to fix and not in the counts. --app <name> lists an app's findings.",
+);
+const ranPatchCounts = new Map();
+for (const finding of report.ran_patch_findings) {
+	ranPatchCounts.set(finding.rule, (ranPatchCounts.get(finding.rule) || 0) + 1);
+}
+addCallout(
+	"uncounted",
+	"Rules hit in patches already run, not counted",
+	[...ranPatchCounts].sort(([a], [b]) => a.localeCompare(b)).map(([rule, count]) => `${rule}: ${count} found`),
+	"Patch Log records these patches as run, so bench migrate does not run them again and what they call can be" +
+		` gone on ${report.target}.`,
+);
+
+const dropped = [
+	[report.summary.suppressed, "suppressed by an ignore comment"],
+	[report.summary.baselined, "in the baseline"],
+]
+	.filter(([count]) => count)
+	.map(([count, reason]) => `${count} ${reason}`);
+if (dropped.length) {
+	const notCounted = document.getElementById("not-counted");
+	notCounted.textContent = `${dropped.join(" and ")}, not counted.`;
+	notCounted.hidden = false;
+}
+
+const rules = new Map();
+for (const finding of report.findings) {
+	if (!rules.has(finding.rule)) {
+		rules.set(finding.rule, {
+			id: finding.rule,
+			severity: finding.severity,
+			title: finding.title,
+			message: finding.message,
+			replacement: finding.replacement,
+			fix: finding.fix,
+			shim: finding.shim,
+			references: finding.references,
+			findings: [],
+		});
+	}
+	rules.get(finding.rule).findings.push(finding);
+}
+
+function renderPath(file) {
+	// A schema finding names a record ("Custom Field: Blog Post-child_table") instead of a file.
+	let nameStart = file.lastIndexOf("/") + 1;
+	if (!nameStart && file.includes(": ")) nameStart = file.indexOf(": ") + 2;
+	const dir = element("span", "dir");
+	for (const segment of file.slice(0, nameStart).split(/(?<=\/)/)) dir.append(segment, element("wbr"));
+	const path = element("span", "path");
+	path.append(dir, file.slice(nameStart));
+	return path;
+}
+
+function renderRule(rule) {
+	const details = element("details", `rule ${rule.severity}`);
+	details.open = rule.severity === "error";
+
+	const fix = element("span", "rule-fix");
+	fix.append(element("strong", "", FIX_LABELS[rule.fix] || "Fix"), withLinks(rule.replacement));
+	const head = element("span", "rule-head");
+	head.append(element("span", "rule-title", rule.title), fix);
+	const badge = element("span", "badge");
+	const summary = element("summary");
+	summary.append(element("span", "pill", LABELS[rule.severity]), head, badge);
+
+	const findingsByFile = new Map();
+	for (const finding of rule.findings) {
+		const file = fileLabel(finding);
+		if (!findingsByFile.has(file)) findingsByFile.set(file, []);
+		findingsByFile.get(file).push(finding);
+	}
+
+	const list = element("ul", "locations");
+	const rows = [];
+	for (const [file, findings] of [...findingsByFile].sort(([a], [b]) => a.localeCompare(b))) {
+		const row = element("li");
+		row.append(renderPath(file));
+		if (findings.some((finding) => finding.stops_migrate)) {
+			row.append(element("span", "tag", "Pending patch, stops bench migrate"));
+		}
+
+		const withLine = findings.filter((finding) => finding.line).sort((a, b) => a.line - b.line);
+		if (withLine.length) {
+			const lines = element("span", "lines");
+			for (const finding of withLine) {
+				const line = element("span", "", String(finding.line));
+				if (finding.snippet) line.dataset.snippet = finding.snippet;
+				lines.append(line);
+			}
+			row.append(lines);
+		} else {
+			const snippets = findings.map((finding) => finding.snippet).filter(Boolean);
+			row.append(element("span", "lines", snippets.join(", ")));
+		}
+
+		list.append(row);
+		rows.push({
+			node: row,
+			count: findings.length,
+			text: `${file} ${findings.map((finding) => finding.snippet || "").join(" ")}`.toLowerCase(),
+		});
+	}
+
+	const message = element("p");
+	message.append(withLinks(rule.message));
+	const source = element("p", "source");
+	source.append(element("code", "", rule.id));
+	for (const url of rule.references) {
+		source.append(" · ", URL_PATTERN.test(url) ? link(url, referenceLabel(url)) : url);
+	}
+	const whyBody = element("div", "why-body");
+	whyBody.append(message, source);
+	const why = element("details", "why");
+	why.append(element("summary", "", "Why"), whyBody);
+
+	const body = element("div", "rule-body");
+	body.append(list);
+	if (rule.shim) {
+		const shim = element("div", "shim");
+		const code = element("pre");
+		code.append(element("code", "", rule.shim));
+		shim.append(element("p", "shim-title", "Shim that runs on both versions"), code);
+		body.append(shim);
+	}
+	body.append(why);
+	details.append(summary, body);
+	badge.textContent = String(rule.findings.length);
+	return {
+		node: details,
+		why,
+		severity: rule.severity,
+		badge,
+		rows,
+		total: rule.findings.length,
+		text: `${rule.id} ${rule.title} ${rule.message} ${rule.replacement}`.toLowerCase(),
+	};
+}
+
+const rulesContainer = document.getElementById("rules");
+const cards = [...rules.values()]
+	.sort(
+		(a, b) =>
+			SEVERITIES.indexOf(a.severity) - SEVERITIES.indexOf(b.severity) ||
+			b.findings.length - a.findings.length ||
+			a.id.localeCompare(b.id),
+	)
+	.map(renderRule);
+for (const card of cards) rulesContainer.append(card.node);
+
+const search = document.getElementById("search");
+const empty = document.getElementById("empty");
+let selectedSeverity = null;
+
+function applyFilters() {
+	const query = search.value.trim().toLowerCase();
+	let shown = 0;
+	for (const card of cards) {
+		const severityMatches = !selectedSeverity || card.severity === selectedSeverity;
+		const ruleMatches = card.text.includes(query);
+		let visible = 0;
+		for (const row of card.rows) {
+			row.node.hidden = !(severityMatches && (ruleMatches || row.text.includes(query)));
+			if (!row.node.hidden) visible += row.count;
+		}
+		card.node.hidden = !visible;
+		card.badge.textContent = visible === card.total ? String(visible) : `${visible} of ${card.total}`;
+		if (query && visible) card.node.open = true;
+		shown += visible;
+	}
+	empty.hidden = Boolean(shown);
+}
+
+const filters = document.getElementById("filters");
+const chips = {};
+for (const severity of SEVERITIES) {
+	const count = report.findings.filter((finding) => finding.severity === severity).length;
+	const chip = element("button", `chip ${severity}`);
+	chip.type = "button";
+	chip.disabled = !count;
+	chip.setAttribute("aria-pressed", "false");
+	chip.append(element("span", "dot"), element("strong", "", String(count)), NOUNS[severity][count === 1 ? 0 : 1]);
+	chip.addEventListener("click", () => {
+		selectedSeverity = selectedSeverity === severity ? null : severity;
+		for (const [key, other] of Object.entries(chips)) {
+			other.setAttribute("aria-pressed", String(key === selectedSeverity));
+		}
+		applyFilters();
+	});
+	chips[severity] = chip;
+	filters.append(chip);
+}
+
+if (report.findings.length) {
+	search.addEventListener("input", applyFilters);
+	document.addEventListener("keydown", (event) => {
+		if (event.key === "/" && document.activeElement !== search) {
+			event.preventDefault();
+			search.focus();
+		} else if (event.key === "Escape" && document.activeElement === search) {
+			search.value = "";
+			search.blur();
+			applyFilters();
+		}
+	});
+	window.addEventListener("beforeprint", () => {
+		for (const card of cards) card.node.open = card.why.open = true;
+	});
+} else {
+	document.getElementById("search-box").hidden = true;
+	const scannedEverything = ![
+		report.missing_apps,
+		report.unparsable_files,
+		report.unreadable_files,
+		report.not_checked,
+	].some((items) => items.length);
+	rulesContainer.append(
+		element("p", "clean", `No known incompatibilities found${scannedEverything ? "" : " in what was scanned"}.`),
+	);
+}
+</script>
+</body>
+</html>

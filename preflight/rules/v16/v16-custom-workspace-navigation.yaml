@@ -1,0 +1,33 @@
+id: v16-custom-workspace-navigation
+title: Public workspaces with no module drop out of the desk's navigation
+severity: warning
+match:
+  type: site_record
+  doctypes:
+    - Workspace
+  filters:
+    public: 1
+    module: ""
+message: >
+  A public workspace made in the v15 desk has no module, since the form keeps the field read only,
+  and v15 lists it in the sidebar all the same. v16 makes the module mandatory: the patch
+  backfill_workspace_module moves each such workspace into Custom Workspaces, a module it creates
+  in no app. The v16 desk reaches a workspace only through an app; the Apps screen shows one tile
+  per app, and an app's rail and module switcher show only the modules placed in it. The workspace
+  is then on no page anyone navigates from, though it still opens by its URL and from the search
+  bar. Nothing raises.
+replacement: >
+  Open the workspace by its URL, set its Module to one an app's rail lists, such as Selling or
+  Accounts, and save; v16 adds it to that module's sidebar. Or, as a Workspace Manager, add it to an
+  app's rail with Manage Dock and save the dock for everyone.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/pull/41636
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/patches/v16_0/backfill_workspace_module.py
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/desk/doctype/workspace/workspace.py#L803-L818
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/utils/modules.py#L8-L23
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/public/js/frappe/ui/sidebar/sidebar.js#L291-L296
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/public/js/frappe/ui/sidebar/sidebar.js#L973-L980
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/desk/page/desktop/desktop.js#L181-L182
+  - https://github.com/frappe/frappe/blob/v15.124.0/frappe/desk/doctype/workspace/workspace.json#L74-L81
+  - https://github.com/frappe/frappe/blob/v15.124.0/frappe/desk/desktop.py#L426-L470

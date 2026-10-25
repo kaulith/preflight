@@ -1,0 +1,16 @@
+id: v17-deprecated-show-progress
+title: show_progress is marked for removal in v17
+severity: warning
+match:
+  type: import_path
+  paths:
+    - frappe.desk.doctype.bulk_update.bulk_update.show_progress
+message: >
+  The bulk update module re-exports show_progress from the deprecation dumpster, whose entry names
+  v17 as the removal. It is still present on develop (checked 2026-10-25), so it keeps working
+  with a deprecation warning; the import fails once the removal lands.
+replacement: >
+  Call frappe.publish_progress with the percentage, which is all show_progress does.
+references:
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/deprecation_dumpster.py#L248
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/desk/doctype/bulk_update/bulk_update.py#L150

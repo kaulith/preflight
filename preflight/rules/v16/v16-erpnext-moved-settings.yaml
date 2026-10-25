@@ -1,0 +1,40 @@
+id: v16-erpnext-moved-settings
+title: ERPNext settings moved to Company and POS Settings
+severity: error
+match:
+  type: doctype_field
+  fields:
+    - Accounts Settings.acc_frozen_upto
+    - Accounts Settings.frozen_accounts_modifier
+    - Accounts Settings.post_change_gl_entries
+    - Manufacturing Settings.default_wip_warehouse
+    - Manufacturing Settings.default_fg_warehouse
+    - Manufacturing Settings.default_scrap_warehouse
+    - Manufacturing Settings.set_op_cost_and_scrap_from_sub_assemblies
+message: >
+  ERPNext v16 moved these settings. Accounts Frozen Till Date and Role Allowed to Set Frozen
+  Accounts and Edit Frozen Entries are per company, as Company.accounts_frozen_till_date and
+  Company.role_allowed_for_frozen_entries; the default work-in-progress, finished goods and
+  scrap warehouses moved from Manufacturing Settings to Company fields of the same name; the
+  change amount check post_change_gl_entries moved to POS Settings; and Manufacturing Settings'
+  set_op_cost_and_scrap_from_sub_assemblies is set_op_cost_and_secondary_items_from_sub_assemblies.
+  The migration copies the values across. frappe.db.get_single_value on an old field raises
+  "Field does not exist" after the upgrade, and frappe.db.get_value returns what the field held
+  at the upgrade, or nothing for the renamed one, and never changes afterwards.
+  A Custom Field placed after one of them moves to the end of the form.
+replacement: >
+  Read the field from the document's company, as in
+  frappe.get_cached_value("Company", doc.company, "accounts_frozen_till_date"), and likewise
+  role_allowed_for_frozen_entries, default_wip_warehouse, default_fg_warehouse and
+  default_scrap_warehouse; read frappe.db.get_single_value("POS Settings",
+  "post_change_gl_entries"), and the new Manufacturing Settings field name.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/50824
+  - https://github.com/frappe/erpnext/pull/50507
+  - https://github.com/frappe/erpnext/pull/51633
+  - https://github.com/frappe/erpnext/pull/52979
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/patches/v16_0/migrate_account_freezing_settings_to_company.py
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/patches/v16_0/set_company_wise_warehouses.py
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/patches/v16_0/set_post_change_gl_entries_on_pos_settings.py
+  - https://github.com/frappe/frappe/blob/4f40f4acbb3cc296f0e9cbc69ce2bb49ccd8208a/frappe/database/database.py#L914-L921

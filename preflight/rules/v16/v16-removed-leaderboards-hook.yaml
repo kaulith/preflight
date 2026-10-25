@@ -1,0 +1,17 @@
+id: v16-removed-leaderboards-hook
+title: leaderboards hook removed with the leaderboard page
+severity: error
+match:
+  type: hook_key
+  keys:
+    - leaderboards
+message: >
+  v16 removed the leaderboard page along with energy points, and nothing reads the leaderboards
+  hook any more. The entry stays valid Python, so nothing raises; the leaderboards the app
+  contributes stop appearing.
+replacement: >
+  Drop the hook and the function it points at, or move the numbers into a report or a workspace
+  number card.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/32040

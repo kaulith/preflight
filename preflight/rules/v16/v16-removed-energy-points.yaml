@@ -1,0 +1,17 @@
+id: v16-removed-energy-points
+title: Energy points moved out of the framework
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.social.doctype.energy_point_log
+    - frappe.social.doctype.energy_point_rule
+    - frappe.social.doctype.energy_point_settings
+message: >
+  The energy point doctypes were moved out of the framework into their own app in v16.
+  Importing these modules raises ImportError after the upgrade.
+replacement: >
+  Install the EPS app (https://github.com/frappe/eps), or remove the dependency.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/pull/32040

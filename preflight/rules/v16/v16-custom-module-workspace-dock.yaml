@@ -1,0 +1,29 @@
+id: v16-custom-module-workspace-dock
+title: Public workspaces in a custom module drop out of the desk's navigation
+severity: warning
+match:
+  type: site_record
+  doctypes:
+    - Workspace
+  filters:
+    public: 1
+    module.custom: 1
+  title_field: module
+message: >
+  v15 lists every public workspace in the sidebar, whatever its module. v16 reaches a module only
+  from an app's rail, which lists the rows of the Dock record the app ships, and no app ships a row
+  for a module made on the site. The v16 desk places a custom module in the app its Module Def
+  names, frappe unless changed, and that app's Manage Dock counts it among the modules on no tier,
+  so the workspace is on no page anyone navigates from. It still opens by its URL and from the
+  search bar. Nothing raises.
+replacement: >
+  After the upgrade, as a Workspace Manager, open the app the module is placed in (Framework for
+  frappe), choose Manage Dock in the user menu, Add the module under Module with an icon and a
+  title, and save For everyone; it then shows on that app's rail for every user.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/utils/modules.py#L8-L23
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/boot.py#L324-L329
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/public/js/frappe/ui/sidebar/dock_manager.js#L31-L37
+  - https://github.com/frappe/frappe/blob/v15.124.0/frappe/core/doctype/module_def/module_def.js#L6-L18
+  - https://github.com/frappe/frappe/blob/v15.124.0/frappe/desk/desktop.py#L463-L478

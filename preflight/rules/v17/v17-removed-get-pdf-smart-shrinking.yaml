@@ -1,0 +1,21 @@
+id: v17-removed-get-pdf-smart-shrinking
+title: get_pdf() no longer accepts smart_shrinking
+severity: error
+match:
+  type: call
+  paths:
+    - frappe.utils.pdf.get_pdf
+  with_kwargs:
+    - smart_shrinking
+  with_positional_args: 4
+message: >
+  frappe.utils.pdf.get_pdf dropped the smart_shrinking argument in v17 along with wkhtmltopdf;
+  passing it raises TypeError. Passed positionally, the value lands in the new print_format
+  argument instead.
+replacement: >
+  Drop the argument, and pass {"shrink-to-fit": True} in options to scale content wider than the
+  page down to fit it.
+references:
+  - https://github.com/frappe/frappe/pull/44253
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/utils/pdf.py#L87-L93
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/utils/pdf_generator/browser.py#L129-L139

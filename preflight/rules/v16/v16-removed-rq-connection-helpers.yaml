@@ -1,0 +1,29 @@
+id: v16-removed-rq-connection-helpers
+title: rq connection helpers removed
+severity: error
+match:
+  type: import_path
+  paths:
+    - rq.Connection
+    - rq.push_connection
+    - rq.pop_connection
+    - rq.get_current_connection
+    - rq.connections.Connection
+    - rq.connections.push_connection
+    - rq.connections.pop_connection
+    - rq.connections.get_current_connection
+    - rq.connections.resolve_connection
+message: >
+  Frappe v15 installs rq 1.15.1 and v16 installs rq 2.6.1. rq 2.0 removed the Connection context
+  manager and the push_connection, pop_connection, get_current_connection and resolve_connection
+  helpers, so importing one raises ImportError after the upgrade.
+replacement: >
+  Pass the Redis connection to rq explicitly, for example Queue(name, connection=conn) or
+  Job.fetch(job_id, connection=conn). get_redis_conn() in frappe.utils.background_jobs returns the
+  site's queue connection, and get_queue(name) returns a Queue already bound to it.
+fix: before
+references:
+  - https://github.com/rq/rq/pull/2043
+  - https://github.com/rq/rq/blob/v1.15.1/rq/connections.py#L15-L118
+  - https://github.com/frappe/frappe/blob/v15.124.0/pyproject.toml#L70
+  - https://github.com/frappe/frappe/blob/v16.53.0/pyproject.toml#L75

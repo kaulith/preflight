@@ -1,0 +1,18 @@
+id: v16-removed-user-get-roles
+title: The user get_roles endpoint was removed
+severity: error
+match:
+  type: string_contains
+  paths:
+    - frappe.core.doctype.user.user.get_roles
+message: >
+  v16.31.0 removed the whitelisted frappe.core.doctype.user.user.get_roles, which returned the
+  roles of the user named in uid. A frappe.call to it fails after the upgrade.
+replacement: >
+  For the logged-in user, read frappe.user_roles in the browser or call
+  frappe.core.doctype.user.user.get_current_user_roles. For another user, add a whitelisted
+  method to the app that checks permission and returns frappe.get_roles(user).
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/41728
+  - https://github.com/frappe/frappe/blob/v15.124.0/frappe/core/doctype/user/user.py#L845-L848

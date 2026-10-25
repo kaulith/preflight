@@ -1,0 +1,28 @@
+id: v16-deprecated-tests-utils-helpers
+title: The test helpers on frappe.tests.utils moved
+severity: warning
+match:
+  type: import_path
+  paths:
+    - frappe.tests.utils.change_settings
+    - frappe.tests.utils.patch_hooks
+    - frappe.tests.utils.debug_on
+    - frappe.tests.utils.timeout
+    - frappe.tests.utils.get_dependencies
+message: >
+  These helpers moved out of frappe.tests.utils in v16. The old module re-exports them from
+  the deprecation dumpster, so a test still runs and logs a deprecation warning, and they are
+  removed in v17.
+replacement: >
+  Import change_settings, patch_hooks, debug_on and timeout from frappe.tests, or use the
+  matching helper on the test case; get_dependencies becomes
+  frappe.tests.utils.get_missing_records_doctypes.
+fix: with-upgrade
+shim: |
+  try:
+  	from frappe.tests import change_settings, patch_hooks, timeout
+  except ImportError:
+  	from frappe.tests.utils import change_settings, patch_hooks, timeout
+references:
+  - https://github.com/frappe/frappe/blob/version-16/frappe/deprecation_dumpster.py
+  - https://github.com/frappe/frappe/blob/version-16/frappe/tests/utils/__init__.py

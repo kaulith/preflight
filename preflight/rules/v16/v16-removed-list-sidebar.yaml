@@ -1,0 +1,15 @@
+id: v16-removed-list-sidebar
+title: List sidebar class removed
+severity: error
+match:
+  type: pattern
+  patterns:
+    - \bfrappe\.views\.ListSidebar\b
+message: >
+  The list view sidebar was removed in v16 and with it frappe.views.ListSidebar.
+  Client code that constructs or overrides the class breaks after the upgrade.
+replacement: >
+  There is no list sidebar in v16; move the controls into the list view itself, or drop them.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/35223

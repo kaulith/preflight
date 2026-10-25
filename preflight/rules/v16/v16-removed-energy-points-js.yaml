@@ -1,0 +1,16 @@
+id: v16-removed-energy-points-js
+title: Energy point client helpers removed
+severity: error
+match:
+  type: pattern
+  patterns:
+    - \bfrappe\.energy_points\b
+    - \bfrappe\.ui\.form\.Review\b
+message: >
+  frappe.energy_points and the form review dialog frappe.ui.form.Review left the framework
+  with the energy point doctypes in v16, so both are undefined after the upgrade.
+replacement: >
+  Install the EPS app (https://github.com/frappe/eps), or remove the dependency.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/pull/32040

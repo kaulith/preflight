@@ -1,0 +1,29 @@
+id: v16-moved-desk-permission-helpers
+title: Page and report permission helpers moved out of frappe.boot
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.boot.get_allowed_pages
+    - frappe.boot.get_allowed_reports
+    - frappe.boot.get_allowed_report_names
+    - frappe.boot.get_user_pages_or_reports
+message: >
+  v16.21.0 moved the helpers that list the pages and reports a user may open off frappe.boot
+  and onto the DeskViews class. Importing one from frappe.boot raises ImportError after the
+  upgrade.
+replacement: >
+  Import DeskViews from frappe.desk.desk_views and call the method of the same name on it,
+  for example DeskViews.get_allowed_reports(cache=True). Each also takes an optional user.
+fix: with-upgrade
+shim: |
+  try:
+  	from frappe.desk.desk_views import DeskViews
+
+  	get_allowed_reports = DeskViews.get_allowed_reports
+  except ImportError:
+  	from frappe.boot import get_allowed_reports
+references:
+  - https://github.com/frappe/frappe/pull/39838
+  - https://github.com/frappe/frappe/blob/v15.124.0/frappe/boot.py#L187-L199
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/desk/desk_views.py#L85-L135

@@ -1,0 +1,21 @@
+{
+	"tree": "helpdesk",
+	"commit": "21fa9cdf6a4b894e51ea6bf28a4683c75328dd5b",
+	"counts": {
+		"v16-sanitize-html-strips-tags": 1
+	},
+	"counts_with_tests": {
+		"v16-deprecated-frappe-test-case": 18,
+		"v16-deprecated-tests-utils-helpers": 3,
+		"v16-sanitize-html-strips-tags": 1
+	},
+	"unparsable": [],
+	"findings": [
+		[
+			"v16-sanitize-html-strips-tags",
+			"helpdesk/helpdesk/doctype/hd_ticket/hd_ticket.py",
+			16,
+			"from frappe.utils.html_utils import sanitize_html"
+		]
+	]
+}

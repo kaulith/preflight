@@ -1,0 +1,25 @@
+id: v16-sql-function-string-fields
+title: SQL functions as strings in query fields are rejected
+severity: error
+match:
+  type: select_field
+  patterns:
+    - ^\*$
+    - ^\d+$
+    - (?i)^(?:(`[\w\s-]+`|\w+)\.)?(`\w+`|\w+)(?:\s+as\s+(?:`[\w\s-]+`|'[\w\s:-]+'|\w+))?$
+message: >
+  v16 checks every string in the fields of frappe.get_all, frappe.get_list, frappe.db.get_value,
+  frappe.db.get_values and frappe.qb.get_query, and accepts only a field name, backticked,
+  table-qualified or aliased, or "*". A SQL function written as a string, such as
+  "sum(qty) as qty" or "count(name)", raises ValidationError where v15 ran it, and any other
+  expression ("qty * rate", "distinct item_code") raises PermissionError.
+replacement: >
+  Pass the function as a dict, {"SUM": "qty", "as": "qty"}, which only v16 accepts. Code that
+  must also run on v15 builds the query with frappe.qb and its functions instead
+  (frappe.qb.from_(sle).select(Sum(sle.qty)), with Sum from frappe.query_builder.functions),
+  which both versions run.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/32381
+  - https://github.com/frappe/frappe/blob/e8d41dd0061a32ee781caefe5d0b0d2bb7c15362/frappe/database/query.py#L163-L166
+  - https://github.com/frappe/frappe/blob/e8d41dd0061a32ee781caefe5d0b0d2bb7c15362/frappe/database/query.py#L2256-L2282

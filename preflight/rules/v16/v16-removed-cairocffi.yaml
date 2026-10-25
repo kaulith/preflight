@@ -1,0 +1,23 @@
+id: v16-removed-cairocffi
+title: frappe no longer installs cairocffi
+severity: error
+match:
+  type: undeclared_import
+  paths:
+    - cairocffi
+  dependencies:
+    - cairocffi
+message: >
+  The app imports cairocffi without declaring it in pyproject.toml or requirements.txt. That works
+  on v15 because frappe still lists cairocffi among its dependencies, though nothing in frappe
+  imports it. v16 dropped it, so a new v16 environment, like the one Frappe Cloud builds or the one
+  bench builds on Python 3.14, does not have it, and the import raises ModuleNotFoundError. An
+  environment upgraded in place keeps the package until it is rebuilt.
+replacement: >
+  Declare cairocffi in the app's [project] dependencies, in a range that takes in the
+  cairocffi==1.5.1 frappe v15 pins, so the app installs on both versions.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/24659
+  - https://github.com/frappe/frappe/blob/486ecf9e4a1daaa0027512bfab2947b8cde1502b/pyproject.toml#L38
+  - https://github.com/frappe/frappe/blob/v16.53.0/pyproject.toml#L10-L106

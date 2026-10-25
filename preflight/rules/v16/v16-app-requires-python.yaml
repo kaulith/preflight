@@ -1,0 +1,15 @@
+id: v16-app-requires-python
+title: App's requires-python rules out the Python v16 runs on
+severity: error
+match:
+  type: requires_python
+  python: ">=3.14,<3.15"
+message: >
+  Frappe v16 runs on Python >=3.14,<3.15 and the app's requires-python allows none of it, so pip
+  will not install the app on a v16 bench. The app stays on this branch through the upgrade, so
+  this pyproject.toml is the one that gets installed.
+replacement: >
+  Widen requires-python in the app's pyproject.toml to take in Python 3.14, and test the app on it.
+fix: before
+references:
+  - https://github.com/frappe/frappe/blob/v16.53.0/pyproject.toml

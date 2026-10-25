@@ -1,0 +1,22 @@
+id: v16-removed-backup-doctypes
+title: Offsite backup doctypes moved out of the framework
+severity: error
+match:
+  type: doctype
+  doctypes:
+    - Dropbox Settings
+    - S3 Backup Settings
+    - Google Drive
+message: >
+  The Dropbox, S3 and Google Drive backup settings were moved out of the framework in v16.
+  A custom field, property setter or link field on one of them points at a doctype the
+  site no longer has, and code that reads it raises DoesNotExistError, or ImportError where it
+  loads a document with frappe.get_doc. All three are single doctypes, so their stored values
+  stay behind in tabSingles while every read through the ORM fails.
+replacement: >
+  Install the Offsite Backups app (https://github.com/frappe/offsite_backups) to keep the
+  doctypes, or move the backups to another target and drop the customisation.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/pull/32351
+  - frappe/patches/v16_0/add_module_deprecation_warning.py

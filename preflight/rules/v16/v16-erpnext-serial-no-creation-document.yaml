@@ -1,0 +1,23 @@
+id: v16-erpnext-serial-no-creation-document
+title: ERPNext Serial No purchase_document_no replaced by reference_name
+severity: warning
+match:
+  type: doctype_field
+  fields:
+    - Serial No.purchase_document_no
+message: >
+  ERPNext v16 records the document that created a serial number in reference_doctype and
+  reference_name, in place of the Creation Document No (purchase_document_no) of v15. The
+  migration copies it into reference_name and leaves the old column behind with nothing writing
+  it again. On an upgraded site frappe.get_all and frappe.db.get_value return what it held at
+  the upgrade and nothing for serial numbers made after it; frappe.get_list and the browser's
+  frappe.db.get_value leave the field out of the result, and raise a PermissionError when it
+  filters or sorts the query. On a site installed on v16 the column does not exist, and
+  frappe.get_all and frappe.db.get_value on it raise.
+  A Custom Field placed after it moves to the end of the form.
+replacement: >
+  Read reference_name, with reference_doctype for the kind of document.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/48950
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/patches/v16_0/update_serial_no_reference_name.py

@@ -1,0 +1,3857 @@
+{
+	"tree": "frappe-v15",
+	"commit": "5e57d292b1c5d2a8ae5a8172ab2bd0652c13daa6",
+	"counts": {
+		"v16-app-workspaces-apps-screen": 1,
+		"v16-build-xlsx-data-returns-three": 2,
+		"v16-deprecated-get-number-format-info": 1,
+		"v16-deprecated-gravatar-helpers": 1,
+		"v16-deprecated-show-progress": 1,
+		"v16-deprecated-test-runner": 1,
+		"v16-has-permission-hook-returns-none": 2,
+		"v16-has-permission-raise-exception": 4,
+		"v16-moved-desk-permission-helpers": 5,
+		"v16-moved-frappe-config-helpers": 6,
+		"v16-removed-backup-doctypes": 23,
+		"v16-removed-backup-integrations": 17,
+		"v16-removed-blog": 3,
+		"v16-removed-blog-doctypes": 38,
+		"v16-removed-changelog-feed": 3,
+		"v16-removed-changelog-feed-doctypes": 4,
+		"v16-removed-changelog-feed-hook": 1,
+		"v16-removed-changelog-feed-js": 3,
+		"v16-removed-energy-point-doctypes": 33,
+		"v16-removed-energy-points": 14,
+		"v16-removed-energy-points-js": 7,
+		"v16-removed-leaderboards-hook": 1,
+		"v16-removed-list-sidebar": 2,
+		"v16-removed-newsletter": 2,
+		"v16-removed-newsletter-doctypes": 14,
+		"v16-removed-octicons": 393,
+		"v16-removed-octicons-import": 2,
+		"v16-removed-rq-connection-helpers": 1,
+		"v16-removed-transaction-log-doctypes": 5,
+		"v16-removed-workspace-sidebar-items": 1,
+		"v16-removed-workspace-sidebar-items-import": 2,
+		"v16-sanitize-html-strips-tags": 13,
+		"v16-sql-function-string-fields": 21,
+		"v16-value-cache-nested": 2
+	},
+	"counts_with_tests": {
+		"v16-app-workspaces-apps-screen": 1,
+		"v16-build-xlsx-data-applied-filters": 1,
+		"v16-build-xlsx-data-returns-three": 6,
+		"v16-deprecated-frappe-test-case": 263,
+		"v16-deprecated-get-number-format-info": 1,
+		"v16-deprecated-get-test-records": 17,
+		"v16-deprecated-gravatar-helpers": 1,
+		"v16-deprecated-show-progress": 1,
+		"v16-deprecated-test-runner": 12,
+		"v16-deprecated-tests-utils-helpers": 24,
+		"v16-has-permission-hook-returns-none": 2,
+		"v16-has-permission-raise-exception": 4,
+		"v16-moved-desk-permission-helpers": 6,
+		"v16-moved-frappe-config-helpers": 9,
+		"v16-removed-backup-doctypes": 23,
+		"v16-removed-backup-integrations": 17,
+		"v16-removed-blog": 6,
+		"v16-removed-blog-doctypes": 127,
+		"v16-removed-changelog-feed": 3,
+		"v16-removed-changelog-feed-doctypes": 4,
+		"v16-removed-changelog-feed-hook": 1,
+		"v16-removed-changelog-feed-js": 3,
+		"v16-removed-energy-point-doctypes": 45,
+		"v16-removed-energy-points": 14,
+		"v16-removed-energy-points-js": 7,
+		"v16-removed-leaderboards-hook": 1,
+		"v16-removed-list-sidebar": 2,
+		"v16-removed-newsletter": 7,
+		"v16-removed-newsletter-doctypes": 19,
+		"v16-removed-octicons": 393,
+		"v16-removed-octicons-import": 2,
+		"v16-removed-rq-connection-helpers": 1,
+		"v16-removed-transaction-log-doctypes": 8,
+		"v16-removed-workspace-sidebar-items": 1,
+		"v16-removed-workspace-sidebar-items-import": 2,
+		"v16-sanitize-html-strips-tags": 14,
+		"v16-sql-function-string-fields": 44,
+		"v16-value-cache-nested": 8
+	},
+	"unparsable": [],
+	"findings": [
+		[
+			"v16-app-workspaces-apps-screen",
+			"frappe/hooks.py",
+			null,
+			"frappe/automation/workspace/tools/tools.json and 5 more"
+		],
+		[
+			"v16-build-xlsx-data-returns-three",
+			"frappe/email/doctype/auto_email_report/auto_email_report.py",
+			177,
+			"xlsx_data, column_widths = build_xlsx_data(report_data, [], 1, ignore_visible_idx=True)"
+		],
+		[
+			"v16-build-xlsx-data-returns-three",
+			"frappe/email/doctype/auto_email_report/auto_email_report.py",
+			186,
+			"xlsx_data, column_widths = build_xlsx_data(report_data, [], 1, ignore_visible_idx=True)"
+		],
+		[
+			"v16-deprecated-get-number-format-info",
+			"frappe/model/meta.py",
+			848,
+			"from frappe.utils import get_number_format_info"
+		],
+		[
+			"v16-deprecated-gravatar-helpers",
+			"frappe/utils/safe_exec.py",
+			453,
+			"get_gravatar=frappe.utils.get_gravatar_url,"
+		],
+		[
+			"v16-deprecated-show-progress",
+			"frappe/core/doctype/deleted_document/deleted_document.py",
+			8,
+			"from frappe.desk.doctype.bulk_update.bulk_update import show_progress"
+		],
+		[
+			"v16-deprecated-test-runner",
+			"frappe/commands/utils.py",
+			789,
+			"ret = frappe.test_runner.main("
+		],
+		[
+			"v16-has-permission-hook-returns-none",
+			"frappe/hooks.py",
+			134,
+			"\"User\": \"frappe.core.doctype.user.user.has_permission\","
+		],
+		[
+			"v16-has-permission-hook-returns-none",
+			"frappe/hooks.py",
+			140,
+			"\"Communication\": \"frappe.core.doctype.communication.communication.has_permission\","
+		],
+		[
+			"v16-has-permission-raise-exception",
+			"frappe/__init__.py",
+			1066,
+			"out = frappe.permissions.has_permission("
+		],
+		[
+			"v16-has-permission-raise-exception",
+			"frappe/boot.py",
+			287,
+			"if not has_permission(\"Report\", raise_exception=False):"
+		],
+		[
+			"v16-has-permission-raise-exception",
+			"frappe/desk/search.py",
+			445,
+			"if has_permission(doctype, \"read\", doc, raise_exception=False):"
+		],
+		[
+			"v16-has-permission-raise-exception",
+			"frappe/share.py",
+			153,
+			"if not has_permission(doc.doctype, \"read\", doc, raise_exception=False):"
+		],
+		[
+			"v16-moved-desk-permission-helpers",
+			"frappe/desk/desktop.py",
+			10,
+			"from frappe.boot import get_allowed_pages, get_allowed_reports"
+		],
+		[
+			"v16-moved-desk-permission-helpers",
+			"frappe/desk/doctype/dashboard_chart/dashboard_chart.py",
+			10,
+			"from frappe.boot import get_allowed_report_names"
+		],
+		[
+			"v16-moved-desk-permission-helpers",
+			"frappe/desk/doctype/desktop_icon/desktop_icon.py",
+			483,
+			"from frappe.boot import get_allowed_pages"
+		],
+		[
+			"v16-moved-desk-permission-helpers",
+			"frappe/desk/doctype/number_card/number_card.py",
+			9,
+			"from frappe.boot import get_allowed_report_names"
+		],
+		[
+			"v16-moved-desk-permission-helpers",
+			"frappe/utils/user.py",
+			10,
+			"from frappe.boot import get_allowed_reports"
+		],
+		[
+			"v16-moved-frappe-config-helpers",
+			"frappe/core/doctype/module_profile/module_profile.py",
+			25,
+			"from frappe.config import get_modules_from_all_apps"
+		],
+		[
+			"v16-moved-frappe-config-helpers",
+			"frappe/core/doctype/user/user.py",
+			159,
+			"from frappe.config import get_modules_from_all_apps"
+		],
+		[
+			"v16-moved-frappe-config-helpers",
+			"frappe/core/doctype/user_type/user_type.py",
+			6,
+			"from frappe.config import get_modules_from_app"
+		],
+		[
+			"v16-moved-frappe-config-helpers",
+			"frappe/desk/doctype/dashboard/dashboard.py",
+			8,
+			"from frappe.config import get_modules_from_all_apps_for_user"
+		],
+		[
+			"v16-moved-frappe-config-helpers",
+			"frappe/desk/doctype/dashboard_chart/dashboard_chart.py",
+			11,
+			"from frappe.config import get_modules_from_all_apps_for_user"
+		],
+		[
+			"v16-moved-frappe-config-helpers",
+			"frappe/desk/doctype/number_card/number_card.py",
+			10,
+			"from frappe.config import get_modules_from_all_apps_for_user"
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/integrations/doctype/dropbox_settings/dropbox_settings.js",
+			4,
+			"frappe.ui.form.on(\"Dropbox Settings\", {"
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/integrations/doctype/dropbox_settings/dropbox_settings.py",
+			77,
+			"if frappe.db.get_single_value(\"Dropbox Settings\", \"backup_frequency\") == freq:"
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/integrations/doctype/dropbox_settings/dropbox_settings.py",
+			84,
+			"if cint(frappe.db.get_single_value(\"Dropbox Settings\", \"enabled\")):"
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/integrations/doctype/dropbox_settings/dropbox_settings.py",
+			91,
+			"if cint(frappe.db.get_single_value(\"Dropbox Settings\", \"send_email_for_successful_backup\")):"
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/integrations/doctype/dropbox_settings/dropbox_settings.py",
+			284,
+			"settings = frappe.get_doc(\"Dropbox Settings\")"
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/integrations/doctype/dropbox_settings/dropbox_settings.py",
+			371,
+			"dropbox_settings = frappe.get_single(\"Dropbox Settings\")"
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/integrations/doctype/google_drive/google_drive.js",
+			4,
+			"frappe.ui.form.on(\"Google Drive\", {"
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/integrations/doctype/google_drive/google_drive.py",
+			70,
+			"oauth_code = frappe.db.get_single_value(\"Google Drive\", \"authorization_code\") if not code else code"
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/integrations/doctype/google_drive/google_drive.py",
+			75,
+			"frappe.db.set_single_value(\"Google Drive\", \"backup_folder_id\", \"\")"
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/integrations/doctype/google_drive/google_drive.py",
+			83,
+			"frappe.db.set_single_value("
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/integrations/doctype/google_drive/google_drive.py",
+			93,
+			"account = frappe.get_doc(\"Google Drive\")"
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/integrations/doctype/google_drive/google_drive.py",
+			115,
+			"frappe.db.set_single_value(\"Google Drive\", \"backup_folder_id\", folder.get(\"id\"))"
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/integrations/doctype/google_drive/google_drive.py",
+			138,
+			"frappe.db.set_single_value(\"Google Drive\", \"backup_folder_id\", f.get(\"id\"))"
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/integrations/doctype/google_drive/google_drive.py",
+			204,
+			"frappe.db.set_single_value(\"Google Drive\", \"last_backup_on\", frappe.utils.now_datetime())"
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/integrations/doctype/google_drive/google_drive.py",
+			210,
+			"drive_settings = frappe.db.get_singles_dict(\"Google Drive\", cast=True)"
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/integrations/doctype/google_drive/google_drive.py",
+			216,
+			"drive_settings = frappe.db.get_singles_dict(\"Google Drive\", cast=True)"
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/integrations/doctype/s3_backup_settings/s3_backup_settings.js",
+			4,
+			"frappe.ui.form.on(\"S3 Backup Settings\", {"
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/integrations/doctype/s3_backup_settings/s3_backup_settings.py",
+			103,
+			"if cint(frappe.db.get_single_value(\"S3 Backup Settings\", \"enabled\")):"
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/integrations/doctype/s3_backup_settings/s3_backup_settings.py",
+			104,
+			"if frappe.db.get_single_value(\"S3 Backup Settings\", \"frequency\") == freq:"
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/integrations/doctype/s3_backup_settings/s3_backup_settings.py",
+			138,
+			"doc = frappe.get_single(\"S3 Backup Settings\")"
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/patches/v11_0/set_dropbox_file_backup.py",
+			6,
+			"frappe.reload_doctype(\"Dropbox Settings\")"
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/patches/v11_0/set_dropbox_file_backup.py",
+			7,
+			"check_dropbox_enabled = cint(frappe.db.get_single_value(\"Dropbox Settings\", \"enabled\"))"
+		],
+		[
+			"v16-removed-backup-doctypes",
+			"frappe/patches/v11_0/set_dropbox_file_backup.py",
+			9,
+			"frappe.db.set_single_value(\"Dropbox Settings\", \"file_backup\", 1)"
+		],
+		[
+			"v16-removed-backup-integrations",
+			"frappe/hooks.py",
+			271,
+			"\"frappe.integrations.doctype.dropbox_settings.dropbox_settings.take_backups_daily\","
+		],
+		[
+			"v16-removed-backup-integrations",
+			"frappe/hooks.py",
+			272,
+			"\"frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_daily\","
+		],
+		[
+			"v16-removed-backup-integrations",
+			"frappe/hooks.py",
+			273,
+			"\"frappe.integrations.doctype.google_drive.google_drive.daily_backup\","
+		],
+		[
+			"v16-removed-backup-integrations",
+			"frappe/hooks.py",
+			285,
+			"\"frappe.integrations.doctype.dropbox_settings.dropbox_settings.take_backups_weekly\","
+		],
+		[
+			"v16-removed-backup-integrations",
+			"frappe/hooks.py",
+			286,
+			"\"frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_weekly\","
+		],
+		[
+			"v16-removed-backup-integrations",
+			"frappe/hooks.py",
+			290,
+			"\"frappe.integrations.doctype.google_drive.google_drive.weekly_backup\","
+		],
+		[
+			"v16-removed-backup-integrations",
+			"frappe/hooks.py",
+			298,
+			"\"frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_monthly\""
+		],
+		[
+			"v16-removed-backup-integrations",
+			"frappe/integrations/doctype/dropbox_settings/dropbox_settings.js",
+			27,
+			"method: \"frappe.integrations.doctype.dropbox_settings.dropbox_settings.get_dropbox_authorize_url\","
+		],
+		[
+			"v16-removed-backup-integrations",
+			"frappe/integrations/doctype/dropbox_settings/dropbox_settings.js",
+			41,
+			"method: \"frappe.integrations.doctype.dropbox_settings.dropbox_settings.take_backup\","
+		],
+		[
+			"v16-removed-backup-integrations",
+			"frappe/integrations/doctype/dropbox_settings/dropbox_settings.py",
+			60,
+			"enqueue("
+		],
+		[
+			"v16-removed-backup-integrations",
+			"frappe/integrations/doctype/dropbox_settings/dropbox_settings.py",
+			99,
+			"enqueue("
+		],
+		[
+			"v16-removed-backup-integrations",
+			"frappe/integrations/doctype/google_drive/google_drive.js",
+			36,
+			"method: \"frappe.integrations.doctype.google_drive.google_drive.take_backup\","
+		],
+		[
+			"v16-removed-backup-integrations",
+			"frappe/integrations/doctype/google_drive/google_drive.js",
+			59,
+			"method: \"frappe.integrations.doctype.google_drive.google_drive.authorize_access\","
+		],
+		[
+			"v16-removed-backup-integrations",
+			"frappe/integrations/doctype/google_drive/google_drive.py",
+			150,
+			"enqueue("
+		],
+		[
+			"v16-removed-backup-integrations",
+			"frappe/integrations/doctype/s3_backup_settings/s3_backup_settings.js",
+			15,
+			"method: \"frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backup\","
+		],
+		[
+			"v16-removed-backup-integrations",
+			"frappe/integrations/doctype/s3_backup_settings/s3_backup_settings.py",
+			82,
+			"job = enqueue("
+		],
+		[
+			"v16-removed-backup-integrations",
+			"frappe/integrations/doctype/s3_backup_settings/s3_backup_settings.py",
+			117,
+			"enqueue("
+		],
+		[
+			"v16-removed-blog",
+			"frappe/templates/includes/comments/comments.py",
+			9,
+			"from frappe.website.doctype.blog_settings.blog_settings import get_comment_limit"
+		],
+		[
+			"v16-removed-blog",
+			"frappe/templates/includes/likes/likes.py",
+			7,
+			"from frappe.website.doctype.blog_settings.blog_settings import get_like_limit"
+		],
+		[
+			"v16-removed-blog",
+			"frappe/website/doctype/blogger/blogger.py",
+			38,
+			"from frappe.website.doctype.blog_post.blog_post import clear_blog_cache"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/hooks.py",
+			399,
+			"{\"doctype\": \"Blog Post\"},"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/patches/v13_0/set_read_times.py",
+			8,
+			"frappe.reload_doc(\"website\", \"doctype\", \"blog_post\")"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/patches/v13_0/set_read_times.py",
+			10,
+			"for blog in frappe.get_all(\"Blog Post\"):"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/patches/v13_0/set_read_times.py",
+			11,
+			"blog = frappe.get_doc(\"Blog Post\", blog.name)"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/patches/v13_0/set_read_times.py",
+			12,
+			"frappe.db.set_value(\"Blog Post\", blog.name, \"read_time\", get_read_time(blog), update_modified=False)"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/patches/v13_0/set_route_for_blog_category.py",
+			5,
+			"categories = frappe.get_list(\"Blog Category\")"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/patches/v13_0/set_route_for_blog_category.py",
+			7,
+			"doc = frappe.get_doc(\"Blog Category\", category[\"name\"])"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/templates/includes/comments/comments.py",
+			33,
+			"if reference_doctype == \"Blog Post\" and not frappe.db.get_single_value("
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_category/blog_category.js",
+			4,
+			"frappe.ui.form.on(\"Blog Category\", {"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_post/blog_post.js",
+			4,
+			"frappe.ui.form.on(\"Blog Post\", {"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_post/blog_post.js",
+			6,
+			"frappe.db.get_single_value(\"Blog Settings\", \"show_cta_in_blog\").then((value) => {"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_post/blog_post.json",
+			null,
+			"link field blog_category"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_post/blog_post.json",
+			null,
+			"link field blogger"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_post/blog_post.py",
+			64,
+			"frappe.db.get_value(\"Blog Category\", self.blog_category, \"route\")"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_post/blog_post.py",
+			101,
+			"all_posts = frappe.get_all(\"Blog Post\", {\"featured\": 1})"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_post/blog_post.py",
+			103,
+			"frappe.db.set_value(\"Blog Post\", post.name, \"featured\", 0)"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_post/blog_post.py",
+			124,
+			"context.enable_cta = not self.hide_cta and frappe.db.get_single_value("
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_post/blog_post.py",
+			129,
+			"context.blogger_info = frappe.get_doc(\"Blogger\", self.blogger).as_dict()"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_post/blog_post.py",
+			151,
+			"context.category = frappe.db.get_value("
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_post/blog_post.py",
+			159,
+			"context.guest_allowed = frappe.db.get_single_value(\"Blog Settings\", \"allow_guest_to_comment\")"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_post/blog_post.py",
+			162,
+			"if frappe.db.get_single_value(\"Blog Settings\", \"show_cta_in_blog\", cache=True):"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_post/blog_post.py",
+			163,
+			"blog_settings = frappe.get_cached_doc(\"Blog Settings\")"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_post/blog_post.py",
+			176,
+			"if not frappe.db.get_single_value(\"Blog Settings\", \"enable_social_sharing\", cache=True):"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_post/blog_post.py",
+			244,
+			"blog_settings = frappe.get_doc(\"Blog Settings\").as_dict(no_default_fields=True)"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_post/blog_post.py",
+			251,
+			"category = frappe.get_doc(\"Blog Category\", category_name)"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_post/blog_post.py",
+			259,
+			"blogger = frappe.db.get_value(\"Blogger\", {\"name\": frappe.local.form_dict.blogger}, \"full_name\")"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_post/blog_post.py",
+			288,
+			"post, category = frappe.qb.DocType(\"Blog Post\"), frappe.qb.DocType(\"Blog Category\")"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_post/blog_post.py",
+			306,
+			"for blog in frappe.db.get_list(\"Blog Post\", fields=[\"route\"], pluck=\"route\", filters={\"published\": True}):"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_post/blog_post.py",
+			398,
+			"post.category = frappe.db.get_value("
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_post/blog_post_list.js",
+			1,
+			"frappe.listview_settings[\"Blog Post\"] = {"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_settings/blog_settings.js",
+			4,
+			"frappe.ui.form.on(\"Blog Settings\", {"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_settings/blog_settings.py",
+			42,
+			"return frappe.get_single_value(\"Blog Settings\", \"like_limit\") or 5"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blog_settings/blog_settings.py",
+			46,
+			"return frappe.get_single_value(\"Blog Settings\", \"comment_limit\") or 5"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blogger/blogger.js",
+			4,
+			"frappe.ui.form.on(\"Blogger\", {"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blogger/blogger.py",
+			44,
+			"\"\"\"select name from `tabBlog Post` where owner=%s"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/website/doctype/blogger/blogger.py",
+			48,
+			"b = frappe.get_doc(\"Blog Post\", blog)"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/www/rss.py",
+			18,
+			"blog_list = frappe.get_all("
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"frappe/www/rss.py",
+			36,
+			"blog_settings = frappe.get_doc(\"Blog Settings\", \"Blog Settings\")"
+		],
+		[
+			"v16-removed-changelog-feed",
+			"frappe/boot.py",
+			17,
+			"from frappe.desk.doctype.changelog_feed.changelog_feed import get_changelog_feed_items"
+		],
+		[
+			"v16-removed-changelog-feed",
+			"frappe/hooks.py",
+			291,
+			"\"frappe.desk.doctype.changelog_feed.changelog_feed.fetch_changelog_feed\","
+		],
+		[
+			"v16-removed-changelog-feed",
+			"frappe/hooks.py",
+			492,
+			"get_changelog_feed = \"frappe.desk.doctype.changelog_feed.changelog_feed.get_feed\""
+		],
+		[
+			"v16-removed-changelog-feed-doctypes",
+			"frappe/desk/doctype/changelog_feed/changelog_feed.py",
+			33,
+			"since = frappe.db.get_value("
+		],
+		[
+			"v16-removed-changelog-feed-doctypes",
+			"frappe/desk/doctype/changelog_feed/changelog_feed.py",
+			57,
+			"if not frappe.db.exists(\"Changelog Feed\", feed):"
+		],
+		[
+			"v16-removed-changelog-feed-doctypes",
+			"frappe/desk/doctype/changelog_feed/changelog_feed.py",
+			58,
+			"frappe.new_doc(\"Changelog Feed\").update(feed).insert()"
+		],
+		[
+			"v16-removed-changelog-feed-doctypes",
+			"frappe/desk/doctype/changelog_feed/changelog_feed.py",
+			68,
+			"feed = frappe.get_all("
+		],
+		[
+			"v16-removed-changelog-feed-hook",
+			"frappe/hooks.py",
+			492,
+			"get_changelog_feed = \"frappe.desk.doctype.changelog_feed.changelog_feed.get_feed\""
+		],
+		[
+			"v16-removed-changelog-feed-js",
+			"frappe/public/js/frappe/ui/notifications/notifications.js",
+			467,
+			"this.render_changelog_feed_html(frappe.boot.changelog_feed || []);"
+		],
+		[
+			"v16-removed-changelog-feed-js",
+			"frappe/public/js/frappe/ui/toolbar/awesome_bar.js",
+			226,
+			"frappe.search.utils.get_marketplace_apps(txt)"
+		],
+		[
+			"v16-removed-changelog-feed-js",
+			"frappe/public/js/frappe/ui/toolbar/search_utils.js",
+			690,
+			"frappe.boot.marketplace_apps.forEach(function (item) {"
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/core/doctype/user/user.py",
+			539,
+			"frappe.db.delete(\"Energy Point Log\", {\"user\": self.name})"
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/desk/form/load.py",
+			309,
+			"return frappe.get_all("
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/desk/leaderboard.py",
+			32,
+			"energy_point_users = frappe.get_list("
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/desk/page/user_profile/user_profile.py",
+			16,
+			"eps_log = frappe.qb.DocType(\"Energy Point Log\")"
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/desk/page/user_profile/user_profile.py",
+			36,
+			"result = frappe.get_all("
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/desk/page/user_profile/user_profile.py",
+			54,
+			"monthly_rank = frappe.get_all("
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/desk/page/user_profile/user_profile.py",
+			56,
+			"group_by=\"`tabEnergy Point Log`.`user`\","
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/desk/page/user_profile/user_profile.py",
+			63,
+			"all_time_rank = frappe.get_all("
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/desk/page/user_profile/user_profile.py",
+			65,
+			"group_by=\"`tabEnergy Point Log`.`user`\","
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/desk/page/user_profile/user_profile.py",
+			95,
+			"return frappe.db.get_list("
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/model/rename_doc.py",
+			309,
+			"EPL = frappe.qb.DocType(\"Energy Point Log\")"
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/social/doctype/energy_point_log/energy_point_log.js",
+			4,
+			"frappe.ui.form.on(\"Energy Point Log\", {"
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/social/doctype/energy_point_log/energy_point_log.json",
+			null,
+			"link field revert_of"
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/social/doctype/energy_point_log/energy_point_log.json",
+			null,
+			"link field rule"
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/social/doctype/energy_point_log/energy_point_log.py",
+			80,
+			"reference_log = frappe.get_doc(\"Energy Point Log\", self.revert_of)"
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/social/doctype/energy_point_log/energy_point_log.py",
+			100,
+			"\"doctype\": \"Energy Point Log\","
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/social/doctype/energy_point_log/energy_point_log.py",
+			197,
+			"return frappe.get_doc(\"Energy Point Log\", log_exists)"
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/social/doctype/energy_point_log/energy_point_log.py",
+			199,
+			"new_log = frappe.new_doc(\"Energy Point Log\")"
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/social/doctype/energy_point_log/energy_point_log.py",
+			216,
+			"return frappe.db.exists(\"Energy Point Log\", filters)"
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/social/doctype/energy_point_log/energy_point_log.py",
+			222,
+			"\"doctype\": \"Energy Point Log\","
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/social/doctype/energy_point_log/energy_point_log.py",
+			265,
+			"WHEN `type`='Review' AND `points` < 0 {given_points_condition}"
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/social/doctype/energy_point_log/energy_point_log.py",
+			322,
+			"return frappe.get_all("
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/social/doctype/energy_point_log/energy_point_log_list.js",
+			1,
+			"frappe.listview_settings[\"Energy Point Log\"] = {"
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/social/doctype/energy_point_rule/energy_point_rule.js",
+			4,
+			"frappe.ui.form.on(\"Energy Point Rule\", {"
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/social/doctype/energy_point_rule/energy_point_rule.py",
+			135,
+			"frappe.get_doc(\"Energy Point Rule\", d.get(\"name\")).apply(doc)"
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/social/doctype/energy_point_rule/energy_point_rule.py",
+			139,
+			"energy_point_logs = frappe.get_all("
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/social/doctype/energy_point_rule/energy_point_rule.py",
+			144,
+			"reference_log = frappe.get_doc(\"Energy Point Log\", log.name)"
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/social/doctype/energy_point_rule/energy_point_rule.py",
+			151,
+			"for d in frappe.get_all(\"Energy Point Rule\", [\"reference_doctype\"], {\"enabled\": 1})"
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/social/doctype/energy_point_settings/energy_point_settings.js",
+			4,
+			"frappe.ui.form.on(\"Energy Point Settings\", {"
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/social/doctype/energy_point_settings/energy_point_settings.json",
+			null,
+			"table field review_levels"
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/social/doctype/energy_point_settings/energy_point_settings.py",
+			32,
+			"return frappe.db.get_single_value(\"Energy Point Settings\", \"enabled\", True)"
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/social/doctype/energy_point_settings/energy_point_settings.py",
+			36,
+			"settings = frappe.get_single(\"Energy Point Settings\")"
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"frappe/social/doctype/review_level/review_level.js",
+			4,
+			"frappe.ui.form.on(\"Review Level\", {"
+		],
+		[
+			"v16-removed-energy-points",
+			"frappe/boot.py",
+			28,
+			"from frappe.social.doctype.energy_point_log.energy_point_log import get_energy_points"
+		],
+		[
+			"v16-removed-energy-points",
+			"frappe/boot.py",
+			30,
+			"is_energy_point_enabled,"
+		],
+		[
+			"v16-removed-energy-points",
+			"frappe/desk/page/user_profile/user_profile_controller.js",
+			373,
+			"\"frappe.social.doctype.energy_point_log.energy_point_log.get_user_energy_and_review_points\","
+		],
+		[
+			"v16-removed-energy-points",
+			"frappe/hooks.py",
+			195,
+			"\"frappe.social.doctype.energy_point_rule.energy_point_rule.process_energy_points\","
+		],
+		[
+			"v16-removed-energy-points",
+			"frappe/hooks.py",
+			281,
+			"\"frappe.social.doctype.energy_point_settings.energy_point_settings.allocate_review_points\","
+		],
+		[
+			"v16-removed-energy-points",
+			"frappe/hooks.py",
+			289,
+			"\"frappe.social.doctype.energy_point_log.energy_point_log.send_weekly_summary\","
+		],
+		[
+			"v16-removed-energy-points",
+			"frappe/hooks.py",
+			295,
+			"\"frappe.social.doctype.energy_point_log.energy_point_log.send_monthly_summary\","
+		],
+		[
+			"v16-removed-energy-points",
+			"frappe/public/js/frappe/form/sidebar/review.js",
+			15,
+			".xcall(\"frappe.social.doctype.energy_point_log.energy_point_log.get_energy_points\", {"
+		],
+		[
+			"v16-removed-energy-points",
+			"frappe/public/js/frappe/form/sidebar/review.js",
+			94,
+			".xcall(\"frappe.social.doctype.energy_point_log.energy_point_log.review\", {"
+		],
+		[
+			"v16-removed-energy-points",
+			"frappe/social/doctype/energy_point_log/energy_point_log.py",
+			343,
+			"is_energy_point_enabled,"
+		],
+		[
+			"v16-removed-energy-points",
+			"frappe/social/doctype/energy_point_rule/energy_point_rule.py",
+			10,
+			"from frappe.social.doctype.energy_point_log.energy_point_log import create_energy_points_log"
+		],
+		[
+			"v16-removed-energy-points",
+			"frappe/social/doctype/energy_point_rule/energy_point_rule.py",
+			12,
+			"is_energy_point_enabled,"
+		],
+		[
+			"v16-removed-energy-points",
+			"frappe/social/doctype/energy_point_settings/energy_point_settings.js",
+			33,
+			"\"frappe.social.doctype.energy_point_log.energy_point_log.add_review_points\","
+		],
+		[
+			"v16-removed-energy-points",
+			"frappe/social/doctype/energy_point_settings/energy_point_settings.py",
+			6,
+			"from frappe.social.doctype.energy_point_log.energy_point_log import create_review_points_log"
+		],
+		[
+			"v16-removed-energy-points-js",
+			"frappe/desk/page/user_profile/user_profile_controller.js",
+			2,
+			"frappe.provide(\"frappe.energy_points\");"
+		],
+		[
+			"v16-removed-energy-points-js",
+			"frappe/desk/page/user_profile/user_profile_controller.js",
+			466,
+			"content: frappe.energy_points.format_history_log(data),"
+		],
+		[
+			"v16-removed-energy-points-js",
+			"frappe/public/js/frappe/form/footer/form_timeline.js",
+			521,
+			"content: frappe.energy_points.format_form_log(log),"
+		],
+		[
+			"v16-removed-energy-points-js",
+			"frappe/public/js/frappe/form/sidebar/form_sidebar.js",
+			262,
+			"this.frm.reviews = new frappe.ui.form.Review({"
+		],
+		[
+			"v16-removed-energy-points-js",
+			"frappe/public/js/frappe/form/sidebar/review.js",
+			4,
+			"frappe.ui.form.Review = class Review {"
+		],
+		[
+			"v16-removed-energy-points-js",
+			"frappe/public/js/frappe/utils/energy_point_utils.js",
+			4,
+			"frappe.provide(\"frappe.energy_points\");"
+		],
+		[
+			"v16-removed-energy-points-js",
+			"frappe/public/js/frappe/utils/energy_point_utils.js",
+			6,
+			"Object.assign(frappe.energy_points, {"
+		],
+		[
+			"v16-removed-leaderboards-hook",
+			"frappe/hooks.py",
+			89,
+			"leaderboards = \"frappe.desk.leaderboard.get_leaderboards\""
+		],
+		[
+			"v16-removed-list-sidebar",
+			"frappe/public/js/frappe/list/base_list.js",
+			282,
+			"this.list_sidebar = new frappe.views.ListSidebar({"
+		],
+		[
+			"v16-removed-list-sidebar",
+			"frappe/public/js/frappe/list/list_sidebar.js",
+			11,
+			"frappe.views.ListSidebar = class ListSidebar {"
+		],
+		[
+			"v16-removed-newsletter",
+			"frappe/hooks.py",
+			248,
+			"\"frappe.email.doctype.newsletter.newsletter.send_scheduled_email\","
+		],
+		[
+			"v16-removed-newsletter",
+			"frappe/www/unsubscribe.py",
+			2,
+			"from frappe.email.doctype.newsletter.newsletter import confirmed_unsubscribe"
+		],
+		[
+			"v16-removed-newsletter-doctypes",
+			"frappe/email/doctype/email_group/email_group.js",
+			70,
+			"frappe.new_doc(\"Newsletter\");"
+		],
+		[
+			"v16-removed-newsletter-doctypes",
+			"frappe/email/doctype/newsletter/newsletter.js",
+			4,
+			"frappe.ui.form.on(\"Newsletter\", {"
+		],
+		[
+			"v16-removed-newsletter-doctypes",
+			"frappe/email/doctype/newsletter/newsletter.json",
+			null,
+			"table field attachments"
+		],
+		[
+			"v16-removed-newsletter-doctypes",
+			"frappe/email/doctype/newsletter/newsletter.json",
+			null,
+			"table field email_group"
+		],
+		[
+			"v16-removed-newsletter-doctypes",
+			"frappe/email/doctype/newsletter/newsletter.py",
+			279,
+			"return [x.email_group for x in self.email_group] or frappe.get_all("
+		],
+		[
+			"v16-removed-newsletter-doctypes",
+			"frappe/email/doctype/newsletter/newsletter.py",
+			404,
+			"scheduled_newsletter = frappe.get_all("
+		],
+		[
+			"v16-removed-newsletter-doctypes",
+			"frappe/email/doctype/newsletter/newsletter.py",
+			417,
+			"newsletter = frappe.get_doc(\"Newsletter\", newsletter_name)"
+		],
+		[
+			"v16-removed-newsletter-doctypes",
+			"frappe/email/doctype/newsletter/newsletter.py",
+			424,
+			"frappe.db.set_value(\"Newsletter\", newsletter_name, \"email_sent\", 0)"
+		],
+		[
+			"v16-removed-newsletter-doctypes",
+			"frappe/email/doctype/newsletter/newsletter.py",
+			439,
+			"doc = frappe.get_cached_doc(\"Newsletter\", reference_name)"
+		],
+		[
+			"v16-removed-newsletter-doctypes",
+			"frappe/email/doctype/newsletter/newsletter.py",
+			441,
+			"newsletter = frappe.qb.DocType(\"Newsletter\")"
+		],
+		[
+			"v16-removed-newsletter-doctypes",
+			"frappe/email/doctype/newsletter/newsletter_list.js",
+			1,
+			"frappe.listview_settings[\"Newsletter\"] = {"
+		],
+		[
+			"v16-removed-newsletter-doctypes",
+			"frappe/hooks.py",
+			403,
+			"{\"doctype\": \"Newsletter\"},"
+		],
+		[
+			"v16-removed-newsletter-doctypes",
+			"frappe/patches/v13_0/update_newsletter_content_type.py",
+			8,
+			"frappe.reload_doc(\"email\", \"doctype\", \"Newsletter\")"
+		],
+		[
+			"v16-removed-newsletter-doctypes",
+			"frappe/www/unsubscribe.py",
+			43,
+			"return frappe.get_all("
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			17,
+			".octicon,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			18,
+			".mega-octicon {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			30,
+			".mega-octicon {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			34,
+			".octicon-alert:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			37,
+			".octicon-arrow-down:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			40,
+			".octicon-arrow-left:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			43,
+			".octicon-arrow-right:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			46,
+			".octicon-arrow-small-down:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			49,
+			".octicon-arrow-small-left:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			52,
+			".octicon-arrow-small-right:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			55,
+			".octicon-arrow-small-up:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			58,
+			".octicon-arrow-up:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			61,
+			".octicon-microscope:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			62,
+			".octicon-beaker:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			65,
+			".octicon-bell:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			68,
+			".octicon-book:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			71,
+			".octicon-bookmark:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			74,
+			".octicon-briefcase:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			77,
+			".octicon-broadcast:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			80,
+			".octicon-browser:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			83,
+			".octicon-bug:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			86,
+			".octicon-calendar:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			89,
+			".octicon-check:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			92,
+			".octicon-checklist:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			95,
+			".octicon-chevron-down:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			98,
+			".octicon-chevron-left:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			101,
+			".octicon-chevron-right:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			104,
+			".octicon-chevron-up:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			107,
+			".octicon-circle-slash:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			110,
+			".octicon-circuit-board:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			113,
+			".octicon-clippy:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			116,
+			".octicon-clock:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			119,
+			".octicon-cloud-download:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			122,
+			".octicon-cloud-upload:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			125,
+			".octicon-code:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			128,
+			".octicon-color-mode:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			131,
+			".octicon-comment-add:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			132,
+			".octicon-comment:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			135,
+			".octicon-comment-discussion:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			138,
+			".octicon-credit-card:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			141,
+			".octicon-dash:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			144,
+			".octicon-dashboard:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			147,
+			".octicon-database:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			150,
+			".octicon-clone:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			151,
+			".octicon-desktop-download:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			154,
+			".octicon-device-camera:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			157,
+			".octicon-device-camera-video:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			160,
+			".octicon-device-desktop:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			163,
+			".octicon-device-mobile:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			166,
+			".octicon-diff:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			169,
+			".octicon-diff-added:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			172,
+			".octicon-diff-ignored:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			175,
+			".octicon-diff-modified:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			178,
+			".octicon-diff-removed:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			181,
+			".octicon-diff-renamed:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			184,
+			".octicon-ellipsis:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			187,
+			".octicon-eye-unwatch:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			188,
+			".octicon-eye-watch:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			189,
+			".octicon-eye:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			192,
+			".octicon-file-binary:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			195,
+			".octicon-file-code:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			198,
+			".octicon-file-directory:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			201,
+			".octicon-file-media:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			204,
+			".octicon-file-pdf:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			207,
+			".octicon-file-submodule:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			210,
+			".octicon-file-symlink-directory:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			213,
+			".octicon-file-symlink-file:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			216,
+			".octicon-file-text:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			219,
+			".octicon-file-zip:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			222,
+			".octicon-flame:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			225,
+			".octicon-fold:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			228,
+			".octicon-gear:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			231,
+			".octicon-gift:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			234,
+			".octicon-gist:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			237,
+			".octicon-gist-secret:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			240,
+			".octicon-git-branch-create:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			241,
+			".octicon-git-branch-delete:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			242,
+			".octicon-git-branch:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			245,
+			".octicon-git-commit:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			248,
+			".octicon-git-compare:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			251,
+			".octicon-git-merge:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			254,
+			".octicon-git-pull-request-abandoned:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			255,
+			".octicon-git-pull-request:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			258,
+			".octicon-globe:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			261,
+			".octicon-graph:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			264,
+			".octicon-heart:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			267,
+			".octicon-history:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			270,
+			".octicon-home:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			273,
+			".octicon-horizontal-rule:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			276,
+			".octicon-hubot:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			279,
+			".octicon-inbox:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			282,
+			".octicon-info:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			285,
+			".octicon-issue-closed:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			288,
+			".octicon-issue-opened:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			291,
+			".octicon-issue-reopened:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			294,
+			".octicon-jersey:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			297,
+			".octicon-key:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			300,
+			".octicon-keyboard:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			303,
+			".octicon-law:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			306,
+			".octicon-light-bulb:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			309,
+			".octicon-link:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			312,
+			".octicon-link-external:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			315,
+			".octicon-list-ordered:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			318,
+			".octicon-list-unordered:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			321,
+			".octicon-location:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			324,
+			".octicon-gist-private:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			325,
+			".octicon-mirror-private:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			326,
+			".octicon-git-fork-private:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			327,
+			".octicon-lock:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			330,
+			".octicon-logo-github:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			333,
+			".octicon-mail:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			336,
+			".octicon-mail-read:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			339,
+			".octicon-mail-reply:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			342,
+			".octicon-mark-github:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			345,
+			".octicon-markdown:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			348,
+			".octicon-megaphone:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			351,
+			".octicon-mention:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			354,
+			".octicon-milestone:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			357,
+			".octicon-mirror-public:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			358,
+			".octicon-mirror:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			361,
+			".octicon-mortar-board:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			364,
+			".octicon-mute:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			367,
+			".octicon-no-newline:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			370,
+			".octicon-octoface:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			373,
+			".octicon-organization:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			376,
+			".octicon-package:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			379,
+			".octicon-paintcan:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			382,
+			".octicon-pencil:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			385,
+			".octicon-person-add:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			386,
+			".octicon-person-follow:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			387,
+			".octicon-person:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			390,
+			".octicon-pin:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			393,
+			".octicon-plug:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			396,
+			".octicon-repo-create:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			397,
+			".octicon-gist-new:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			398,
+			".octicon-file-directory-create:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			399,
+			".octicon-file-add:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			400,
+			".octicon-plus:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			403,
+			".octicon-primitive-dot:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			406,
+			".octicon-primitive-square:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			409,
+			".octicon-pulse:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			412,
+			".octicon-question:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			415,
+			".octicon-quote:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			418,
+			".octicon-radio-tower:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			421,
+			".octicon-repo-delete:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			422,
+			".octicon-repo:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			425,
+			".octicon-repo-clone:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			428,
+			".octicon-repo-force-push:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			431,
+			".octicon-gist-fork:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			432,
+			".octicon-repo-forked:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			435,
+			".octicon-repo-pull:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			438,
+			".octicon-repo-push:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			441,
+			".octicon-rocket:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			444,
+			".octicon-rss:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			447,
+			".octicon-ruby:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			450,
+			".octicon-screen-full:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			453,
+			".octicon-screen-normal:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			456,
+			".octicon-search-save:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			457,
+			".octicon-search:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			460,
+			".octicon-server:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			463,
+			".octicon-settings:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			466,
+			".octicon-shield:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			469,
+			".octicon-log-in:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			470,
+			".octicon-sign-in:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			473,
+			".octicon-log-out:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			474,
+			".octicon-sign-out:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			477,
+			".octicon-squirrel:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			480,
+			".octicon-star-add:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			481,
+			".octicon-star-delete:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			482,
+			".octicon-star:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			485,
+			".octicon-stop:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			488,
+			".octicon-repo-sync:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			489,
+			".octicon-sync:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			492,
+			".octicon-tag-remove:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			493,
+			".octicon-tag-add:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			494,
+			".octicon-tag:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			497,
+			".octicon-telescope:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			500,
+			".octicon-terminal:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			503,
+			".octicon-three-bars:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			506,
+			".octicon-thumbsdown:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			509,
+			".octicon-thumbsup:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			512,
+			".octicon-tools:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			515,
+			".octicon-trashcan:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			518,
+			".octicon-triangle-down:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			521,
+			".octicon-triangle-left:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			524,
+			".octicon-triangle-right:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			527,
+			".octicon-triangle-up:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			530,
+			".octicon-unfold:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			533,
+			".octicon-unmute:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			536,
+			".octicon-versions:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			539,
+			".octicon-watch:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			542,
+			".octicon-remove-close:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			543,
+			".octicon-x:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/octicons.scss",
+			546,
+			".octicon-zap:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			12,
+			".octicon,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			13,
+			".mega-octicon {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			25,
+			".mega-octicon {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			29,
+			".octicon-alert:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			32,
+			".octicon-arrow-down:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			35,
+			".octicon-arrow-left:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			38,
+			".octicon-arrow-right:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			41,
+			".octicon-arrow-small-down:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			44,
+			".octicon-arrow-small-left:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			47,
+			".octicon-arrow-small-right:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			50,
+			".octicon-arrow-small-up:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			53,
+			".octicon-arrow-up:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			56,
+			".octicon-microscope:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			57,
+			".octicon-beaker:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			60,
+			".octicon-bell:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			63,
+			".octicon-book:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			66,
+			".octicon-bookmark:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			69,
+			".octicon-briefcase:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			72,
+			".octicon-broadcast:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			75,
+			".octicon-browser:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			78,
+			".octicon-bug:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			81,
+			".octicon-calendar:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			84,
+			".octicon-check:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			87,
+			".octicon-checklist:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			90,
+			".octicon-chevron-down:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			93,
+			".octicon-chevron-left:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			96,
+			".octicon-chevron-right:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			99,
+			".octicon-chevron-up:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			102,
+			".octicon-circle-slash:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			105,
+			".octicon-circuit-board:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			108,
+			".octicon-clippy:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			111,
+			".octicon-clock:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			114,
+			".octicon-cloud-download:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			117,
+			".octicon-cloud-upload:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			120,
+			".octicon-code:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			123,
+			".octicon-color-mode:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			126,
+			".octicon-comment-add:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			127,
+			".octicon-comment:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			130,
+			".octicon-comment-discussion:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			133,
+			".octicon-credit-card:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			136,
+			".octicon-dash:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			139,
+			".octicon-dashboard:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			142,
+			".octicon-database:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			145,
+			".octicon-clone:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			146,
+			".octicon-desktop-download:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			149,
+			".octicon-device-camera:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			152,
+			".octicon-device-camera-video:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			155,
+			".octicon-device-desktop:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			158,
+			".octicon-device-mobile:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			161,
+			".octicon-diff:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			164,
+			".octicon-diff-added:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			167,
+			".octicon-diff-ignored:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			170,
+			".octicon-diff-modified:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			173,
+			".octicon-diff-removed:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			176,
+			".octicon-diff-renamed:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			179,
+			".octicon-ellipsis:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			182,
+			".octicon-eye-unwatch:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			183,
+			".octicon-eye-watch:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			184,
+			".octicon-eye:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			187,
+			".octicon-file-binary:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			190,
+			".octicon-file-code:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			193,
+			".octicon-file-directory:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			196,
+			".octicon-file-media:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			199,
+			".octicon-file-pdf:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			202,
+			".octicon-file-submodule:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			205,
+			".octicon-file-symlink-directory:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			208,
+			".octicon-file-symlink-file:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			211,
+			".octicon-file-text:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			214,
+			".octicon-file-zip:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			217,
+			".octicon-flame:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			220,
+			".octicon-fold:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			223,
+			".octicon-gear:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			226,
+			".octicon-gift:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			229,
+			".octicon-gist:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			232,
+			".octicon-gist-secret:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			235,
+			".octicon-git-branch-create:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			236,
+			".octicon-git-branch-delete:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			237,
+			".octicon-git-branch:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			240,
+			".octicon-git-commit:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			243,
+			".octicon-git-compare:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			246,
+			".octicon-git-merge:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			249,
+			".octicon-git-pull-request-abandoned:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			250,
+			".octicon-git-pull-request:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			253,
+			".octicon-globe:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			256,
+			".octicon-graph:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			259,
+			".octicon-heart:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			262,
+			".octicon-history:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			265,
+			".octicon-home:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			268,
+			".octicon-horizontal-rule:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			271,
+			".octicon-hubot:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			274,
+			".octicon-inbox:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			277,
+			".octicon-info:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			280,
+			".octicon-issue-closed:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			283,
+			".octicon-issue-opened:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			286,
+			".octicon-issue-reopened:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			289,
+			".octicon-jersey:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			292,
+			".octicon-key:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			295,
+			".octicon-keyboard:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			298,
+			".octicon-law:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			301,
+			".octicon-light-bulb:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			304,
+			".octicon-link:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			307,
+			".octicon-link-external:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			310,
+			".octicon-list-ordered:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			313,
+			".octicon-list-unordered:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			316,
+			".octicon-location:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			319,
+			".octicon-gist-private:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			320,
+			".octicon-mirror-private:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			321,
+			".octicon-git-fork-private:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			322,
+			".octicon-lock:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			325,
+			".octicon-logo-github:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			328,
+			".octicon-mail:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			331,
+			".octicon-mail-read:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			334,
+			".octicon-mail-reply:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			337,
+			".octicon-mark-github:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			340,
+			".octicon-markdown:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			343,
+			".octicon-megaphone:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			346,
+			".octicon-mention:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			349,
+			".octicon-milestone:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			352,
+			".octicon-mirror-public:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			353,
+			".octicon-mirror:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			356,
+			".octicon-mortar-board:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			359,
+			".octicon-mute:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			362,
+			".octicon-no-newline:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			365,
+			".octicon-octoface:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			368,
+			".octicon-organization:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			371,
+			".octicon-package:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			374,
+			".octicon-paintcan:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			377,
+			".octicon-pencil:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			380,
+			".octicon-person-add:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			381,
+			".octicon-person-follow:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			382,
+			".octicon-person:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			385,
+			".octicon-pin:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			388,
+			".octicon-plug:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			391,
+			".octicon-repo-create:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			392,
+			".octicon-gist-new:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			393,
+			".octicon-file-directory-create:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			394,
+			".octicon-file-add:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			395,
+			".octicon-plus:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			398,
+			".octicon-primitive-dot:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			401,
+			".octicon-primitive-square:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			404,
+			".octicon-pulse:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			407,
+			".octicon-question:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			410,
+			".octicon-quote:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			413,
+			".octicon-radio-tower:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			416,
+			".octicon-repo-delete:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			417,
+			".octicon-repo:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			420,
+			".octicon-repo-clone:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			423,
+			".octicon-repo-force-push:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			426,
+			".octicon-gist-fork:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			427,
+			".octicon-repo-forked:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			430,
+			".octicon-repo-pull:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			433,
+			".octicon-repo-push:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			436,
+			".octicon-rocket:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			439,
+			".octicon-rss:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			442,
+			".octicon-ruby:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			445,
+			".octicon-screen-full:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			448,
+			".octicon-screen-normal:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			451,
+			".octicon-search-save:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			452,
+			".octicon-search:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			455,
+			".octicon-server:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			458,
+			".octicon-settings:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			461,
+			".octicon-shield:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			464,
+			".octicon-log-in:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			465,
+			".octicon-sign-in:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			468,
+			".octicon-log-out:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			469,
+			".octicon-sign-out:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			472,
+			".octicon-squirrel:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			475,
+			".octicon-star-add:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			476,
+			".octicon-star-delete:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			477,
+			".octicon-star:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			480,
+			".octicon-stop:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			483,
+			".octicon-repo-sync:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			484,
+			".octicon-sync:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			487,
+			".octicon-tag-remove:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			488,
+			".octicon-tag-add:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			489,
+			".octicon-tag:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			492,
+			".octicon-telescope:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			495,
+			".octicon-terminal:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			498,
+			".octicon-three-bars:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			501,
+			".octicon-thumbsdown:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			504,
+			".octicon-thumbsup:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			507,
+			".octicon-tools:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			510,
+			".octicon-trashcan:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			513,
+			".octicon-triangle-down:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			516,
+			".octicon-triangle-left:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			519,
+			".octicon-triangle-right:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			522,
+			".octicon-triangle-up:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			525,
+			".octicon-unfold:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			528,
+			".octicon-unmute:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			531,
+			".octicon-versions:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			534,
+			".octicon-watch:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			537,
+			".octicon-remove-close:before,"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			538,
+			".octicon-x:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/css/octicons/sprockets-octicons.scss",
+			541,
+			".octicon-zap:before {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/js/frappe/data_import/import_preview.js",
+			66,
+			"<i class=\"octicon octicon-stop\"></i></button>`;"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/js/frappe/ui/toolbar/toolbar.js",
+			212,
+			"<i class=\"octicon ${icon}\"></i>"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/js/frappe/views/interaction.js",
+			158,
+			"<a class='text-muted small'><i class='octicon octicon-plus' style='font-size: 12px'></i> \" +"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/public/scss/desk/kanban.scss",
+			53,
+			".octicon-plus {"
+		],
+		[
+			"v16-removed-octicons",
+			"frappe/website/js/bootstrap-4.js",
+			38,
+			"<i class=\"octicon octicon-x visible-xs\" style=\"padding: 1px 0px;\"></i>"
+		],
+		[
+			"v16-removed-octicons-import",
+			"frappe/public/scss/desk.bundle.scss",
+			2,
+			"@import \"frappe/public/css/octicons/octicons.css\";"
+		],
+		[
+			"v16-removed-octicons-import",
+			"frappe/public/scss/web_form.bundle.scss",
+			2,
+			"@import \"frappe/public/css/octicons/octicons.css\";"
+		],
+		[
+			"v16-removed-rq-connection-helpers",
+			"frappe/utils/doctor.py",
+			3,
+			"from rq import Connection, Worker"
+		],
+		[
+			"v16-removed-transaction-log-doctypes",
+			"frappe/core/doctype/transaction_log/transaction_log.js",
+			4,
+			"frappe.ui.form.on(\"Transaction Log\", {});"
+		],
+		[
+			"v16-removed-transaction-log-doctypes",
+			"frappe/core/doctype/transaction_log/transaction_log.json",
+			null,
+			"link field amended_from"
+		],
+		[
+			"v16-removed-transaction-log-doctypes",
+			"frappe/core/doctype/transaction_log/transaction_log.py",
+			38,
+			"prev_hash = frappe.get_all("
+		],
+		[
+			"v16-removed-transaction-log-doctypes",
+			"frappe/core/report/transaction_log_report/transaction_log_report.py",
+			19,
+			"logs = frappe.get_all(\"Transaction Log\", fields=[\"*\"], order_by=\"creation desc\")"
+		],
+		[
+			"v16-removed-transaction-log-doctypes",
+			"frappe/core/report/transaction_log_report/transaction_log_report.py",
+			24,
+			"previous_hash = frappe.get_all("
+		],
+		[
+			"v16-removed-workspace-sidebar-items",
+			"frappe/public/js/frappe/views/workspace/workspace.js",
+			136,
+			"return frappe.xcall(\"frappe.desk.desktop.get_workspace_sidebar_items\");"
+		],
+		[
+			"v16-removed-workspace-sidebar-items-import",
+			"frappe/apps.py",
+			18,
+			"from frappe.desk.desktop import get_workspace_sidebar_items"
+		],
+		[
+			"v16-removed-workspace-sidebar-items-import",
+			"frappe/boot.py",
+			180,
+			"from frappe.desk.desktop import get_workspace_sidebar_items"
+		],
+		[
+			"v16-sanitize-html-strips-tags",
+			"frappe/__init__.py",
+			879,
+			"from frappe.utils import sanitize_html"
+		],
+		[
+			"v16-sanitize-html-strips-tags",
+			"frappe/core/doctype/comment/comment.py",
+			71,
+			"self.content = frappe.utils.sanitize_html("
+		],
+		[
+			"v16-sanitize-html-strips-tags",
+			"frappe/core/doctype/translation/translation.py",
+			7,
+			"from frappe.utils import sanitize_html"
+		],
+		[
+			"v16-sanitize-html-strips-tags",
+			"frappe/core/doctype/user/user.py",
+			38,
+			"from frappe.utils.html_utils import sanitize_html"
+		],
+		[
+			"v16-sanitize-html-strips-tags",
+			"frappe/desk/doctype/note/note.py",
+			39,
+			"self.content = frappe.utils.sanitize_html(self.content, always_sanitize=True)"
+		],
+		[
+			"v16-sanitize-html-strips-tags",
+			"frappe/email/receive.py",
+			37,
+			"sanitize_html,"
+		],
+		[
+			"v16-sanitize-html-strips-tags",
+			"frappe/model/base_document.py",
+			33,
+			"sanitize_html,"
+		],
+		[
+			"v16-sanitize-html-strips-tags",
+			"frappe/utils/__init__.py",
+			30,
+			"from frappe.utils.html_utils import sanitize_html"
+		],
+		[
+			"v16-sanitize-html-strips-tags",
+			"frappe/utils/safe_exec.py",
+			469,
+			"sanitize_html=frappe.utils.sanitize_html,"
+		],
+		[
+			"v16-sanitize-html-strips-tags",
+			"frappe/website/doctype/blog_post/blog_post.py",
+			15,
+			"sanitize_html,"
+		],
+		[
+			"v16-sanitize-html-strips-tags",
+			"frappe/website/doctype/discussion_reply/discussion_reply.py",
+			23,
+			"from frappe.utils.html_utils import sanitize_html"
+		],
+		[
+			"v16-sanitize-html-strips-tags",
+			"frappe/www/search.py",
+			6,
+			"from frappe.utils import sanitize_html"
+		],
+		[
+			"v16-sanitize-html-strips-tags",
+			"frappe/www/search.py",
+			17,
+			"context.update(get_search_results(query, frappe.utils.sanitize_html(frappe.form_dict.scope)))"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"frappe/core/doctype/data_import/data_import.py",
+			234,
+			"fields=[\"count(*) as count\", \"success\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"frappe/desk/doctype/dashboard_chart/dashboard_chart.py",
+			205,
+			"fields=[datefield, f\"SUM({value_field})\", \"COUNT(*)\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"frappe/desk/doctype/dashboard_chart/dashboard_chart.py",
+			248,
+			"f\"{aggregate_function}({value_field})\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"frappe/desk/doctype/dashboard_chart/dashboard_chart.py",
+			274,
+			"f\"{aggregate_function}({value_field}) as count\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"frappe/desk/doctype/number_card/number_card.py",
+			145,
+			"fields = [f\"{function}(*) as result\"]"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"frappe/desk/doctype/number_card/number_card.py",
+			147,
+			"fields = [f\"{function}({doc.aggregate_function_based_on}) as result\"]"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"frappe/desk/doctype/route_history/route_history.py",
+			51,
+			"fields=[\"route\", \"count(name) as count\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"frappe/desk/leaderboard.py",
+			34,
+			"fields=[\"user as name\", \"sum(points) as value\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"frappe/desk/listview.py",
+			72,
+			"fields=[\"count(*) as count\", f\"`{field}` as name\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"frappe/desk/notifications.py",
+			68,
+			"d, fields=[\"count(*) as count\"], filters=condition, ignore_ifnull=True"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"frappe/desk/page/user_profile/user_profile.py",
+			41,
+			"fields=[field, \"ABS(sum(points)) as points\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"frappe/desk/page/user_profile/user_profile.py",
+			58,
+			"fields=[\"user\", \"sum(points)\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"frappe/desk/page/user_profile/user_profile.py",
+			67,
+			"fields=[\"user\", \"sum(points)\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"frappe/desk/reportview.py",
+			713,
+			"fields=[column, \"count(*)\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"frappe/desk/reportview.py",
+			724,
+			"fields=[column, \"count(*)\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"frappe/desk/reportview.py",
+			763,
+			"fields=[tag[\"name\"], \"count(*)\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"frappe/desk/reportview.py",
+			785,
+			"fields=[tag[\"name\"], \"count(*)\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"frappe/email/doctype/email_account/email_account.py",
+			919,
+			"fields=[\"max(uid) as uid\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"frappe/email/doctype/newsletter/newsletter.py",
+			71,
+			"fields=[\"status\", \"count(name) as count\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"frappe/workflow/doctype/workflow/workflow.py",
+			132,
+			"fields=[workflow_state_field, \"count(*) as count\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"frappe/www/list.py",
+			241,
+			"fields = \"distinct *\""
+		],
+		[
+			"v16-value-cache-nested",
+			"frappe/model/document.py",
+			591,
+			"if self.doctype in frappe.db.value_cache:"
+		],
+		[
+			"v16-value-cache-nested",
+			"frappe/model/document.py",
+			592,
+			"del frappe.db.value_cache[self.doctype]"
+		]
+	]
+}

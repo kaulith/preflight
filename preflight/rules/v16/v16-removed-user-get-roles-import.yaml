@@ -1,0 +1,17 @@
+id: v16-removed-user-get-roles-import
+title: get_roles removed from the User controller
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.core.doctype.user.user.get_roles
+message: >
+  v16.31.0 removed get_roles from frappe.core.doctype.user.user, so importing it in server code
+  raises ImportError after the upgrade.
+replacement: >
+  Call frappe.get_roles(user), which the removed function wrapped, or
+  frappe.core.doctype.user.user.get_current_user_roles for the logged-in user.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/41728
+  - https://github.com/frappe/frappe/blob/v15.124.0/frappe/core/doctype/user/user.py#L845-L848

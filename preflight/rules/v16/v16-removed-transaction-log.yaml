@@ -1,0 +1,16 @@
+id: v16-removed-transaction-log
+title: Transaction Log doctype removed
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.core.doctype.transaction_log
+message: >
+  The Transaction Log doctype and its report were removed from the framework in v16.
+  Importing this module raises ImportError after the upgrade.
+replacement: >
+  Remove the dependency. The French use moved to the erpnext_france app
+  (https://github.com/scopen-coop/erpnext_france); the German use is obsolete.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/33844

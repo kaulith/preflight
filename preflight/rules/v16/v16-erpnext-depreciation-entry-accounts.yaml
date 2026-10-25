@@ -1,0 +1,25 @@
+id: v16-erpnext-depreciation-entry-accounts
+title: make_depreciation_entry no longer takes credit_and_debit_accounts
+severity: error
+match:
+  type: call
+  paths:
+    - erpnext.assets.doctype.asset.depreciation.make_depreciation_entry
+    - erpnext.assets.doctype.asset.depreciation._make_depreciation_entry
+  with_kwargs:
+    - credit_and_debit_accounts
+message: >
+  ERPNext v16 dropped the credit_and_debit_accounts argument of make_depreciation_entry and
+  _make_depreciation_entry, which now always read the accounts from the asset's category. Passing
+  it by keyword raises TypeError after the upgrade. By position it was the fifth argument, where v16
+  takes accounting_dimensions, and erpnext's own v16 code passes five arguments that way, so a call
+  with five positional arguments is not reported; check one by hand.
+replacement: >
+  Drop the argument, since v15 reads the accounts from the asset's category itself when it is not
+  passed, and pass accounting_dimensions by keyword, which both versions take.
+fix: before
+references:
+  - https://github.com/frappe/erpnext/pull/45251
+  - https://github.com/frappe/erpnext/blob/31803451f1cfb27087f8e9c9ddc8798c19844427/erpnext/assets/doctype/asset/depreciation.py#L212-L235
+  - https://github.com/frappe/erpnext/blob/v16.52.1/erpnext/assets/doctype/asset/depreciation.py#L46-L63
+  - https://github.com/frappe/erpnext/blob/v16.52.1/erpnext/assets/doctype/asset/depreciation.py#L166-L189

@@ -1,0 +1,22 @@
+id: v16-has-permission-hook-returns-none
+title: has_permission hook can return None, which v16 reads as deny
+severity: error
+match:
+  type: returns_none
+  keys:
+    - has_permission
+message: >
+  The function this has_permission entry names can return None: a path falls off the end, or
+  returns with no value or with None. v15 read None as "no opinion" and let the next hook, or the
+  role permissions, decide. v16 denies on anything falsy, so every user that path runs for is
+  refused the document.
+replacement: >
+  Return True from every path in the function that should let the document through, not only
+  False from the branch that denies. Ship it with the upgrade: v15 stops at the first hook that
+  returns anything but None, so on v15 a True from this one skips the has_permission hooks still
+  to run on the doctype, such as another app's denial.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/pull/24253
+  - https://github.com/frappe/frappe/blob/486ecf9e4a1daaa0027512bfab2947b8cde1502b/frappe/permissions.py#L466-L473
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/permissions.py#L494-L500

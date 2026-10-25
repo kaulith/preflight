@@ -1,0 +1,1382 @@
+{
+	"tree": "erpnext-v15",
+	"commit": "31803451f1cfb27087f8e9c9ddc8798c19844427",
+	"counts": {
+		"v16-deprecated-country-info-get-translated-dict": 1,
+		"v16-deprecated-get-number-format-info": 2,
+		"v16-deprecated-read-multi-pdf": 1,
+		"v16-erpnext-advance-payment-doctypes-hook": 1,
+		"v16-erpnext-asset-fields": 14,
+		"v16-erpnext-asset-repair-cost": 1,
+		"v16-erpnext-budget-fields": 1,
+		"v16-erpnext-closing-stock-balance-doctype": 7,
+		"v16-erpnext-default-supplier-purchase-orders": 1,
+		"v16-erpnext-depreciation-helpers": 2,
+		"v16-erpnext-homepage": 1,
+		"v16-erpnext-homepage-doctypes": 10,
+		"v16-erpnext-lead-source": 1,
+		"v16-erpnext-lead-source-doctype": 8,
+		"v16-erpnext-make-pricing-rule-js": 2,
+		"v16-erpnext-moved-settings": 26,
+		"v16-erpnext-pos-closing-invoices": 2,
+		"v16-erpnext-pos-fields": 3,
+		"v16-erpnext-removed-fields": 3,
+		"v16-erpnext-removed-methods": 2,
+		"v16-erpnext-replaced-reports": 2,
+		"v16-erpnext-repost-settings-doctype": 1,
+		"v16-erpnext-scrap-item-doctypes": 4,
+		"v16-erpnext-scrap-items": 3,
+		"v16-erpnext-secondary-items-fields": 1,
+		"v16-erpnext-subcontracted-quantity": 3,
+		"v16-erpnext-tax-withholding": 7,
+		"v16-erpnext-tax-withholding-doctypes": 2,
+		"v16-erpnext-tax-withholding-fields": 2,
+		"v16-erpnext-utm-fields": 1,
+		"v16-erpnext-workstation-cost-fields": 4,
+		"v16-has-permission-raise-exception": 1,
+		"v16-removed-blog-doctypes": 1,
+		"v16-removed-energy-point-doctypes": 3,
+		"v16-removed-leaderboards-hook": 1,
+		"v16-removed-newsletter": 1,
+		"v16-removed-newsletter-doctypes": 2,
+		"v16-removed-transaction-log-doctypes": 1,
+		"v16-sanitize-html-strips-tags": 1,
+		"v16-sql-function-string-fields": 84
+	},
+	"counts_with_tests": {
+		"v16-deprecated-country-info-get-translated-dict": 1,
+		"v16-deprecated-frappe-test-case": 163,
+		"v16-deprecated-get-number-format-info": 2,
+		"v16-deprecated-get-test-records": 60,
+		"v16-deprecated-read-multi-pdf": 1,
+		"v16-deprecated-test-runner": 13,
+		"v16-deprecated-tests-utils-helpers": 48,
+		"v16-erpnext-advance-payment-doctypes-hook": 1,
+		"v16-erpnext-asset-fields": 28,
+		"v16-erpnext-asset-repair-cost": 2,
+		"v16-erpnext-budget-fields": 6,
+		"v16-erpnext-closing-stock-balance": 1,
+		"v16-erpnext-closing-stock-balance-doctype": 8,
+		"v16-erpnext-default-supplier-purchase-orders": 5,
+		"v16-erpnext-depreciation-helpers": 2,
+		"v16-erpnext-homepage": 1,
+		"v16-erpnext-homepage-doctypes": 11,
+		"v16-erpnext-lead-source": 1,
+		"v16-erpnext-lead-source-doctype": 9,
+		"v16-erpnext-make-pricing-rule-js": 2,
+		"v16-erpnext-moved-settings": 39,
+		"v16-erpnext-pos-closing-invoices": 2,
+		"v16-erpnext-pos-fields": 3,
+		"v16-erpnext-removed-fields": 6,
+		"v16-erpnext-removed-methods": 2,
+		"v16-erpnext-replaced-reports": 4,
+		"v16-erpnext-repost-settings-doctype": 4,
+		"v16-erpnext-scrap-item-doctypes": 6,
+		"v16-erpnext-scrap-items": 4,
+		"v16-erpnext-secondary-items-fields": 1,
+		"v16-erpnext-serial-no-creation-document": 3,
+		"v16-erpnext-subcontracted-quantity": 3,
+		"v16-erpnext-tax-withholding": 7,
+		"v16-erpnext-tax-withholding-doctypes": 2,
+		"v16-erpnext-tax-withholding-fields": 2,
+		"v16-erpnext-utm-fields": 2,
+		"v16-erpnext-workstation-cost-fields": 9,
+		"v16-has-permission-raise-exception": 1,
+		"v16-removed-blog-doctypes": 1,
+		"v16-removed-energy-point-doctypes": 3,
+		"v16-removed-leaderboards-hook": 1,
+		"v16-removed-newsletter": 1,
+		"v16-removed-newsletter-doctypes": 2,
+		"v16-removed-transaction-log-doctypes": 1,
+		"v16-sanitize-html-strips-tags": 1,
+		"v16-sql-function-string-fields": 105,
+		"v16-value-cache-nested": 1
+	},
+	"unparsable": [],
+	"findings": [
+		[
+			"v16-deprecated-country-info-get-translated-dict",
+			"erpnext/hooks.py",
+			495,
+			"get_translated_dict = {(\"doctype\", \"Global Defaults\"): \"frappe.geo.country_info.get_translated_dict\"}"
+		],
+		[
+			"v16-deprecated-get-number-format-info",
+			"erpnext/accounts/utils.py",
+			25,
+			"get_number_format_info,"
+		],
+		[
+			"v16-deprecated-get-number-format-info",
+			"erpnext/stock/doctype/quality_inspection/quality_inspection.py",
+			9,
+			"from frappe.utils import cint, cstr, flt, get_link_to_form, get_number_format_info"
+		],
+		[
+			"v16-deprecated-read-multi-pdf",
+			"erpnext/regional/report/irs_1099/irs_1099.py",
+			12,
+			"from frappe.utils.print_format import read_multi_pdf"
+		],
+		[
+			"v16-erpnext-advance-payment-doctypes-hook",
+			"erpnext/hooks.py",
+			507,
+			"advance_payment_doctypes = [\"Sales Order\", \"Purchase Order\"]"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/accounts/doctype/purchase_invoice/purchase_invoice.py",
+			1399,
+			"\"gross_purchase_amount\": purchase_amount,"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/accounts/report/asset_depreciation_ledger/asset_depreciation_ledger.py",
+			123,
+			"\"gross_purchase_amount\","
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/asset.py",
+			1284,
+			"\"gross_purchase_amount\": remaining_gross_purchase_amount,"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/depreciation.py",
+			858,
+			"return flt(asset_doc.gross_purchase_amount - asset_doc.opening_accumulated_depreciation)"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/depreciation.py",
+			881,
+			"flt(asset_doc.gross_purchase_amount) - accumulated_depr_amount,"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset_capitalization/asset_capitalization.py",
+			355,
+			"[\"name\", \"item_code\", \"company\", \"status\", \"docstatus\", \"is_composite_asset\"],"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset_capitalization/asset_capitalization.py",
+			604,
+			"asset_doc.is_composite_asset = 1"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset_capitalization/asset_capitalization.py",
+			608,
+			"asset_doc.gross_purchase_amount = total_target_asset_value"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset_capitalization/asset_capitalization.py",
+			642,
+			"gross_purchase_amount = asset_doc.gross_purchase_amount - total_target_asset_value"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset_capitalization/asset_capitalization.py",
+			646,
+			"gross_purchase_amount = asset_doc.gross_purchase_amount + total_target_asset_value"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/report/fixed_asset_register/fixed_asset_register.py",
+			75,
+			"\"gross_purchase_amount\","
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/report/fixed_asset_register/fixed_asset_register.py",
+			359,
+			"\"gross_purchase_amount\","
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/patches/v15_0/link_purchase_item_to_asset_doc.py",
+			17,
+			"\"gross_purchase_amount\","
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/stock/doctype/purchase_receipt/purchase_receipt.py",
+			908,
+			"\"gross_purchase_amount\": purchase_amount,"
+		],
+		[
+			"v16-erpnext-asset-repair-cost",
+			"erpnext/assets/doctype/asset_repair/asset_repair.js",
+			138,
+			"method: \"erpnext.assets.doctype.asset_repair.asset_repair.get_repair_cost_for_purchase_invoice\","
+		],
+		[
+			"v16-erpnext-budget-fields",
+			"erpnext/accounts/doctype/budget/budget.py",
+			153,
+			"if not frappe.get_cached_value(\"Budget\", {\"fiscal_year\": args.fiscal_year, \"company\": args.company}):  # nosec"
+		],
+		[
+			"v16-erpnext-closing-stock-balance-doctype",
+			"erpnext/stock/doctype/closing_stock_balance/closing_stock_balance.js",
+			4,
+			"frappe.ui.form.on(\"Closing Stock Balance\", {"
+		],
+		[
+			"v16-erpnext-closing-stock-balance-doctype",
+			"erpnext/stock/doctype/closing_stock_balance/closing_stock_balance.json",
+			null,
+			"link field amended_from"
+		],
+		[
+			"v16-erpnext-closing-stock-balance-doctype",
+			"erpnext/stock/doctype/closing_stock_balance/closing_stock_balance.py",
+			57,
+			"table = frappe.qb.DocType(\"Closing Stock Balance\")"
+		],
+		[
+			"v16-erpnext-closing-stock-balance-doctype",
+			"erpnext/stock/doctype/closing_stock_balance/closing_stock_balance.py",
+			144,
+			"doc = frappe.get_doc(\"Closing Stock Balance\", name)"
+		],
+		[
+			"v16-erpnext-closing-stock-balance-doctype",
+			"erpnext/stock/doctype/repost_item_valuation/repost_item_valuation.py",
+			170,
+			"return frappe.get_all(\"Closing Stock Balance\", fields=[\"name\", \"to_date\"], filters=filters)"
+		],
+		[
+			"v16-erpnext-closing-stock-balance-doctype",
+			"erpnext/stock/report/stock_balance/stock_balance.py",
+			87,
+			"res = frappe.get_doc(\"Closing Stock Balance\", closing_balance[0].name).get_prepared_data()"
+		],
+		[
+			"v16-erpnext-closing-stock-balance-doctype",
+			"erpnext/stock/report/stock_balance/stock_balance.py",
+			339,
+			"table = frappe.qb.DocType(\"Closing Stock Balance\")"
+		],
+		[
+			"v16-erpnext-default-supplier-purchase-orders",
+			"erpnext/stock/doctype/material_request/material_request.js",
+			409,
+			"query: \"erpnext.stock.doctype.material_request.material_request.get_default_supplier_query\","
+		],
+		[
+			"v16-erpnext-depreciation-helpers",
+			"erpnext/accounts/doctype/sales_invoice/sales_invoice.py",
+			43,
+			"reverse_depreciation_entry_made_after_disposal,"
+		],
+		[
+			"v16-erpnext-depreciation-helpers",
+			"erpnext/assets/doctype/asset_capitalization/asset_capitalization.py",
+			19,
+			"reverse_depreciation_entry_made_after_disposal,"
+		],
+		[
+			"v16-erpnext-homepage",
+			"erpnext/portal/doctype/homepage_section/homepage_section.py",
+			19,
+			"HomepageSectionCard,"
+		],
+		[
+			"v16-erpnext-homepage-doctypes",
+			"erpnext/patches/v12_0/set_default_homepage_type.py",
+			5,
+			"frappe.db.set_single_value(\"Homepage\", \"hero_section_based_on\", \"Default\")"
+		],
+		[
+			"v16-erpnext-homepage-doctypes",
+			"erpnext/portal/doctype/homepage/homepage.js",
+			4,
+			"frappe.ui.form.on(\"Homepage\", {"
+		],
+		[
+			"v16-erpnext-homepage-doctypes",
+			"erpnext/portal/doctype/homepage/homepage.js",
+			10,
+			"frappe.set_route(\"List\", \"Homepage Section\", \"List\");"
+		],
+		[
+			"v16-erpnext-homepage-doctypes",
+			"erpnext/portal/doctype/homepage/homepage.json",
+			null,
+			"link field hero_section"
+		],
+		[
+			"v16-erpnext-homepage-doctypes",
+			"erpnext/portal/doctype/homepage_section/homepage_section.js",
+			4,
+			"frappe.ui.form.on(\"Homepage Section\", {});"
+		],
+		[
+			"v16-erpnext-homepage-doctypes",
+			"erpnext/portal/doctype/homepage_section/homepage_section.json",
+			null,
+			"table field section_cards"
+		],
+		[
+			"v16-erpnext-homepage-doctypes",
+			"erpnext/templates/pages/home.py",
+			11,
+			"homepage = frappe.get_cached_doc(\"Homepage\")"
+		],
+		[
+			"v16-erpnext-homepage-doctypes",
+			"erpnext/templates/pages/home.py",
+			18,
+			"homepage.hero_section_doc = frappe.get_cached_doc(\"Homepage Section\", homepage.hero_section)"
+		],
+		[
+			"v16-erpnext-homepage-doctypes",
+			"erpnext/templates/pages/home.py",
+			36,
+			"homepage_sections = frappe.get_all("
+		],
+		[
+			"v16-erpnext-homepage-doctypes",
+			"erpnext/templates/pages/home.py",
+			42,
+			"frappe.get_cached_doc(\"Homepage Section\", name) for name in homepage_sections"
+		],
+		[
+			"v16-erpnext-lead-source",
+			"erpnext/selling/page/sales_funnel/sales_funnel.js",
+			114,
+			"opp_by_lead_source: \"erpnext.selling.page.sales_funnel.sales_funnel.get_opp_by_lead_source\","
+		],
+		[
+			"v16-erpnext-lead-source-doctype",
+			"erpnext/accounts/doctype/pos_invoice/pos_invoice.json",
+			null,
+			"link field source"
+		],
+		[
+			"v16-erpnext-lead-source-doctype",
+			"erpnext/accounts/doctype/sales_invoice/sales_invoice.json",
+			null,
+			"link field source"
+		],
+		[
+			"v16-erpnext-lead-source-doctype",
+			"erpnext/crm/doctype/lead/lead.json",
+			null,
+			"link field source"
+		],
+		[
+			"v16-erpnext-lead-source-doctype",
+			"erpnext/crm/doctype/lead_source/lead_source.js",
+			4,
+			"frappe.ui.form.on(\"Lead Source\", {"
+		],
+		[
+			"v16-erpnext-lead-source-doctype",
+			"erpnext/crm/doctype/opportunity/opportunity.json",
+			null,
+			"link field source"
+		],
+		[
+			"v16-erpnext-lead-source-doctype",
+			"erpnext/selling/doctype/quotation/quotation.json",
+			null,
+			"link field source"
+		],
+		[
+			"v16-erpnext-lead-source-doctype",
+			"erpnext/selling/doctype/sales_order/sales_order.json",
+			null,
+			"link field source"
+		],
+		[
+			"v16-erpnext-lead-source-doctype",
+			"erpnext/stock/doctype/delivery_note/delivery_note.json",
+			null,
+			"link field source"
+		],
+		[
+			"v16-erpnext-make-pricing-rule-js",
+			"erpnext/buying/doctype/supplier/supplier.js",
+			72,
+			"\"Pricing Rule\": () => erpnext.utils.make_pricing_rule(frm.doc.doctype, frm.doc.name),"
+		],
+		[
+			"v16-erpnext-make-pricing-rule-js",
+			"erpnext/selling/doctype/customer/customer.js",
+			168,
+			"erpnext.utils.make_pricing_rule(frm.doc.doctype, frm.doc.name);"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/accounts/deferred_revenue.py",
+			321,
+			"accounts_frozen_upto = frappe.db.get_single_value(\"Accounts Settings\", \"acc_frozen_upto\")"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/accounts/doctype/account/account.py",
+			96,
+			"\"Accounts Settings\", \"Accounts Settings\", \"frozen_accounts_modifier\""
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/accounts/doctype/account/account.py",
+			339,
+			"\"Accounts Settings\", \"Accounts Settings\", \"frozen_accounts_modifier\""
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/accounts/doctype/gl_entry/gl_entry.py",
+			402,
+			"\"Accounts Settings\", None, \"frozen_accounts_modifier\""
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/accounts/doctype/sales_invoice/sales_invoice.py",
+			1635,
+			"frappe.db.get_single_value(\"Accounts Settings\", \"post_change_gl_entries\")"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/accounts/general_ledger.py",
+			792,
+			"acc_frozen_upto = frappe.db.get_value(\"Accounts Settings\", None, \"acc_frozen_upto\")"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/accounts/general_ledger.py",
+			795,
+			"\"Accounts Settings\", None, \"frozen_accounts_modifier\""
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/accounts/party.py",
+			824,
+			"\"Accounts Settings\", \"frozen_accounts_modifier\""
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/assets/doctype/asset/depreciation.py",
+			146,
+			"acc_frozen_upto = frappe.db.get_single_value(\"Accounts Settings\", \"acc_frozen_upto\")"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/assets/doctype/asset/depreciation.py",
+			151,
+			"frozen_accounts_modifier = frappe.db.get_single_value(\"Accounts Settings\", \"frozen_accounts_modifier\")"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/manufacturing/doctype/bom/bom.py",
+			1398,
+			"and frappe.db.get_single_value(\"Manufacturing Settings\", \"set_op_cost_and_scrap_from_sub_assemblies\")"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/manufacturing/doctype/job_card/job_card.py",
+			1027,
+			"self.wip_warehouse = frappe.db.get_single_value(\"Manufacturing Settings\", \"default_wip_warehouse\")"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/manufacturing/doctype/work_order/work_order.py",
+			331,
+			"self.wip_warehouse = frappe.db.get_single_value(\"Manufacturing Settings\", \"default_wip_warehouse\")"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/manufacturing/doctype/work_order/work_order.py",
+			334,
+			"frappe.db.get_single_value(\"Manufacturing Settings\", \"default_fg_warehouse\")"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/manufacturing/doctype/work_order/work_order.py",
+			1684,
+			"\"wip_warehouse\": doc.default_wip_warehouse,"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/manufacturing/doctype/work_order/work_order.py",
+			1685,
+			"\"fg_warehouse\": doc.default_fg_warehouse,"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/manufacturing/doctype/work_order/work_order.py",
+			1686,
+			"\"scrap_warehouse\": doc.default_scrap_warehouse,"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/patches/v13_0/modify_invalid_gain_loss_gl_entries.py",
+			48,
+			"acc_frozen_upto = frappe.db.get_value(\"Accounts Settings\", None, \"acc_frozen_upto\")"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/patches/v13_0/modify_invalid_gain_loss_gl_entries.py",
+			50,
+			"frappe.db.set_single_value(\"Accounts Settings\", \"acc_frozen_upto\", None)"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/patches/v13_0/modify_invalid_gain_loss_gl_entries.py",
+			68,
+			"frappe.db.set_single_value(\"Accounts Settings\", \"acc_frozen_upto\", acc_frozen_upto)"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/patches/v14_0/single_to_multi_dunning.py",
+			66,
+			"\"Accounts Settings\", \"acc_frozen_upto\""
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/patches/v15_0/recalculate_amount_difference_field.py",
+			61,
+			"acc_frozen_upto = frappe.db.get_single_value(\"Accounts Settings\", \"acc_frozen_upto\")"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/stock/doctype/material_request/material_request.py",
+			841,
+			"default_wip_warehouse = frappe.db.get_single_value(\"Manufacturing Settings\", \"default_wip_warehouse\")"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/stock/doctype/repost_item_valuation/repost_item_valuation.py",
+			188,
+			"[\"acc_frozen_upto\", \"frozen_accounts_modifier\"],"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/stock/doctype/stock_entry/stock_entry.py",
+			3022,
+			"frappe.db.get_single_value(\"Manufacturing Settings\", \"set_op_cost_and_scrap_from_sub_assemblies\")"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/stock/doctype/stock_entry/stock_entry.py",
+			3885,
+			"\"Manufacturing Settings\", \"set_op_cost_and_scrap_from_sub_assemblies\""
+		],
+		[
+			"v16-erpnext-pos-closing-invoices",
+			"erpnext/accounts/doctype/pos_closing_entry/pos_closing_entry.js",
+			107,
+			"method: \"erpnext.accounts.doctype.pos_closing_entry.pos_closing_entry.get_pos_invoices\","
+		],
+		[
+			"v16-erpnext-pos-closing-invoices",
+			"erpnext/accounts/doctype/pos_closing_entry/pos_closing_entry.js",
+			137,
+			"method: \"erpnext.accounts.doctype.pos_closing_entry.pos_closing_entry.get_pos_invoices\","
+		],
+		[
+			"v16-erpnext-pos-fields",
+			"erpnext/accounts/doctype/pos_closing_entry/pos_closing_entry.py",
+			250,
+			"closing_entry.set(\"pos_transactions\", pos_transactions)"
+		],
+		[
+			"v16-erpnext-pos-fields",
+			"erpnext/accounts/doctype/pos_invoice/pos_invoice.js",
+			61,
+			".get_value(\"POS Profile\", this.frm.doc.pos_profile, \"disable_grand_total_to_default_mop\")"
+		],
+		[
+			"v16-erpnext-pos-fields",
+			"erpnext/accounts/doctype/sales_invoice/sales_invoice.js",
+			64,
+			".get_value(\"POS Profile\", this.frm.doc.pos_profile, \"disable_grand_total_to_default_mop\")"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/manufacturing/doctype/bom/bom.py",
+			1325,
+			"[\"expenses_included_in_valuation\", \"default_operating_cost_account\"],"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/manufacturing/doctype/production_plan/production_plan.py",
+			895,
+			"key = \"{}:{}:{}\".format(item.sales_order, material_request_type, item_doc.customer or \"\")"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/manufacturing/doctype/production_plan/production_plan.py",
+			908,
+			"\"customer\": item_doc.customer or \"\","
+		],
+		[
+			"v16-erpnext-removed-methods",
+			"erpnext/accounts/doctype/payment_entry/payment_entry.js",
+			1733,
+			"method: \"erpnext.accounts.doctype.payment_entry.payment_entry.get_party_and_account_balance\","
+		],
+		[
+			"v16-erpnext-removed-methods",
+			"erpnext/public/js/utils.js",
+			311,
+			"method: \"erpnext.accounts.doctype.pricing_rule.pricing_rule.make_pricing_rule\","
+		],
+		[
+			"v16-erpnext-replaced-reports",
+			"erpnext/projects/report/employee_billing_summary/employee_billing_summary.py",
+			7,
+			"from erpnext.projects.report.billing_summary import get_columns, get_data"
+		],
+		[
+			"v16-erpnext-replaced-reports",
+			"erpnext/projects/report/project_billing_summary/project_billing_summary.py",
+			7,
+			"from erpnext.projects.report.billing_summary import get_columns, get_data"
+		],
+		[
+			"v16-erpnext-repost-settings-doctype",
+			"erpnext/patches/v14_0/add_default_for_repost_settings.py",
+			9,
+			"repost_settings = frappe.get_doc(\"Repost Accounting Ledger Settings\")"
+		],
+		[
+			"v16-erpnext-scrap-item-doctypes",
+			"erpnext/manufacturing/doctype/bom/bom.js",
+			822,
+			"frappe.ui.form.on(\"BOM Scrap Item\", {"
+		],
+		[
+			"v16-erpnext-scrap-item-doctypes",
+			"erpnext/manufacturing/doctype/bom/bom.json",
+			null,
+			"table field scrap_items"
+		],
+		[
+			"v16-erpnext-scrap-item-doctypes",
+			"erpnext/manufacturing/doctype/job_card/job_card.json",
+			null,
+			"table field scrap_items"
+		],
+		[
+			"v16-erpnext-scrap-item-doctypes",
+			"erpnext/stock/doctype/stock_entry/stock_entry.py",
+			3073,
+			"job_card_scrap_item = frappe.qb.DocType(\"Job Card Scrap Item\")"
+		],
+		[
+			"v16-erpnext-scrap-items",
+			"erpnext/manufacturing/doctype/bom/bom.py",
+			114,
+			"from erpnext.manufacturing.doctype.bom_scrap_item.bom_scrap_item import BOMScrapItem"
+		],
+		[
+			"v16-erpnext-scrap-items",
+			"erpnext/manufacturing/doctype/job_card/job_card.py",
+			67,
+			"from erpnext.manufacturing.doctype.job_card_scrap_item.job_card_scrap_item import JobCardScrapItem"
+		],
+		[
+			"v16-erpnext-scrap-items",
+			"erpnext/stock/doctype/stock_entry/stock_entry.py",
+			32,
+			"get_scrap_items_from_sub_assemblies,"
+		],
+		[
+			"v16-erpnext-secondary-items-fields",
+			"erpnext/stock/doctype/stock_entry/stock_entry.py",
+			3119,
+			"[\"Stock Entry Detail\", \"is_scrap_item\", \"=\", 1],"
+		],
+		[
+			"v16-erpnext-subcontracted-quantity",
+			"erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.py",
+			217,
+			"[\"qty\", \"subcontracted_quantity\", \"fg_item_qty\"],"
+		],
+		[
+			"v16-erpnext-subcontracted-quantity",
+			"erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.py",
+			306,
+			"\"Purchase Order Item\", service_item.purchase_order_item, \"subcontracted_quantity\""
+		],
+		[
+			"v16-erpnext-subcontracted-quantity",
+			"erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.py",
+			319,
+			"\"subcontracted_quantity\","
+		],
+		[
+			"v16-erpnext-tax-withholding",
+			"erpnext/accounts/doctype/journal_entry/journal_entry.py",
+			23,
+			"get_party_tax_withholding_details,"
+		],
+		[
+			"v16-erpnext-tax-withholding",
+			"erpnext/accounts/doctype/payment_entry/payment_entry.py",
+			34,
+			"get_party_tax_withholding_details,"
+		],
+		[
+			"v16-erpnext-tax-withholding",
+			"erpnext/accounts/doctype/purchase_invoice/purchase_invoice.py",
+			28,
+			"get_party_tax_withholding_details,"
+		],
+		[
+			"v16-erpnext-tax-withholding",
+			"erpnext/accounts/doctype/purchase_invoice/purchase_invoice.py",
+			67,
+			"from erpnext.accounts.doctype.advance_tax.advance_tax import AdvanceTax"
+		],
+		[
+			"v16-erpnext-tax-withholding",
+			"erpnext/accounts/doctype/purchase_invoice/purchase_invoice.py",
+			77,
+			"from erpnext.accounts.doctype.tax_withheld_vouchers.tax_withheld_vouchers import TaxWithheldVouchers"
+		],
+		[
+			"v16-erpnext-tax-withholding",
+			"erpnext/accounts/doctype/sales_invoice/sales_invoice.py",
+			23,
+			"get_party_tax_withholding_details,"
+		],
+		[
+			"v16-erpnext-tax-withholding",
+			"erpnext/buying/doctype/purchase_order/purchase_order.py",
+			19,
+			"get_party_tax_withholding_details,"
+		],
+		[
+			"v16-erpnext-tax-withholding-doctypes",
+			"erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json",
+			null,
+			"table field advance_tax"
+		],
+		[
+			"v16-erpnext-tax-withholding-doctypes",
+			"erpnext/accounts/doctype/purchase_invoice/purchase_invoice.json",
+			null,
+			"table field tax_withheld_vouchers"
+		],
+		[
+			"v16-erpnext-tax-withholding-fields",
+			"erpnext/accounts/doctype/tax_withholding_category/tax_withholding_category.py",
+			211,
+			"\"consider_party_ledger_amount\": tax_withholding.consider_party_ledger_amount,"
+		],
+		[
+			"v16-erpnext-tax-withholding-fields",
+			"erpnext/accounts/doctype/tax_withholding_category/tax_withholding_category.py",
+			740,
+			"\"tax_withholding_category\": ldc.tax_withholding_category,"
+		],
+		[
+			"v16-erpnext-utm-fields",
+			"erpnext/selling/page/sales_funnel/sales_funnel.py",
+			73,
+			"fields=[\"currency\", \"sales_stage\", \"opportunity_amount\", \"probability\", \"source\"],"
+		],
+		[
+			"v16-erpnext-workstation-cost-fields",
+			"erpnext/manufacturing/doctype/workstation/workstation.py",
+			102,
+			"\"hour_rate_labour\","
+		],
+		[
+			"v16-erpnext-workstation-cost-fields",
+			"erpnext/manufacturing/doctype/workstation/workstation.py",
+			103,
+			"\"hour_rate_electricity\","
+		],
+		[
+			"v16-erpnext-workstation-cost-fields",
+			"erpnext/manufacturing/doctype/workstation/workstation.py",
+			104,
+			"\"hour_rate_consumable\","
+		],
+		[
+			"v16-erpnext-workstation-cost-fields",
+			"erpnext/manufacturing/doctype/workstation/workstation.py",
+			105,
+			"\"hour_rate_rent\","
+		],
+		[
+			"v16-has-permission-raise-exception",
+			"erpnext/setup/doctype/employee/employee.py",
+			259,
+			"if not has_permission(\"User Permission\", ptype=\"write\", raise_exception=False):"
+		],
+		[
+			"v16-removed-blog-doctypes",
+			"erpnext/templates/pages/home.py",
+			26,
+			"context.blogs = frappe.get_all("
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"erpnext/patches/v12_0/create_default_energy_point_rules.py",
+			7,
+			"frappe.reload_doc(\"social\", \"doctype\", \"energy_point_rule\")"
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"erpnext/setup/default_energy_point_rules.py",
+			39,
+			"\"doctype\": \"Energy Point Rule\","
+		],
+		[
+			"v16-removed-energy-point-doctypes",
+			"erpnext/setup/install.py",
+			203,
+			"rule_exists = frappe.db.exists("
+		],
+		[
+			"v16-removed-leaderboards-hook",
+			"erpnext/hooks.py",
+			70,
+			"leaderboards = \"erpnext.startup.leaderboard.get_leaderboards\""
+		],
+		[
+			"v16-removed-newsletter",
+			"erpnext/public/js/website_utils.js",
+			9,
+			"method: \"frappe.email.doctype.newsletter.newsletter.subscribe\","
+		],
+		[
+			"v16-removed-newsletter-doctypes",
+			"erpnext/hooks.py",
+			35,
+			"\"Newsletter\": \"public/js/newsletter.js\","
+		],
+		[
+			"v16-removed-newsletter-doctypes",
+			"erpnext/public/js/newsletter.js",
+			4,
+			"frappe.ui.form.on(\"Newsletter\", {"
+		],
+		[
+			"v16-removed-transaction-log-doctypes",
+			"erpnext/regional/__init__.py",
+			33,
+			"\"doctype\": \"Transaction Log\","
+		],
+		[
+			"v16-sanitize-html-strips-tags",
+			"erpnext/templates/pages/search_help.py",
+			5,
+			"from frappe.utils import sanitize_html"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/accounts/doctype/bank_statement_import/bank_statement_import.py",
+			265,
+			"fields=[\"count(*) as count\", \"success\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/accounts/doctype/opening_invoice_creation_tool/opening_invoice_creation_tool.py",
+			74,
+			"\"count(name) as total_invoices\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/accounts/doctype/opening_invoice_creation_tool/opening_invoice_creation_tool.py",
+			75,
+			"\"sum(outstanding_amount) as outstanding_amount\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/accounts/doctype/pricing_rule/pricing_rule.py",
+			744,
+			"fields=[\"distinct uom\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/accounts/doctype/tax_withholding_category/tax_withholding_category.py",
+			666,
+			"\"sum(debit)\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/accounts/doctype/tax_withholding_category/tax_withholding_category.py",
+			744,
+			"\"sum(tax_withholding_net_total)\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/accounts/party.py",
+			874,
+			"\"sum(grand_total) as grand_total\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/accounts/party.py",
+			875,
+			"\"sum(base_grand_total) as base_grand_total\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/accounts/party.py",
+			890,
+			"fields=[\"company\", \"sum(loyalty_points) as loyalty_points\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/accounts/report/accounts_receivable_summary/accounts_receivable_summary.py",
+			211,
+			"balance_calc_fields = [\"party\", \"SUM(credit - debit) AS balance\"]"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/accounts/report/accounts_receivable_summary/accounts_receivable_summary.py",
+			213,
+			"balance_calc_fields = [\"party\", \"SUM(debit - credit) AS balance\"]"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/accounts/report/item_wise_sales_register/item_wise_sales_register.py",
+			530,
+			"\"sum(base_grand_total)\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/buying/doctype/supplier_quotation/supplier_quotation.py",
+			359,
+			"fields=[\"supplier_quotation_item\", \"sum(qty)\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/controllers/sales_and_purchase_return.py",
+			343,
+			"f\"sum(abs(`tab{child_doctype}`.qty)) as qty\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/controllers/sales_and_purchase_return.py",
+			348,
+			"f\"sum(abs(`tab{child_doctype}`.stock_qty)) as stock_qty\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/controllers/sales_and_purchase_return.py",
+			353,
+			"f\"sum(abs(`tab{child_doctype}`.rejected_qty)) as rejected_qty\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/controllers/sales_and_purchase_return.py",
+			354,
+			"f\"sum(abs(`tab{child_doctype}`.received_qty)) as received_qty\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/controllers/sales_and_purchase_return.py",
+			358,
+			"fields += [f\"sum(abs(`tab{child_doctype}`.received_stock_qty)) as received_stock_qty\"]"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/controllers/sales_and_purchase_return.py",
+			704,
+			"select_field = \"abs(stock_value_difference / actual_qty)\""
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/controllers/subcontracting_controller.py",
+			258,
+			"fields=[\"item_code\", \"(qty - received_qty) as qty\", \"parent\", \"bom\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/controllers/subcontracting_controller.py",
+			512,
+			"fields = [f\"`tab{doctype}`.`stock_qty` / `tabBOM`.`quantity` as qty_consumed_per_unit\"]"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/manufacturing/doctype/bom/bom.py",
+			1587,
+			"fields=[\"distinct parent as item_code\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/manufacturing/doctype/bom_creator/bom_creator.py",
+			517,
+			"\"'BOM Creator Item' as doctype\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.py",
+			169,
+			"fields=[\"sum(for_quantity)\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.py",
+			864,
+			"\"sum(total_time_in_mins) as time_in_mins\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.py",
+			865,
+			"\"sum(total_completed_qty) as completed_qty\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.py",
+			866,
+			"\"sum(process_loss_qty) as process_loss_qty\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.py",
+			955,
+			"\"sum(fg_completed_qty)\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.py",
+			1145,
+			"fields=[\"distinct operation as operation\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/manufacturing/doctype/production_plan/production_plan.py",
+			604,
+			"fields=[\"sales_order\", \"sales_order_item\", \"SUM(planned_qty) as qty\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/manufacturing/doctype/work_order/work_order.py",
+			566,
+			"fields=\"sum(produced_qty) as produced_qty\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/manufacturing/doctype/work_order/work_order.py",
+			1088,
+			"fields=[\"timestamp(posting_date, posting_time) as posting_datetime\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/manufacturing/doctype/work_order/work_order.py",
+			1673,
+			"frappe.db.get_value(\"Stock Entry\", filters, \"sum(fg_completed_qty)\", order_by=None)"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/manufacturing/report/bom_operations_time/bom_operations_time.py",
+			83,
+			"fields=[\"count(name) as count\", \"bom_no\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/manufacturing/report/job_card_summary/job_card_summary.py",
+			62,
+			"fields=[\"min(from_time) as from_time\", \"max(to_time) as to_time\", \"parent\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/manufacturing/report/production_planning_report/production_planning_report.py",
+			233,
+			"fields=[\"item_code\", \"min(schedule_date) as arrival_date\", \"qty as arrival_qty\", \"warehouse\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/patches/v11_0/make_quality_inspection_template.py",
+			13,
+			"\"Item Quality Inspection Parameter\", fields=[\"distinct parent\"], filters={\"parenttype\": \"Item\"}"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/patches/v12_0/repost_stock_ledger_entries_for_target_warehouse.py",
+			11,
+			"fields=[\"count(*) as p_count\", \"is_default\", \"user\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/patches/v12_0/set_total_batch_quantity.py",
+			12,
+			"\"sum(actual_qty)\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/patches/v13_0/update_response_by_variance.py",
+			16,
+			"\"timestampdiff(Second, `first_responded_on`, `response_by`) as variance\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/patches/v13_0/update_response_by_variance.py",
+			39,
+			"\"timestampdiff(Second, `resolution_date`, `resolution_by`) as variance\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/patches/v14_0/single_to_multi_dunning.py",
+			42,
+			"\"'0' as paid_amount\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/patches/v16_0/set_ordered_qty_in_quotation_item.py",
+			8,
+			"fields=[\"quotation_item\", \"sum(stock_qty) as ordered_qty\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/projects/doctype/project/project.py",
+			443,
+			"fields = \"distinct *\""
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/projects/doctype/timesheet/timesheet.py",
+			455,
+			"\"(total_billable_amount - total_billed_amount) as billing_amt\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/regional/report/uae_vat_201/uae_vat_201.py",
+			194,
+			"\"Purchase Invoice\", filters=query_filters, fields=[\"sum(base_total)\"], as_list=True, limit=1"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/regional/report/uae_vat_201/uae_vat_201.py",
+			234,
+			"\"Purchase Invoice\", filters=query_filters, fields=[\"sum(base_total)\"], as_list=True, limit=1"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/regional/report/uae_vat_201/uae_vat_201.py",
+			289,
+			"\"Purchase Invoice\", filters=query_filters, fields=[\"sum(base_total)\"], as_list=True, limit=1"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/regional/report/uae_vat_201/uae_vat_201.py",
+			307,
+			"fields=[\"sum(recoverable_standard_rated_expenses)\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/regional/report/uae_vat_201/uae_vat_201.py",
+			325,
+			"\"Sales Invoice\", filters=query_filters, fields=[\"sum(base_total)\"], as_list=True, limit=1"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/regional/report/uae_vat_201/uae_vat_201.py",
+			343,
+			"fields=[\"sum(tourist_tax_return)\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/selling/doctype/sales_order/sales_order.py",
+			847,
+			"fields=[\"sales_order_item\", \"sum(qty) as qty\", \"sum(received_qty) as received_qty\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/selling/report/customer_wise_item_price/customer_wise_item_price.py",
+			98,
+			"\"Bin\", fields=[\"item_code\", \"sum(actual_qty) AS available\"], group_by=\"item_code\""
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/setup/doctype/email_digest/email_digest.py",
+			800,
+			"fields=[\"count(*) as count\", \"sum(grand_total) as grand_total\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/setup/doctype/sales_person/sales_person.py",
+			67,
+			"\"sum(allocated_amount)\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/setup/doctype/sales_person/sales_person.py",
+			75,
+			"\"sum(allocated_amount)\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/startup/leaderboard.py",
+			65,
+			"fields=[\"customer as name\", \"sum(outstanding_amount) as value\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/startup/leaderboard.py",
+			82,
+			"fields=[\"customer as name\", f\"sum({select_field}) as value\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/startup/leaderboard.py",
+			127,
+			"f\"sum(`tab{child_doctype}`.{select_field}) as value\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/startup/leaderboard.py",
+			147,
+			"fields=[\"supplier as name\", \"sum(outstanding_amount) as value\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/startup/leaderboard.py",
+			164,
+			"fields=[\"supplier as name\", f\"sum({select_field}) as value\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/startup/leaderboard.py",
+			188,
+			"f\"sum({select_field}) as value\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/startup/leaderboard.py",
+			212,
+			"\"sum(`tabSales Team`.allocated_amount) as value\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/stock/dashboard_chart_source/warehouse_wise_stock_value/warehouse_wise_stock_value.py",
+			34,
+			"fields=[\"warehouse\", \"sum(stock_value) stock_value\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/stock/doctype/batch/batch.py",
+			416,
+			"fields=[\"distinct batch_no\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/stock/doctype/inventory_dimension/inventory_dimension.py",
+			327,
+			"fields=[\"distinct parent\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/stock/doctype/inventory_dimension/inventory_dimension.py",
+			398,
+			"\"distinct target_fieldname as fieldname\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/stock/doctype/packing_slip/packing_slip.py",
+			135,
+			"[\"sum(qty - packed_qty)\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/stock/doctype/packing_slip/packing_slip.py",
+			177,
+			"\"Packing Slip\", {\"delivery_note\": self.delivery_note, \"docstatus\": 1}, [\"max(to_case_no)\"]"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/stock/doctype/purchase_receipt/purchase_receipt.py",
+			1329,
+			"\"sum(abs(`tabPurchase Receipt Item`.qty)) as qty\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/stock/doctype/stock_entry/stock_entry.py",
+			2787,
+			"fields=[\"max(process_loss_qty) as process_loss_qty\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/stock/doctype/stock_entry/stock_entry.py",
+			3553,
+			"fields=[\"sum(transfer_qty) as qty\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/stock/report/incorrect_serial_no_valuation/incorrect_serial_no_valuation.py",
+			118,
+			"\"(stock_value_difference / actual_qty) as valuation_rate\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/stock/report/item_variant_details/item_variant_details.py",
+			146,
+			"\"sum(planned_qty) as planned_qty\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/stock/report/item_variant_details/item_variant_details.py",
+			147,
+			"\"sum(actual_qty) as actual_qty\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/stock/report/item_variant_details/item_variant_details.py",
+			148,
+			"\"sum(projected_qty) as projected_qty\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/stock/report/item_variant_details/item_variant_details.py",
+			170,
+			"\"avg(price_list_rate) as avg_rate\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/stock/report/item_variant_details/item_variant_details.py",
+			188,
+			"\"avg(price_list_rate) as avg_rate\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/stock/report/serial_and_batch_summary/serial_and_batch_summary.py",
+			178,
+			"fields=[\"distinct parent as parent\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/stock/report/serial_and_batch_summary/serial_and_batch_summary.py",
+			185,
+			"return frappe.get_all(\"DocField\", filters=query_filters, fields=[\"distinct parent\"], as_list=True)"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/stock/report/stock_and_account_value_comparison/stock_and_account_value_comparison.py",
+			92,
+			"\"sum(stock_value_difference) as stock_value\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/stock/report/stock_and_account_value_comparison/stock_and_account_value_comparison.py",
+			119,
+			"\"sum(debit_in_account_currency) - sum(credit_in_account_currency) as account_value\","
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/stock/report/stock_ledger/stock_ledger.py",
+			633,
+			"fields=[\"sum(actual_qty) as qty_after_transaction\", \"sum(stock_value_difference) as stock_value\"],"
+		],
+		[
+			"v16-sql-function-string-fields",
+			"erpnext/stock/serial_batch_bundle.py",
+			1549,
+			"fields=[\"batch_no\", \"SUM(qty) as qty\"],"
+		]
+	]
+}

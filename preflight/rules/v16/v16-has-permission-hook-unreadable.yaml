@@ -1,0 +1,22 @@
+id: v16-has-permission-hook-unreadable
+title: has_permission hook names a function preflight cannot read
+severity: warning
+match:
+  type: unreadable_function
+  keys:
+    - has_permission
+message: >
+  This has_permission entry names a function that is not defined in the app's own source, such as
+  one in another app or one imported into the module the hook names, so preflight cannot tell
+  whether it returns None. v15 read None as "no opinion"; v16 denies on anything falsy, so a hook
+  that falls off the end blocks every user it runs for.
+replacement: >
+  Check by hand that the function returns True from every path that should let the document
+  through, not only False from the branch that denies. Ship that change with the upgrade: v15
+  stops at the first hook that returns anything but None, so on v15 a True skips the
+  has_permission hooks still to run on the doctype.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/pull/24253
+  - https://github.com/frappe/frappe/blob/486ecf9e4a1daaa0027512bfab2947b8cde1502b/frappe/permissions.py#L466-L473
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/permissions.py#L494-L500

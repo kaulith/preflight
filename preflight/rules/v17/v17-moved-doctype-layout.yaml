@@ -1,0 +1,17 @@
+id: v17-moved-doctype-layout
+title: DocType Layout controllers moved to the Core module
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.custom.doctype.doctype_layout
+    - frappe.custom.doctype.doctype_layout_field
+message: >
+  DocType Layout and DocType Layout Field moved from the Custom module to Core in v17. The
+  doctypes are still there, but importing their controllers from frappe.custom.doctype raises
+  ImportError after the upgrade.
+replacement: >
+  Import from frappe.core.doctype.doctype_layout and frappe.core.doctype.doctype_layout_field.
+references:
+  - https://github.com/frappe/frappe/pull/38679
+  - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/core/doctype/doctype_layout/doctype_layout.py

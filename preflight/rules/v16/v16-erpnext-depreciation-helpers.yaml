@@ -1,0 +1,39 @@
+id: v16-erpnext-depreciation-helpers
+title: ERPNext asset depreciation helpers renamed or replaced
+severity: error
+match:
+  type: import_path
+  paths:
+    - erpnext.assets.doctype.asset.depreciation.get_acc_frozen_upto
+    - erpnext.assets.doctype.asset.depreciation.get_credit_and_debit_accounts_for_asset_category_and_company
+    - erpnext.assets.doctype.asset.depreciation.get_depreciable_asset_depr_schedules_data
+    - erpnext.assets.doctype.asset.depreciation.get_depreciation_cost_center_and_depreciation_series_for_company
+    - erpnext.assets.doctype.asset.depreciation.make_depreciation_entry_for_all_asset_depr_schedules
+    - erpnext.assets.doctype.asset.depreciation.modify_depreciation_schedule_for_asset_repairs
+    - erpnext.assets.doctype.asset.depreciation.reverse_depreciation_entry_made_after_disposal
+message: >
+  ERPNext v16 rewrote the asset depreciation module, and these helpers in
+  erpnext.assets.doctype.asset.depreciation are gone: renamed, or replaced by ones that take or
+  return something different, the accounts freeze date among them now that it is set per company.
+  A custom booking, disposal or restore flow that imports one raises ImportError after the
+  upgrade. post_depreciation_entries, the scheduled job, and make_depreciation_entry keep their
+  names, though make_depreciation_entry takes different arguments.
+replacement: >
+  In the same module, get_credit_debit_accounts_for_asset and get_depr_cost_center_and_series are
+  the same functions renamed, and make_depreciation_entry_on_disposal(asset_doc, disposal_date) is
+  make_depreciation_entry_for_all_asset_depr_schedules with its date argument renamed.
+  get_depreciable_assets_data(date) returns each schedule's name, asset, and first and last row,
+  without the asset category and company. reverse_depreciation_entry_made_on_disposal(asset)
+  takes no date and reverses the entry on asset.disposal_date. get_companies_with_frozen_limits()
+  returns a freeze date for each company the user cannot post past, where get_acc_frozen_upto
+  returned one date. In place of modify_depreciation_schedule_for_asset_repairs, call
+  reschedule_depreciation(asset_doc, notes) from
+  erpnext.assets.doctype.asset_depreciation_schedule.asset_depreciation_schedule, which counts the
+  increase_in_asset_life a submitted Asset Repair now adds to each finance book.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/45251
+  - https://github.com/frappe/erpnext/pull/50824
+  - https://github.com/frappe/erpnext/blob/31803451f1cfb27087f8e9c9ddc8798c19844427/erpnext/assets/doctype/asset/depreciation.py#L108-L184
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/assets/doctype/asset/depreciation.py#L81-L163
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/assets/doctype/asset_depreciation_schedule/asset_depreciation_schedule.py#L194-L219

@@ -1,0 +1,34 @@
+id: v16-deprecated-test-runner
+title: frappe.test_runner deprecated
+severity: warning
+match:
+  type: import_path
+  paths:
+    - frappe.test_runner.make_test_records
+    - frappe.test_runner.make_test_records_for_doctype
+    - frappe.test_runner.make_test_objects
+    - frappe.test_runner.get_modules
+    - frappe.test_runner.get_dependencies
+    - frappe.test_runner.print_mandatory_fields
+    - frappe.test_runner.add_to_test_record_log
+    - frappe.test_runner.get_test_record_log
+    - frappe.test_runner.main
+message: >
+  frappe.test_runner is deprecated in v16 and removed in v17. The module only re-exports these
+  helpers from the deprecation dumpster, so a test that imports one still runs and logs a
+  deprecation warning. The dumpster labels them frappe.tests_runner, a module that never existed.
+replacement: >
+  Import make_test_records, make_test_records_for_doctype, make_test_objects and get_modules from
+  frappe.tests.utils, and pass the arguments after doctype by keyword, since v16 dropped their
+  verbose argument. get_dependencies becomes frappe.tests.utils.get_missing_records_doctypes; the
+  others have no public replacement.
+fix: with-upgrade
+shim: |
+  try:
+  	from frappe.tests.utils import make_test_records
+  except ImportError:
+  	from frappe.test_runner import make_test_records
+references:
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/test_runner.py#L1-L41
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/tests/utils/generators.py#L26-L34
+  - https://github.com/frappe/frappe/blob/486ecf9e4a1daaa0027512bfab2947b8cde1502b/frappe/test_runner.py#L333-L419

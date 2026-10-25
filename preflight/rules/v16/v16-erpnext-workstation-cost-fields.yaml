@@ -1,0 +1,32 @@
+id: v16-erpnext-workstation-cost-fields
+title: ERPNext workstation hour rates replaced by operating components
+severity: warning
+match:
+  type: doctype_field
+  fields:
+    - Workstation.hour_rate_electricity
+    - Workstation.hour_rate_consumable
+    - Workstation.hour_rate_rent
+    - Workstation.hour_rate_labour
+    - Workstation Type.hour_rate_electricity
+    - Workstation Type.hour_rate_consumable
+    - Workstation Type.hour_rate_rent
+    - Workstation Type.hour_rate_labour
+message: >
+  ERPNext v16 replaced the four fixed hourly costs of a Workstation and a Workstation Type
+  (electricity, consumables, rent, wages) with a workstation_costs table of Workstation Cost
+  rows, each naming a Workstation Operating Component and its operating_cost. The migration
+  turns the four rates into rows named Electricity, Consumables, Rent and Wages, and leaves the
+  old columns behind with nothing writing them again. On an upgraded site frappe.get_all and
+  frappe.db.get_value return what they held at the upgrade; frappe.get_list and the browser's
+  frappe.db.get_value leave the field out of the result, and raise a PermissionError when it
+  filters or sorts the query. On a site installed on v16 the columns do not exist, and
+  frappe.get_all and frappe.db.get_value on them raise. hour_rate, their total, stays.
+  A Custom Field placed after one of them moves to the end of the form.
+replacement: >
+  Read the workstation_costs rows, by operating_component, for a cost broken down; hour_rate
+  for the total.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/49213
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/patches/v16_0/make_workstation_operating_components.py

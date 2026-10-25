@@ -1,0 +1,23 @@
+id: v16-app-target-branch
+title: App has no upstream version-16 branch to switch to
+severity: error
+fix: before
+match:
+  type: target_branch
+  branch: version-16
+message: >
+  The app is on the bench's frappe version branch, so the upgrade moves it with
+  bench switch-to-branch version-16 --upgrade, and bench cannot read version-16 off it: the app has
+  no remote named upstream, or upstream has no version-16 branch. bench fetches upstream and reads
+  each app's version off upstream/version-16 before checking the app out, and an app without either
+  stops the command partway: the apps before it are already on version-16, the rest are not, and
+  nothing is installed or migrated.
+replacement: >
+  Before the upgrade, add the app's repository as a remote named upstream if it has none
+  (git remote add upstream <url>, or git remote rename origin upstream), and push a version-16 branch
+  to it, cut from the commit that runs on v16. An app that keeps one branch for every frappe version
+  goes onto that branch instead, and is left out of the switch-to-branch command.
+references:
+  - https://github.com/frappe/bench/blob/4f56e02d4a07368bb241f48b1aa69d21498984ae/bench/utils/app.py#L24-L30
+  - https://github.com/frappe/bench/blob/4f56e02d4a07368bb241f48b1aa69d21498984ae/bench/utils/app.py#L62-L107
+  - https://github.com/frappe/bench/blob/4f56e02d4a07368bb241f48b1aa69d21498984ae/bench/utils/app.py#L141-L166

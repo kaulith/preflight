@@ -1,0 +1,19 @@
+id: v16-erpnext-repost-settings
+title: ERPNext Repost Accounting Ledger Settings module merged into Accounts Settings
+severity: error
+match:
+  type: import_path
+  paths:
+    - erpnext.accounts.doctype.repost_accounting_ledger_settings
+message: >
+  ERPNext v16 merged Repost Accounting Ledger Settings into Accounts Settings and removed its
+  module. Importing it, such as set_allow_on_submit_for_dimension_fields, raises ImportError
+  after the upgrade.
+replacement: >
+  Import set_allow_on_submit_for_dimension_fields from
+  erpnext.accounts.doctype.accounts_settings.accounts_settings.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/54301
+  - https://github.com/frappe/erpnext/pull/54321
+  - https://github.com/frappe/erpnext/blob/69063c402427590168c217a29ca9f6e03c0d3d05/erpnext/accounts/doctype/accounts_settings/accounts_settings.py#L267

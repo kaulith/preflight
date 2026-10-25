@@ -1,0 +1,26 @@
+id: v16-build-xlsx-data-applied-filters
+title: build_xlsx_data reads the filter rows from applied_filters
+severity: warning
+match:
+  type: call
+  paths:
+    - frappe.desk.query_report.build_xlsx_data
+  with_kwargs:
+    - include_filters
+  with_positional_args: 4
+message: >
+  With include_filters, build_xlsx_data writes the report's filters as rows above the table. v15
+  reads them from data.filters, which its export_query fills with the filter labels and values the
+  browser sends as applied_filters. v16.17.0 reads data.applied_filters instead and keeps
+  data.filters for the raw filters. Code that fills only data.filters gets a sheet without the
+  filter rows after the upgrade, and nothing raises.
+replacement: >
+  Set data.applied_filters to the same label and value dict as data.filters before the call. v15
+  never reads applied_filters, so setting both works on v15 and v16.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/38773
+  - https://github.com/frappe/frappe/blob/486ecf9e4a1daaa0027512bfab2947b8cde1502b/frappe/desk/query_report.py#L474
+  - https://github.com/frappe/frappe/blob/486ecf9e4a1daaa0027512bfab2947b8cde1502b/frappe/desk/query_report.py#L591-L603
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/desk/query_report.py#L514
+  - https://github.com/frappe/frappe/blob/v16.53.0/frappe/desk/query_report.py#L714-L725

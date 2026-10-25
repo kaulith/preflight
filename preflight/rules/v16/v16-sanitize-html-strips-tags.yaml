@@ -1,0 +1,17 @@
+id: v16-sanitize-html-strips-tags
+title: sanitize_html strips forbidden tags
+severity: info
+match:
+  type: import_path
+  paths:
+    - frappe.utils.sanitize_html
+    - frappe.utils.html_utils.sanitize_html
+message: >
+  sanitize_html moved from bleach to nh3 in v16. Forbidden tags are stripped out instead of
+  being escaped into visible text, so stored comments and descriptions come back shorter than
+  they did on v15.
+replacement: >
+  Check call sites and tests that expect escaped tags in the output.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/blob/version-16/frappe/utils/html_utils.py

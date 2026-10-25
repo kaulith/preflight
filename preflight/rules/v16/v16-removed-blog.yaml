@@ -1,0 +1,18 @@
+id: v16-removed-blog
+title: Blog moved out of the framework
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.website.doctype.blog_post
+    - frappe.website.doctype.blog_category
+    - frappe.website.doctype.blog_settings
+    - frappe.website.doctype.blogger
+message: >
+  The blog doctypes were moved out of the framework into their own app in v16.
+  Importing these modules raises ImportError after the upgrade.
+replacement: >
+  Install the Blog app (https://github.com/frappe/blog), or remove the dependency.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/pull/32737

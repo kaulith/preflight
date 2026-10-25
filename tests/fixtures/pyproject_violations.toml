@@ -1,0 +1,9 @@
+[project]
+name = "digest"
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "pytz==2024.1",
+]
+
+[tool.bench.frappe-dependencies]
+frappe = ">=15.0.0,<16.0.0"

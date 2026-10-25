@@ -1,0 +1,26 @@
+id: v16-erpnext-depreciation-entry-cost-center
+title: make_depreciation_entry no longer takes depreciation_cost_center_and_depreciation_series
+severity: error
+match:
+  type: call
+  paths:
+    - erpnext.assets.doctype.asset.depreciation.make_depreciation_entry
+    - erpnext.assets.doctype.asset.depreciation._make_depreciation_entry
+  with_kwargs:
+    - depreciation_cost_center_and_depreciation_series
+  with_positional_args: 6
+message: >
+  ERPNext v16 dropped the depreciation_cost_center_and_depreciation_series argument of
+  make_depreciation_entry and _make_depreciation_entry, which now always read the cost center and
+  naming series from the asset and its company. Passing it raises TypeError after the upgrade, by
+  keyword or by position: it was the sixth argument and v16 takes five, so the seven-argument call
+  that v15's post_depreciation_entries makes, and that a copy of it in an app makes too, raises.
+replacement: >
+  Drop it, and credit_and_debit_accounts with it, since v15 works both out itself when they are not
+  passed, and pass accounting_dimensions by keyword, which both versions take.
+fix: before
+references:
+  - https://github.com/frappe/erpnext/pull/45251
+  - https://github.com/frappe/erpnext/blob/31803451f1cfb27087f8e9c9ddc8798c19844427/erpnext/assets/doctype/asset/depreciation.py#L84-L92
+  - https://github.com/frappe/erpnext/blob/31803451f1cfb27087f8e9c9ddc8798c19844427/erpnext/assets/doctype/asset/depreciation.py#L212-L244
+  - https://github.com/frappe/erpnext/blob/v16.52.1/erpnext/assets/doctype/asset/depreciation.py#L166-L189
