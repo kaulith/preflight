@@ -1,5 +1,6 @@
 import json
 import platform
+import re
 from collections import Counter
 from pathlib import Path
 from textwrap import indent
@@ -15,11 +16,18 @@ SHIM_HEADING = "Shim that runs on both versions"
 JSON_SCHEMA_VERSION = 1
 SARIF_SCHEMA = "https://json.schemastore.org/sarif-2.1.0.json"
 SARIF_LEVELS = {"error": "error", "warning": "warning", "info": "note"}
+CONTROL_CHARACTER = re.compile(r"[\x00-\x08\x0b-\x1f\x7f-\x9f]")
 
 
 def python_version() -> str:
 	"""The interpreter doing the parsing, which is what decides whether a file can be read."""
 	return platform.python_version()
+
+
+def printable(text: str) -> str:
+	"""Snippets, paths and reasons come from the code and site being scanned; a control character in them is
+	printed escaped, so an escape sequence cannot rewrite the terminal or its clipboard."""
+	return CONTROL_CHARACTER.sub(lambda match: repr(match[0])[1:-1], text)
 
 
 def file_label(finding: Finding) -> str:
@@ -42,7 +50,7 @@ def left_out(heading: str, items: list[str], note: str) -> list[str]:
 	return [
 		"",
 		click.style(f"{heading} ({len(items)})", fg="yellow", bold=True),
-		*(f"    {item}" for item in items),
+		*(f"    {printable(item)}" for item in items),
 		f"  {note}",
 	]
 
@@ -85,7 +93,7 @@ def format_report(report: Report, minimum: str = "info", fail_on: str = "error")
 					if finding.stops_migrate
 					else ""
 				)
-				lines.append(f"    {location(finding)}  {finding.snippet}{pending}")
+				lines.append(f"    {printable(location(finding))}  {printable(finding.snippet)}{pending}")
 			lines.append(f"  {FIX_LABELS[rule.fix]}: {rule.replacement}")
 			if rule.shim:
 				lines += [f"  {SHIM_HEADING}:", indent(rule.shim, "      ")]
