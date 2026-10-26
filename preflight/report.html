@@ -540,7 +540,7 @@ function renderRule(rule) {
 	const source = element("p", "source");
 	source.append(element("code", "", rule.id));
 	for (const url of rule.references) {
-		source.append(" · ", URL_PATTERN.test(url) ? link(url, referenceLabel(url)) : url);
+		source.append(" · ", /^https?:\/\//.test(url) ? link(url, referenceLabel(url)) : url);
 	}
 	const whyBody = element("div", "why-body");
 	whyBody.append(message, source);
