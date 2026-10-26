@@ -121,6 +121,14 @@ def test_app_finding_is_located_from_the_apps_directory():
 	assert "    digest/digest/api.py:5  from frappe.email.doctype.newsletter import newsletter" in output
 
 
+def test_terminal_escapes_in_a_snippet_are_printed_escaped():
+	finding = replace(NEWSLETTER_IMPORT, snippet='code = "\x1b]52;c;cm0gLXJm\x07\r"')
+	report = Report(site="test.localhost", target="v16", apps=["digest"], findings=[finding])
+	output = format_report(report)
+	assert 'code = "\\x1b]52;c;cm0gLXJm\\x07\\r"' in output
+	assert "\x07" not in output and "\r" not in output
+
+
 def test_findings_with_no_line_in_one_file_are_listed_without_one():
 	settings = replace(
 		NEWSLETTER_IMPORT, file="digest/doctype/digest_settings/digest_settings.json", line=None
