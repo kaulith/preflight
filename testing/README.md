@@ -155,7 +155,7 @@ bench init --frappe-branch version-15 --python /opt/homebrew/bin/python3.11 --sk
 cd ~/preflight-test/bench
 bench get-app --branch version-15 --skip-assets erpnext
 env/bin/pip install -e ~/code/personal/preflight
-bench new-site v15.preflight.test --db-root-password root --admin-password <you pick>
+bench new-site v15.preflight.test --db-root-password <mariadb root password> --admin-password <you pick>
 bench --site v15.preflight.test install-app erpnext
 bench --site v15.preflight.test set-config allow_tests true
 ```
