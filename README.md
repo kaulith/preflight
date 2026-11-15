@@ -32,6 +32,14 @@ A clean report means no known problems were found, not that the upgrade is safe.
 - [Writing a rule](https://github.com/kaulith/preflight/blob/main/docs/writing-a-rule.md)
 - [How it was tested](https://github.com/kaulith/preflight/blob/main/docs/how-it-was-tested.md)
 
+## Sponsors
+
+[Sponsors](https://github.com/sponsors/kaulith) keep preflight's rules current with each Frappe release.
+
+<!-- sponsors-team --><!-- sponsors-team -->
+
+<!-- sponsors-backers --><!-- sponsors-backers -->
+
 ## License
 
 MIT
