@@ -170,7 +170,11 @@ class CompatibilityScanner:
 
 		dependencies_line = toml_line(lines, "project", "dependencies")
 		for rule in self.rules_by_type.get("dependency_pins", ()):
-			pins = {canonicalize_name(pin.name): pin for pin in map(Requirement, rule.match.dependencies)}
+			pins = {
+				canonicalize_name(pin.name): pin
+				for pin in map(Requirement, rule.match.dependencies)
+				if not pin.marker or pin.marker.evaluate()
+			}
 			for dependency in data.get("project", {}).get("dependencies", ()):
 				requirement = Requirement(dependency)
 				pin = pins.get(canonicalize_name(requirement.name))
