@@ -8,19 +8,27 @@
 		"v16-erpnext-advance-payment-doctypes-hook": 1,
 		"v16-erpnext-asset-fields": 14,
 		"v16-erpnext-asset-repair-cost": 1,
+		"v16-erpnext-bom-configurator-js": 2,
+		"v16-erpnext-bom-creator-methods": 1,
 		"v16-erpnext-budget-fields": 1,
 		"v16-erpnext-closing-stock-balance-doctype": 7,
 		"v16-erpnext-default-supplier-purchase-orders": 1,
+		"v16-erpnext-demo-transaction-doctypes-hook": 1,
 		"v16-erpnext-depreciation-helpers": 2,
 		"v16-erpnext-homepage": 1,
 		"v16-erpnext-homepage-doctypes": 10,
 		"v16-erpnext-lead-source": 1,
 		"v16-erpnext-lead-source-doctype": 8,
 		"v16-erpnext-make-pricing-rule-js": 2,
-		"v16-erpnext-moved-settings": 26,
+		"v16-erpnext-moved-settings": 38,
 		"v16-erpnext-pos-closing-invoices": 2,
 		"v16-erpnext-pos-fields": 3,
+		"v16-erpnext-removed-argument-demo": 1,
+		"v16-erpnext-removed-demo-setup": 2,
 		"v16-erpnext-removed-fields": 3,
+		"v16-erpnext-removed-helpers": 1,
+		"v16-erpnext-removed-lead-phone-lookup": 1,
+		"v16-erpnext-removed-leaderboard": 1,
 		"v16-erpnext-removed-methods": 2,
 		"v16-erpnext-replaced-reports": 2,
 		"v16-erpnext-repost-settings-doctype": 1,
@@ -54,20 +62,28 @@
 		"v16-erpnext-advance-payment-doctypes-hook": 1,
 		"v16-erpnext-asset-fields": 28,
 		"v16-erpnext-asset-repair-cost": 2,
+		"v16-erpnext-bom-configurator-js": 2,
+		"v16-erpnext-bom-creator-methods": 1,
 		"v16-erpnext-budget-fields": 6,
 		"v16-erpnext-closing-stock-balance": 1,
 		"v16-erpnext-closing-stock-balance-doctype": 8,
 		"v16-erpnext-default-supplier-purchase-orders": 5,
+		"v16-erpnext-demo-transaction-doctypes-hook": 1,
 		"v16-erpnext-depreciation-helpers": 2,
 		"v16-erpnext-homepage": 1,
 		"v16-erpnext-homepage-doctypes": 11,
 		"v16-erpnext-lead-source": 1,
 		"v16-erpnext-lead-source-doctype": 9,
 		"v16-erpnext-make-pricing-rule-js": 2,
-		"v16-erpnext-moved-settings": 39,
+		"v16-erpnext-moved-settings": 58,
 		"v16-erpnext-pos-closing-invoices": 2,
 		"v16-erpnext-pos-fields": 3,
-		"v16-erpnext-removed-fields": 6,
+		"v16-erpnext-removed-argument-demo": 1,
+		"v16-erpnext-removed-demo-setup": 3,
+		"v16-erpnext-removed-fields": 7,
+		"v16-erpnext-removed-helpers": 2,
+		"v16-erpnext-removed-lead-phone-lookup": 1,
+		"v16-erpnext-removed-leaderboard": 1,
 		"v16-erpnext-removed-methods": 2,
 		"v16-erpnext-replaced-reports": 4,
 		"v16-erpnext-repost-settings-doctype": 4,
@@ -215,6 +231,24 @@
 			"method: \"erpnext.assets.doctype.asset_repair.asset_repair.get_repair_cost_for_purchase_invoice\","
 		],
 		[
+			"v16-erpnext-bom-configurator-js",
+			"erpnext/manufacturing/doctype/bom_creator/bom_creator.js",
+			30,
+			"frappe.bom_configurator = new frappe.ui.BOMConfigurator({"
+		],
+		[
+			"v16-erpnext-bom-configurator-js",
+			"erpnext/public/js/bom_configurator/bom_configurator.bundle.js",
+			464,
+			"frappe.ui.BOMConfigurator = BOMConfigurator;"
+		],
+		[
+			"v16-erpnext-bom-creator-methods",
+			"erpnext/public/js/bom_configurator/bom_configurator.bundle.js",
+			57,
+			"get_tree_nodes: \"erpnext.manufacturing.doctype.bom_creator.bom_creator.get_children\","
+		],
+		[
 			"v16-erpnext-budget-fields",
 			"erpnext/accounts/doctype/budget/budget.py",
 			153,
@@ -267,6 +301,12 @@
 			"erpnext/stock/doctype/material_request/material_request.js",
 			409,
 			"query: \"erpnext.stock.doctype.material_request.material_request.get_default_supplier_query\","
+		],
+		[
+			"v16-erpnext-demo-transaction-doctypes-hook",
+			"erpnext/hooks.py",
+			96,
+			"demo_transaction_doctypes = ["
 		],
 		[
 			"v16-erpnext-depreciation-helpers",
@@ -474,6 +514,12 @@
 		],
 		[
 			"v16-erpnext-moved-settings",
+			"erpnext/controllers/selling_controller.py",
+			884,
+			"\"Stock Settings\", \"sample_retention_warehouse\""
+		],
+		[
+			"v16-erpnext-moved-settings",
 			"erpnext/manufacturing/doctype/bom/bom.py",
 			1398,
 			"and frappe.db.get_single_value(\"Manufacturing Settings\", \"set_op_cost_and_scrap_from_sub_assemblies\")"
@@ -516,6 +562,24 @@
 		],
 		[
 			"v16-erpnext-moved-settings",
+			"erpnext/patches/v11_1/set_default_action_for_quality_inspection.py",
+			10,
+			"if stock_settings.default_warehouse and not frappe.db.exists("
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/patches/v11_1/set_default_action_for_quality_inspection.py",
+			11,
+			"\"Warehouse\", stock_settings.default_warehouse"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/patches/v11_1/set_default_action_for_quality_inspection.py",
+			13,
+			"stock_settings.default_warehouse = None"
+		],
+		[
+			"v16-erpnext-moved-settings",
 			"erpnext/patches/v13_0/modify_invalid_gain_loss_gl_entries.py",
 			48,
 			"acc_frozen_upto = frappe.db.get_value(\"Accounts Settings\", None, \"acc_frozen_upto\")"
@@ -546,6 +610,30 @@
 		],
 		[
 			"v16-erpnext-moved-settings",
+			"erpnext/setup/setup_wizard/operations/defaults_setup.py",
+			33,
+			"stock_settings.default_warehouse = frappe.db.get_value(\"Warehouse\", {\"warehouse_name\": _(\"Stores\")})"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/setup/setup_wizard/operations/install_fixtures.py",
+			509,
+			"stock_settings.default_warehouse = frappe.db.get_value(\"Warehouse\", {\"warehouse_name\": _(\"Stores\")})"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/stock/doctype/item/item.py",
+			295,
+			"\"Stock Settings\", \"default_warehouse\""
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/stock/doctype/item/item.py",
+			337,
+			"\"Stock Settings\", \"sample_retention_warehouse\""
+		],
+		[
+			"v16-erpnext-moved-settings",
 			"erpnext/stock/doctype/material_request/material_request.py",
 			841,
 			"default_wip_warehouse = frappe.db.get_single_value(\"Manufacturing Settings\", \"default_wip_warehouse\")"
@@ -558,6 +646,12 @@
 		],
 		[
 			"v16-erpnext-moved-settings",
+			"erpnext/stock/doctype/stock_entry/stock_entry.js",
+			70,
+			"\"sample_retention_warehouse\","
+		],
+		[
+			"v16-erpnext-moved-settings",
 			"erpnext/stock/doctype/stock_entry/stock_entry.py",
 			3022,
 			"frappe.db.get_single_value(\"Manufacturing Settings\", \"set_op_cost_and_scrap_from_sub_assemblies\")"
@@ -565,8 +659,26 @@
 		[
 			"v16-erpnext-moved-settings",
 			"erpnext/stock/doctype/stock_entry/stock_entry.py",
+			3735,
+			"retention_warehouse = frappe.db.get_single_value(\"Stock Settings\", \"sample_retention_warehouse\")"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/stock/doctype/stock_entry/stock_entry.py",
 			3885,
 			"\"Manufacturing Settings\", \"set_op_cost_and_scrap_from_sub_assemblies\""
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/stock/doctype/stock_entry/stock_entry.py",
+			4048,
+			"retention_warehouse = frappe.db.get_single_value(\"Stock Settings\", \"sample_retention_warehouse\")"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/stock/get_item_details.py",
+			689,
+			"default_warehouse = frappe.get_single_value(\"Stock Settings\", \"default_warehouse\")"
 		],
 		[
 			"v16-erpnext-pos-closing-invoices",
@@ -599,6 +711,24 @@
 			".get_value(\"POS Profile\", this.frm.doc.pos_profile, \"disable_grand_total_to_default_mop\")"
 		],
 		[
+			"v16-erpnext-removed-argument-demo",
+			"erpnext/setup/demo.py",
+			78,
+			"bank_account = create_bank_account({\"company_name\": new_company.name}, demo=True)"
+		],
+		[
+			"v16-erpnext-removed-demo-setup",
+			"erpnext/hooks.py",
+			56,
+			"setup_wizard_complete = \"erpnext.setup.setup_wizard.setup_wizard.setup_demo\""
+		],
+		[
+			"v16-erpnext-removed-demo-setup",
+			"erpnext/setup/setup_wizard/setup_wizard.py",
+			8,
+			"from erpnext.setup.demo import setup_demo_data"
+		],
+		[
 			"v16-erpnext-removed-fields",
 			"erpnext/manufacturing/doctype/bom/bom.py",
 			1325,
@@ -615,6 +745,24 @@
 			"erpnext/manufacturing/doctype/production_plan/production_plan.py",
 			908,
 			"\"customer\": item_doc.customer or \"\","
+		],
+		[
+			"v16-erpnext-removed-helpers",
+			"erpnext/controllers/accounts_controller.py",
+			3913,
+			"from erpnext.buying.doctype.supplier_quotation.supplier_quotation import get_purchased_items"
+		],
+		[
+			"v16-erpnext-removed-lead-phone-lookup",
+			"erpnext/telephony/doctype/call_log/call_log.py",
+			11,
+			"from erpnext.crm.doctype.lead.lead import get_lead_with_phone_number"
+		],
+		[
+			"v16-erpnext-removed-leaderboard",
+			"erpnext/hooks.py",
+			70,
+			"leaderboards = \"erpnext.startup.leaderboard.get_leaderboards\""
 		],
 		[
 			"v16-erpnext-removed-methods",

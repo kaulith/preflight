@@ -2,6 +2,7 @@
 	"tree": "frappe-v16",
 	"commit": "4f40f4acbb3cc296f0e9cbc69ce2bb49ccd8208a",
 	"counts": {
+		"v16-delete-session-stored-id": 1,
 		"v16-deprecated-client-get-js": 1,
 		"v16-deprecated-gravatar-helpers": 1,
 		"v16-deprecated-show-progress": 1,
@@ -12,6 +13,7 @@
 		"v16-removed-changelog-feed-doctypes": 4,
 		"v16-removed-changelog-feed-hook": 1,
 		"v16-removed-changelog-feed-js": 3,
+		"v16-removed-filter-methods": 10,
 		"v16-removed-newsletter-doctypes": 1,
 		"v16-removed-octicons": 393,
 		"v16-removed-octicons-import": 2,
@@ -20,6 +22,7 @@
 	},
 	"counts_with_tests": {
 		"v16-build-xlsx-data-applied-filters": 1,
+		"v16-delete-session-stored-id": 1,
 		"v16-deprecated-client-get-js": 1,
 		"v16-deprecated-frappe-test-case": 2,
 		"v16-deprecated-gravatar-helpers": 1,
@@ -31,6 +34,7 @@
 		"v16-removed-changelog-feed-doctypes": 4,
 		"v16-removed-changelog-feed-hook": 1,
 		"v16-removed-changelog-feed-js": 3,
+		"v16-removed-filter-methods": 10,
 		"v16-removed-newsletter-doctypes": 1,
 		"v16-removed-octicons": 393,
 		"v16-removed-octicons-import": 2,
@@ -39,6 +43,12 @@
 	},
 	"unparsable": [],
 	"findings": [
+		[
+			"v16-delete-session-stored-id",
+			"frappe/auth.py",
+			373,
+			"delete_session(frappe.session.sid, user=user, reason=\"User Manually Logged Out\")"
+		],
 		[
 			"v16-deprecated-client-get-js",
 			"frappe/deprecation_dumpster.py",
@@ -182,6 +192,66 @@
 			"frappe/public/js/frappe/ui/toolbar/search_utils.js",
 			681,
 			"frappe.boot.marketplace_apps.forEach(function (item) {"
+		],
+		[
+			"v16-removed-filter-methods",
+			"frappe/public/js/frappe/ui/filters/filter.js",
+			135,
+			"this.add_condition_help(condition);"
+		],
+		[
+			"v16-removed-filter-methods",
+			"frappe/public/js/frappe/ui/filters/filter.js",
+			162,
+			"promise = this.update_filter_tag();"
+		],
+		[
+			"v16-removed-filter-methods",
+			"frappe/public/js/frappe/ui/filters/filter.js",
+			171,
+			"this.update_filter_tag();"
+		],
+		[
+			"v16-removed-filter-methods",
+			"frappe/public/js/frappe/ui/filters/filter.js",
+			177,
+			"!this.$filter_tag ? this.make_tag() : this.set_filter_button_text();"
+		],
+		[
+			"v16-removed-filter-methods",
+			"frappe/public/js/frappe/ui/filters/filter.js",
+			370,
+			"this.$filter_tag = this.get_filter_tag_element().insertAfter("
+		],
+		[
+			"v16-removed-filter-methods",
+			"frappe/public/js/frappe/ui/filters/filter.js",
+			373,
+			"this.set_filter_button_text();"
+		],
+		[
+			"v16-removed-filter-methods",
+			"frappe/public/js/frappe/ui/filters/filter.js",
+			374,
+			"this.bind_tag();"
+		],
+		[
+			"v16-removed-filter-methods",
+			"frappe/public/js/frappe/ui/filters/filter.js",
+			388,
+			"this.$filter_tag.find(\".toggle-filter\").html(this.get_filter_button_text());"
+		],
+		[
+			"v16-removed-filter-methods",
+			"frappe/public/js/frappe/ui/filters/filter_list.js",
+			16,
+			"this.init_filter_popover();"
+		],
+		[
+			"v16-removed-filter-methods",
+			"frappe/public/js/frappe/ui/filters/filter_list.js",
+			97,
+			"this.add_filters_to_popover(this.filters);"
 		],
 		[
 			"v16-removed-newsletter-doctypes",

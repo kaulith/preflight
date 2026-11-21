@@ -1,4 +1,7 @@
 // frappe.views.ListSidebar and frappe.energy_points went away in v16
+chart_panel.setup_download();
+filter_group.add_filter("Sales Invoice", "status", "=", "Paid");
+slides.render_progress_dots();
 frappe.ui.form.on("Sales Invoice", {
 	refresh(frm) {
 		frm.sidebar = new frappe.ui.Sidebar({ wrapper: frm.page.sidebar });

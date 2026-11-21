@@ -29,3 +29,10 @@ const posts = createListResource({
 	doctype: "Blog Post",
 	orderBy: "`tabBlog Post`.published_on desc",
 });
+
+const filter_group = new frappe.ui.FilterGroup({ parent: $("<div>"), doctype: "Sales Invoice" });
+filter_group.init_filter_popover();
+frappe.query_report.add_portrait_warning(dialog);
+cur_frm.fields_dict.items.grid.setup_download();
+filter_group.add_filter("Sales Invoice", "status", "=", "Paid", true);
+frappe.web_form.render_progress_dots();

@@ -57,6 +57,7 @@ def test_violations_are_reported_on_their_lines():
 		"v16-deprecated-gravatar-helpers": [11],
 		"v16-deprecated-gzip-helpers": [11, 56],
 		"v16-deprecated-make-esc": [11, 27],
+		"v16-delete-session-stored-id": [173],
 		"v16-deprecated-read-multi-pdf": [13],
 		"v16-deprecated-show-progress": [63],
 		"v16-deprecated-test-runner": [20],
@@ -81,6 +82,7 @@ def test_violations_are_reported_on_their_lines():
 		"v16-removed-energy-points": [9],
 		"v16-removed-geolite2": [146],
 		"v16-removed-get-excel-date-format": [108],
+		"v16-removed-marketing-campaign": [166],
 		"v16-removed-maxminddb": [156, 160],
 		"v16-removed-newsletter": [5, 24],
 		"v16-removed-newsletter-doctypes": [47, 120],
@@ -99,6 +101,7 @@ def test_violations_are_reported_on_their_lines():
 		"v16-sanitize-html-strips-tags": [28],
 		"v16-server-script-private-request": [150],
 		"v16-sql-function-string-fields": [122],
+		"v16-unlock-document-args": [179],
 		"v16-value-cache-nested": [31],
 	}
 

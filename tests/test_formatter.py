@@ -33,11 +33,11 @@ def render(fixture):
 
 def test_findings_are_grouped_by_severity_then_rule():
 	output = render("violations.py")
-	assert output.index("ERROR (48)") < output.index("WARNING (20)") < output.index("INFO (1)")
+	assert output.index("ERROR (47)") < output.index("WARNING (24)") < output.index("INFO (1)")
 	assert output.index("v16-has-permission-raise-exception") < output.index("v16-removed-newsletter")
 	assert "    custom_app/violations.py:5  from frappe.email.doctype.newsletter" in output
 	assert output.count("v16-deprecated-make-esc") == 1
-	assert "48 error, 20 warning, 1 info" in output
+	assert "47 error, 24 warning, 1 info" in output
 
 
 def test_clean_report_says_so():

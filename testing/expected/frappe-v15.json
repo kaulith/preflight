@@ -4,6 +4,7 @@
 	"counts": {
 		"v16-app-workspaces-apps-screen": 1,
 		"v16-build-xlsx-data-returns-three": 2,
+		"v16-delete-session-stored-id": 1,
 		"v16-deprecated-get-number-format-info": 1,
 		"v16-deprecated-gravatar-helpers": 1,
 		"v16-deprecated-show-progress": 1,
@@ -23,8 +24,10 @@
 		"v16-removed-energy-point-doctypes": 33,
 		"v16-removed-energy-points": 14,
 		"v16-removed-energy-points-js": 7,
+		"v16-removed-filter-methods": 10,
 		"v16-removed-leaderboards-hook": 1,
 		"v16-removed-list-sidebar": 2,
+		"v16-removed-marketing-campaign": 1,
 		"v16-removed-newsletter": 2,
 		"v16-removed-newsletter-doctypes": 14,
 		"v16-removed-octicons": 393,
@@ -41,6 +44,7 @@
 		"v16-app-workspaces-apps-screen": 1,
 		"v16-build-xlsx-data-applied-filters": 1,
 		"v16-build-xlsx-data-returns-three": 6,
+		"v16-delete-session-stored-id": 1,
 		"v16-deprecated-frappe-test-case": 263,
 		"v16-deprecated-get-number-format-info": 1,
 		"v16-deprecated-get-test-records": 17,
@@ -63,8 +67,10 @@
 		"v16-removed-energy-point-doctypes": 45,
 		"v16-removed-energy-points": 14,
 		"v16-removed-energy-points-js": 7,
+		"v16-removed-filter-methods": 10,
 		"v16-removed-leaderboards-hook": 1,
 		"v16-removed-list-sidebar": 2,
+		"v16-removed-marketing-campaign": 1,
 		"v16-removed-newsletter": 7,
 		"v16-removed-newsletter-doctypes": 19,
 		"v16-removed-octicons": 393,
@@ -96,6 +102,12 @@
 			"frappe/email/doctype/auto_email_report/auto_email_report.py",
 			186,
 			"xlsx_data, column_widths = build_xlsx_data(report_data, [], 1, ignore_visible_idx=True)"
+		],
+		[
+			"v16-delete-session-stored-id",
+			"frappe/auth.py",
+			364,
+			"delete_session(frappe.session.sid, user=user, reason=\"User Manually Logged Out\")"
 		],
 		[
 			"v16-deprecated-get-number-format-info",
@@ -1100,6 +1112,66 @@
 			"Object.assign(frappe.energy_points, {"
 		],
 		[
+			"v16-removed-filter-methods",
+			"frappe/public/js/frappe/ui/filters/filter.js",
+			133,
+			"this.add_condition_help(condition);"
+		],
+		[
+			"v16-removed-filter-methods",
+			"frappe/public/js/frappe/ui/filters/filter.js",
+			160,
+			"promise = this.update_filter_tag();"
+		],
+		[
+			"v16-removed-filter-methods",
+			"frappe/public/js/frappe/ui/filters/filter.js",
+			169,
+			"this.update_filter_tag();"
+		],
+		[
+			"v16-removed-filter-methods",
+			"frappe/public/js/frappe/ui/filters/filter.js",
+			175,
+			"!this.$filter_tag ? this.make_tag() : this.set_filter_button_text();"
+		],
+		[
+			"v16-removed-filter-methods",
+			"frappe/public/js/frappe/ui/filters/filter.js",
+			369,
+			"this.$filter_tag = this.get_filter_tag_element().insertAfter("
+		],
+		[
+			"v16-removed-filter-methods",
+			"frappe/public/js/frappe/ui/filters/filter.js",
+			372,
+			"this.set_filter_button_text();"
+		],
+		[
+			"v16-removed-filter-methods",
+			"frappe/public/js/frappe/ui/filters/filter.js",
+			373,
+			"this.bind_tag();"
+		],
+		[
+			"v16-removed-filter-methods",
+			"frappe/public/js/frappe/ui/filters/filter.js",
+			387,
+			"this.$filter_tag.find(\".toggle-filter\").html(this.get_filter_button_text());"
+		],
+		[
+			"v16-removed-filter-methods",
+			"frappe/public/js/frappe/ui/filters/filter_list.js",
+			16,
+			"this.init_filter_popover();"
+		],
+		[
+			"v16-removed-filter-methods",
+			"frappe/public/js/frappe/ui/filters/filter_list.js",
+			97,
+			"this.add_filters_to_popover(this.filters);"
+		],
+		[
 			"v16-removed-leaderboards-hook",
 			"frappe/hooks.py",
 			89,
@@ -1116,6 +1188,12 @@
 			"frappe/public/js/frappe/list/list_sidebar.js",
 			11,
 			"frappe.views.ListSidebar = class ListSidebar {"
+		],
+		[
+			"v16-removed-marketing-campaign",
+			"frappe/email/doctype/newsletter/newsletter.json",
+			null,
+			"link field campaign"
 		],
 		[
 			"v16-removed-newsletter",

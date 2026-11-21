@@ -160,3 +160,20 @@ def archive_attachment(file_url, ip_address):
 	with maxminddb.open_database("/usr/share/GeoIP/GeoLite2-Country.mmdb") as reader:
 		country = reader.get(ip_address)
 	return file_url, country, ClientError, TransferManager
+
+
+def campaign_names():
+	return frappe.get_all("Marketing Campaign", pluck="name")
+
+
+def end_user_sessions(user):
+	from frappe.sessions import delete_session, get_sessions_to_clear
+
+	for sid in get_sessions_to_clear(user):
+		delete_session(sid, reason="Password Reset")
+
+
+def release_lock(payload):
+	from frappe.model.document import unlock_document
+
+	return unlock_document(args=payload)

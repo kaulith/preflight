@@ -149,3 +149,51 @@ def opportunities_by_source(company, from_date, to_date):
 		to_date=to_date,
 		company=company,
 	)
+
+
+def caller_lead(phone_number):
+	from erpnext.crm.doctype.lead.lead import get_lead_with_phone_number
+	from erpnext.manufacturing.doctype.bom_creator.bom_creator import get_children
+	from erpnext.setup.demo import setup_demo_data
+	from erpnext.startup.leaderboard import get_all_customers
+	from erpnext.stock.stock_ledger import is_transfer_stock_entry
+
+	lead = get_lead_with_phone_number(phone_number)
+	return lead, get_children, setup_demo_data, get_all_customers, is_transfer_stock_entry
+
+
+def stock_helpers(row, item, location, reservation, packed_item):
+	from erpnext.stock.doctype.packed_item.packed_item import update_packed_item_with_pick_list_info
+	from erpnext.stock.doctype.pick_list.pick_list import update_common_item_properties
+	from erpnext.stock.doctype.stock_reservation_entry.stock_reservation_entry import (
+		get_serial_batch_entries_for_voucher,
+		get_ssb_bundle_for_voucher,
+	)
+	from erpnext.stock.report.item_variant_details.item_variant_details import get_columns
+	from erpnext.stock.report.negative_batch_report.negative_batch_report import get_warehouses
+
+	update_common_item_properties(row, location, serial_nos_in_stock=[])
+	update_packed_item_with_pick_list_info(row, packed_item, so_packed_item=packed_item)
+	entries = get_serial_batch_entries_for_voucher(sre_name=reservation)
+	bundle = get_ssb_bundle_for_voucher(sre=reservation)
+	return entries, bundle, get_columns(item=item), get_warehouses({}, company="Northwind Traders")
+
+
+def planning_helpers(args, bom, bin_details, data, columns):
+	from erpnext.accounts.report.financial_statements import compute_margin_view_data
+	from erpnext.manufacturing.doctype.bom_update_log.bom_updation_utils import get_ancestor_boms
+	from erpnext.manufacturing.doctype.production_plan.production_plan import get_sub_assembly_items
+	from erpnext.selling.doctype.customer.customer import send_emails
+	from erpnext.setup.setup_wizard.operations.install_fixtures import create_bank_account
+	from erpnext.utilities.bulk_transaction import show_job_status
+
+	send_emails(args=args)
+	create_bank_account(args, demo=True)
+	show_job_status(fail_count=1, deserialized_data_count=2, to_doctype="Sales Invoice")
+	compute_margin_view_data(data, columns, accumulated_values=True, base_row=None)
+	get_sub_assembly_items(sub_assembly_items=[], bin_details=bin_details, bom_no=bom)
+	return get_ancestor_boms(bom, bom_list=[])
+
+
+def bom_tree(bom_creator):
+	return frappe.get_all("BOM Creator Item", filters={"parent": bom_creator}, fields=["fg_item"])

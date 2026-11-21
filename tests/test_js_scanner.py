@@ -39,12 +39,17 @@ def test_violations_are_reported_on_their_lines():
 		"v16-deprecated-client-get-js": [7],
 		"v16-removed-blog-doctypes": [29, 30],
 		"v16-removed-changelog-feed-js": [14],
+		"v16-filter-hidden-argument": [37],
 		"v16-removed-energy-points-js": [4, 5],
+		"v16-removed-filter-methods": [34],
+		"v16-removed-grid-setup-download": [36],
 		"v16-removed-list-sidebar": [3],
 		"v16-removed-newsletter": [23],
 		"v16-removed-newsletter-doctypes": [20],
 		"v16-removed-octicons": [16],
+		"v16-removed-query-report-print-methods": [35],
 		"v16-removed-workspace-sidebar-items": [15],
+		"v16-web-form-progress-dots": [38],
 	}
 
 

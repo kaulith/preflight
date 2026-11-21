@@ -49,3 +49,18 @@ frappe.ui.form.on("Material Request", {
 		}));
 	},
 });
+
+frappe.ui.form.on("BOM Creator", {
+	refresh(frm) {
+		frm.bom_configurator = new frappe.ui.BOMConfigurator({ frm });
+	},
+});
+
+frappe.ui.form.on("Chart of Accounts Importer", {
+	validate(frm) {
+		return frappe.call({
+			method: "erpnext.accounts.doctype.chart_of_accounts_importer.chart_of_accounts_importer.validate_accounts",
+			args: { file_doc: frm.doc.import_file, extension: "csv" },
+		});
+	},
+});
