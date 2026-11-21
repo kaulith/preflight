@@ -1,3 +1,4 @@
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -43,6 +44,13 @@ def test_pins_that_take_in_the_target_are_not_reported():
 		'[tool.bench.frappe-dependencies]\nfrappe = ">=15.0.0,<17.0.0"\n'
 	)
 	assert scanner.scan_pyproject(source, "pyproject.toml") == []
+
+
+def test_a_pin_whose_marker_leaves_out_this_platform_is_not_reported():
+	rule = next(rule for rule in load_rules("v16") if rule.id == "v16-app-dependency-pins")
+	match = replace(rule.match, dependencies=("pytz==2025.2; sys_platform == 'plan9'",))
+	source = '[project]\ndependencies = ["pytz==2024.1"]\n'
+	assert CompatibilityScanner([replace(rule, match=match)]).scan_pyproject(source, "pyproject.toml") == []
 
 
 @pytest.mark.parametrize("branch", ["version-15-hotfix", "mergify/bp/version-15-hotfix/pr-1"])
