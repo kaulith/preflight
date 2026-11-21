@@ -72,7 +72,7 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.14"
-      - run: pip install prefly==0.1.0
+      - run: pip install prefly==0.1.1
       - run: preflight --path . --target v16 --skip-tests --format sarif > preflight.sarif
       - uses: github/codeql-action/upload-sarif@v4
         if: ${{ !cancelled() }}
@@ -114,7 +114,7 @@ frappe.energy_points.get_points(user); // preflight: ignore[v16-removed-energy-p
 The tests are in the repository, not in the package. Clone it at the version installed, then run them with the bench's Python from its `sites` directory:
 
 ```bash
-git clone --branch v0.1.0 https://github.com/kaulith/preflight ~/preflight
+git clone --branch v0.1.1 https://github.com/kaulith/preflight ~/preflight
 cd sites
 ../env/bin/pip install pytest
 ../env/bin/python -m pytest ~/preflight/tests
