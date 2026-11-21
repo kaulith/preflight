@@ -6,24 +6,27 @@ match:
   dependencies:
     - Babel~=2.18.0
     - Click~=8.4.1
-    - filelock~=3.20.1
+    - filelock~=4.2.4
     - filetype~=1.2.0
     - GitPython~=3.1.45
     - Jinja2~=3.1.6
-    - Pillow~=12.3.0
+    - Pillow~=13.0.0
+    - "plutoprint~=0.22.0; (sys_platform == 'linux' and platform_machine == 'x86_64') or (sys_platform == 'darwin' and platform_machine == 'arm64') or sys_platform == 'win32'"
     - PyJWT~=2.15.0
     - duckdb~=1.4.3
     - pyarrow~=25.0.0
     - PyMySQL==1.1.2
-    - pypdf==6.19.0
+    - pypdf==6.21.4
     - PyPika @ git+https://github.com/frappe/pypika@7ef6e40215d46cd531e8c4e58650b84c11abbd04
     - mysqlclient==2.2.7
     - PyQRCode~=1.2.1
     - PyYAML~=6.0.3
     - RestrictedPython~=8.5
     - WeasyPrint==70.0
+    - fonttools[woff]>=4.68.0
     - typst~=0.15.0
     - pydyf==0.12.1
+    - packaging>=24.2
     - Werkzeug==3.1.9
     - Whoosh~=2.7.4
     - beautifulsoup4~=4.13.5
@@ -76,6 +79,14 @@ match:
     - xlrd~=2.0.2
     - zxcvbn~=4.5.0
     - markdownify~=1.2.2
+    - litellm==1.103.2
+    - json_repair~=0.59
+    - frappe-flow==0.1.28
+    - onnxruntime~=1.27
+    - pdfplumber~=0.11
+    - python-docx~=1.1
+    - rapidocr~=3.0
+    - sqlite-vec~=0.1.9
     - google-api-python-client~=2.188.0
     - google-auth-oauthlib~=1.2.4
     - google-auth~=2.48.0
@@ -88,7 +99,7 @@ match:
     - a2wsgi~=1.10.10
     - httpx~=0.28.1
 message: >
-  The app's pyproject.toml pins a package that frappe 16.53.0 also pins, and no version satisfies
+  The app's pyproject.toml pins a package that frappe 16.60.2 also pins, and no version satisfies
   both. bench installs each app with pip or uv into the env that holds frappe, and neither refuses
   the clash: the later install replaces the version the earlier one put in (pip prints a dependency
   conflict, uv only lists the swap) and exits 0, so frappe or the app ends up on a version outside
@@ -98,5 +109,5 @@ replacement: >
   and test the app with it.
 fix: before
 references:
-  - https://github.com/frappe/frappe/blob/e8d41dd0061a32ee781caefe5d0b0d2bb7c15362/pyproject.toml#L10-L106
+  - https://github.com/frappe/frappe/blob/2df0425571ebbaed878eabc3edc5b7e7c3327ae0/pyproject.toml#L11-L121
   - https://github.com/frappe/bench/blob/4f56e02d4a07368bb241f48b1aa69d21498984ae/bench/app.py#L935-L950
