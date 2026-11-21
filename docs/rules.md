@@ -4,9 +4,9 @@ A rule is one YAML file that describes one breaking change. `--target` picks the
 
 | Target | For | Rules |
 |---|---|---|
-| `v16` | A v15 site going to v16 | 113: 77 for frappe and the bench, 36 for ERPNext |
+| `v16` | A v15 site going to v16 | 142: 85 for frappe and the bench, 57 for ERPNext |
 
-Every v16 rule was checked against v16 source code or a merged pull request, or, for a change that comes with the new Python or a package v16 installs, against that project's source or release notes. They were last checked on 25 October 2026, against frappe v16.53.0, and the report header says so. Each rule links to its proof.
+Every v16 rule was checked against v16 source code or a merged pull request, or, for a change that comes with the new Python or a package v16 installs, against that project's source or release notes. They were last checked on 22 November 2026, against frappe v16.60.2 and ERPNext v16.60.0, and the report header says so. Each rule links to its proof.
 
 Each rule also says when its fix can go in: before the upgrade, because the replacement already works on v15, or with the upgrade, because it only exists on v16. Some add a shim that runs on both. See [The fix](reading-a-report.md#the-fix).
 
@@ -45,6 +45,12 @@ The Changelog Feed hook rule reports the `get_changelog_feed` hook, which nothin
 - `v16-removed-test-runner-helpers` (error): The functions that ran a suite from `frappe.test_runner`, such as `run_all_tests` and `run_tests_for_doctype`. Run the tests with `bench run-tests`
 - `v16-removed-list-sidebar` (error): `frappe.views.ListSidebar`
 - `v16-removed-leaderboards-hook` (error): The `leaderboards` hook
+- `v16-removed-marketing-campaign` (error): The Marketing Campaign doctype, replaced by UTM Campaign. The upgrade leaves its records in the old table and UTM Campaign empty
+- `v16-removed-filter-methods` (error): Eight methods of `frappe.ui.Filter` and `frappe.ui.FilterGroup`, such as `init_filter_popover`
+- `v16-removed-query-report-print-methods` (error): The report's `get_custom_format`, `get_print_template` and `add_portrait_warning`
+- `v16-removed-grid-setup-download` (error): The child table grid's `setup_download`
+- `v16-web-form-progress-dots` (error): A Web Form's `render_progress_dots`, replaced by a stepper
+- `v16-unlock-document-args` (error): The `args` parameter of `unlock_document`
 - `v16-moved-frappe-config-helpers` (error): The helpers in `frappe.config`. They moved to `frappe.utils.modules`
 - `v16-moved-desk-permission-helpers` (error): `get_allowed_pages`, `get_allowed_reports`, `get_allowed_report_names` and `get_user_pages_or_reports` in `frappe.boot`. They moved to `DeskViews` in `frappe.desk.desk_views`
 - `v16-removed-workspace-sidebar-items` (error): The `frappe.desk.desktop.get_workspace_sidebar_items` endpoint. Read `frappe.boot.workspaces` in the browser instead
@@ -69,10 +75,12 @@ frappe v15 installs these packages itself, so an app can import them without dec
 
 Each rule covers one import, and reports it only when the app declares none of the packages that install it, in its `pyproject.toml` or `requirements.txt`. Declaring `boto3` covers `import botocore` too, since boto3 requires it; declaring only `botocore` leaves `import boto3` reported. The fix is to declare it, in a range that takes in the version v15 pins, so the app installs on both.
 
+The three boto packages are warnings: since v16.60.0 they are back in a new environment only because `litellm`, which frappe now pins, requires `boto3>=1.43.1,<2`. The import works until a later litellm drops it, and a declared range has to reach that version too, such as `boto3>=1.34.143,<2`.
+
 - `v16-removed-bleach` (error): `bleach`
-- `v16-removed-boto3` (error): `boto3`
-- `v16-removed-botocore` (error): `botocore`, which `boto3` also installs
-- `v16-removed-s3transfer` (error): `s3transfer`, which `boto3` also installs
+- `v16-removed-boto3` (warning): `boto3`
+- `v16-removed-botocore` (warning): `botocore`, which `boto3` also installs
+- `v16-removed-s3transfer` (warning): `s3transfer`, which `boto3` also installs
 - `v16-removed-dropbox` (error): `dropbox`, the Dropbox SDK
 - `v16-removed-geolite2` (error): `maxminddb-geolite2`, imported as `geolite2`
 - `v16-removed-maxminddb` (error): `maxminddb`, which `maxminddb-geolite2` also installs
@@ -86,6 +94,8 @@ Nothing raises here. The code runs and gives a different result.
 - `v16-has-permission-hook-returns-none` (error): The function a `has_permission` hook names can return None. v15 read None as no opinion; v16 reads it as deny
 - `v16-has-permission-hook-unreadable` (warning): The function a `has_permission` hook names is not in the app's own source, so Preflight can't tell whether it returns None. Check it by hand
 - `v16-value-cache-nested` (warning): `frappe.db.value_cache` is nested. The old flat key reads nothing
+- `v16-delete-session-stored-id` (warning): `delete_session` with a positional sid. A stored id gets hashed again, so the session is not deleted and the user stays logged in
+- `v16-filter-hidden-argument` (warning): The fifth argument of `add_filter`. The filter still applies but no longer hides its tag
 - `v16-deprecated-gravatar-helpers` (warning): The gravatar helpers return an identicon or an empty string. v15.112.0 already does the same, so only a site on an older v15 sees the change
 - `v16-removed-octicons` (warning): The Octicons icon font is gone. An `octicon` class still renders, with a blank icon
 - `v16-build-xlsx-data-applied-filters` (warning): With `include_filters`, `build_xlsx_data` reads the filter rows from `data.applied_filters` (v16.17.0). Code that fills only `data.filters` gets a sheet without them
@@ -145,6 +155,29 @@ ERPNext v16 removed or renamed doctypes, fields, modules, methods and a hook tha
 - `v16-erpnext-asset-repair-cost` (error): Asset Repair's `get_repair_cost_for_purchase_invoice`, replaced by `get_unallocated_repair_cost`
 - `v16-erpnext-default-supplier-purchase-orders` (error): Sales Order's `make_purchase_order_for_default_supplier` and Material Request's `get_default_supplier_query`
 - `v16-erpnext-lead-source` (error): The sales funnel's `get_opp_by_lead_source`, replaced by `get_opp_by_utm_source`
+- `v16-erpnext-removed-leaderboard` (error): The `erpnext.startup.leaderboard` module and its whitelisted methods
+- `v16-erpnext-removed-lead-phone-lookup` (error): `get_lead_with_phone_number`. `get_leads_with_phone_number` returns a list
+- `v16-erpnext-removed-helpers` (error): Eleven helpers v15 has and v16 removed, such as `is_transfer_stock_entry`
+- `v16-erpnext-removed-demo-setup` (error): `setup_demo_data` and the setup wizard's `setup_demo`
+- `v16-erpnext-demo-transaction-doctypes-hook` (info): The `demo_transaction_doctypes` hook, which nothing reads on v16
+- BOM Creator, rebuilt around a part tree (error):
+  - `v16-erpnext-bom-creator-item-fields`: BOM Creator Item's `fg_item`, `fg_reference_id` and `parent_row_no`
+  - `v16-erpnext-bom-creator-methods`: The module's `get_children` and `get_item_details`
+  - `v16-erpnext-bom-configurator-js`: `frappe.ui.BOMConfigurator`
+- Calls that pass an argument the function no longer takes, so they raise `TypeError` (error):
+  - `v16-erpnext-removed-argument-accumulated-values`: `compute_margin_view_data`
+  - `v16-erpnext-removed-argument-args`: `parse_list_filters`, `send_emails`, `get_stock_reco_qty_shift`
+  - `v16-erpnext-removed-argument-bom-list`: `get_ancestor_boms`
+  - `v16-erpnext-removed-argument-company`: The Negative Batch report's `get_warehouses`
+  - `v16-erpnext-removed-argument-demo`: `create_bank_account`
+  - `v16-erpnext-removed-argument-fail-count`: `show_job_status`
+  - `v16-erpnext-removed-argument-item`: The Item Variant Details report's `get_columns` and `get_data`
+  - `v16-erpnext-removed-argument-serial-nos-in-stock`: `update_common_item_properties`
+  - `v16-erpnext-removed-argument-so-packed-item`: `update_packed_item_with_pick_list_info`
+  - `v16-erpnext-removed-argument-sre`: `get_ssb_bundle_for_voucher`
+  - `v16-erpnext-removed-argument-sre-name`: `get_serial_batch_entries_for_voucher`
+  - `v16-erpnext-removed-argument-sub-assembly-items`: `get_sub_assembly_items`
+- `v16-erpnext-coa-importer-validate-accounts` (error): A browser call to the Chart of Accounts Importer's `validate_accounts`, no longer whitelisted
 - `v16-erpnext-depreciation-helpers` (error): Seven helpers in the Asset doctype's `depreciation.py`, renamed or replaced
 - The arguments of `make_depreciation_entry`: `asset_depr_schedule_name` is now `depr_schedule_name`, and `credit_and_debit_accounts` and `depreciation_cost_center_and_depreciation_series` are gone (error):
   - `v16-erpnext-depreciation-entry-schedule-name`
@@ -173,7 +206,7 @@ These rules check whether the bench can install the target at all, before any sc
 
 - `v16-bench-python` (error): The bench's Python against v16's `requires-python`, `>=3.14,<3.15`
 - `v16-app-requires-python` (error): Each app's `requires-python` in `pyproject.toml`. Reported when it allows no Python v16 runs on
-- `v16-app-frappe-bound` (warning): Each app's frappe bound in `[tool.bench.frappe-dependencies]`, against frappe 16.53.0
+- `v16-app-frappe-bound` (warning): Each app's frappe bound in `[tool.bench.frappe-dependencies]`, against frappe 16.60.2
 - `v16-app-dependency-pins` (error): Each app's `[project].dependencies` against frappe v16's own pins. Reported when no version satisfies both
 - `v16-app-required-apps` (error): Each app's `required_apps` hook. Reported when a required app is not on the bench
 - `v16-bench-node` (error): With `--online`: the node on the bench's PATH against v16's `>=24`
@@ -198,7 +231,7 @@ An app's `pyproject.toml` is read only when the upgrade leaves the app on its br
 
 | Change | Why there is no rule |
 |---|---|
-| Lists sort by `creation` instead of `modified` | It affects every `frappe.get_all` without an `order_by`. A rule would flag thousands of correct calls |
+| Lists sort by `creation` instead of `modified` | `frappe.get_all` and `frappe.get_list` follow each doctype's `sort_field`, which v16 moved to `creation` on most frappe and ERPNext doctypes; an app's own doctypes keep what their JSON says. `frappe.db.get_value` with filters falls back from `modified` to `creation` on every doctype. A rule would flag thousands of correct calls |
 | `User.validate_roles` | It is a method on a document. The scanner can't tell what a variable holds |
 | `frappe.deprecations.deprecation_warning` | The module is already gone on v15 |
 | `frappe.model.trace.traced_field_context` | A debugging helper that no app we scanned uses |
@@ -207,6 +240,25 @@ An app's `pyproject.toml` is read only when the upgrade leaves the app on its br
 | A removed ERPNext field read off a document passed in from elsewhere, or off `frm.doc` | Nothing there says which doctype the document is |
 | Sales Order's `make_purchase_order` returns a list of Purchase Orders | `po = make_purchase_order(...)` reads the same on v15 and v16, and ERPNext v16's own code calls it that way |
 | Payment Entry's `get_account_details` no longer returns `account_balance` | A key of the returned dict; nothing ties the read to the call. The balance fields are under `v16-erpnext-removed-fields` |
+| A Sales Order's `make_sales_invoice` no longer skips permissions on the invoice unless asked | A correct call and a failing one differ only in who runs it |
+| About 40 ERPNext functions, such as `warehouse_query`, check permissions on v16 and not on v15 | Whether a call fails depends on the user running it |
+| `communication.email.make` with no reference document needs create on Communication | Depends on the user running it |
+| Ten more ERPNext functions, such as `filter_batches`, take new arguments | A rule can match an argument a call passes, not one it leaves out |
+| Nine ERPNext controller methods removed, such as `Project.get_billed_amount_from_parent` | They are reached through `self` or `super()`, and the scanner can't tell what class a variable holds |
+| ERPNext's `update_compnay_address` is now `update_company_address` | An override of the old name stops being called, and nothing in the override names the class it replaces |
+| `get_item_details` refuses `BOM Creator` as its doctype | The doctype is usually a variable |
+| Holiday List's `total_holidays` is a float, with half days as 0.5 | The field still reads; only code that assumes a whole number is affected |
+| Asset Capitalization's `target_asset` is required | A validation on save that depends on the record |
+| An Inventory Dimension condition gets plain field values, so `doc.is_new()` raises | A site record rule compares a field with one value and can't read a condition's text |
+| Data Import export for an owner-only user keeps that user's rows instead of raising | No app code is involved |
+| A Print Format with no PDF generator follows a `chrome` value stored in Print Settings | An upgraded site with nothing stored keeps wkhtmltopdf |
+| `frappe.query_report.chart` is a reduced handle when classic charts are off | The upgrade keeps a site that finished setup on classic charts |
+| A Link field's awesomplete is a shim under the Beta combobox setting | The setting is off by default |
+| `SortSelector` lost `bind_events`, its template and its dropdown markup | The names are too generic to match without flagging other code |
+| The bulk edit grid no longer sets `frappe.flags.no_socketio` | frappe reads the flag on neither version |
+| Leaflet moved out of `libs.bundle.js` into a bundle only MapView and Geolocation load | Its global `L` is too short to match |
+| Five-element rows passed to `add_filters` no longer hide the filter | The rows are usually built elsewhere. A direct `add_filter` call is covered |
+| A multi-step Web Form's `.slide-step` and `.slides-progress` markup is gone, and a Page Break in the first row names page 1 | The setup wizard's slides still use those classes |
 | The upgrade steps | Not an API. See the [upgrade checklist](upgrade-checklist.md) |
 
 To add a rule, see [Writing a rule](writing-a-rule.md).

@@ -70,8 +70,8 @@ and skips it when it loads the rules:
 
 ```yaml
 released: true            # the frappe major is out
-checked: "2026-10-25"     # when the rules were last checked against the source, quoted
-against: frappe v16.53.0  # what they were checked against
+checked: "2026-11-22"     # when the rules were last checked against the source, quoted
+against: frappe v16.60.2  # what they were checked against
 ```
 
 All three keys are required, and no others are allowed. A target with `released: false` still
@@ -503,7 +503,7 @@ the way bench's `validate_dependency` compares it:
 ```yaml
 match:
   type: frappe_bound
-  frappe: "16.53.0"   # the target's latest release, which is what an upgrade installs
+  frappe: "16.60.2"   # the target's latest release, which is what an upgrade installs
 ```
 
 Only an app the upgrade leaves on its branch is read: one checked out on a named branch that is

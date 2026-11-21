@@ -6,7 +6,7 @@ The first line names the site, the frappe version on the bench, and the target. 
 
 ```text
 Preflight test.localhost: frappe 15.123.1 → v16
-Rules checked 2026-10-25 against frappe v16.53.0
+Rules checked 2026-11-22 against frappe v16.60.2
 ```
 
 With `--path` there is no site or bench, and the first line reads `Preflight code only → v16`.
@@ -151,7 +151,7 @@ Findings left out by an ignore comment or by `--baseline` are counted on their o
   "preflight_version": "0.0.1",
   "site": "mysite.local",
   "target": "v16",
-  "rules": {"checked": "2026-10-25", "against": "frappe v16.53.0"},
+  "rules": {"checked": "2026-11-22", "against": "frappe v16.60.2"},
   "python": "3.14.3",
   "frappe_version": "15.123.1",
   "severity": "info",

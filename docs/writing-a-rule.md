@@ -14,12 +14,12 @@ Each target folder holds a `target.yaml` beside its rules. The loader reads it f
 
 ```yaml
 released: true            # the frappe major is out
-checked: "2026-10-25"     # when the rules were last checked against the source, quoted
-against: frappe v16.53.0  # what they were checked against
+checked: "2026-11-22"     # when the rules were last checked against the source, quoted
+against: frappe v16.60.2  # what they were checked against
 ```
 
 - All three keys are required, and no others are allowed.
-- `checked` and `against` are what the report header prints: "Rules checked 2026-10-25 against frappe v16.53.0".
+- `checked` and `against` are what the report header prints: "Rules checked 2026-11-22 against frappe v16.60.2".
 - A target with `released: false` still loads, so its rules are tested with the rest, but `--target` refuses it.
 
 ## The file
@@ -137,7 +137,7 @@ match:
 ```
 
 - With only `paths`, it matches every call.
-- `with_kwargs` matches calls that pass these keywords.
+- `with_kwargs` matches calls that pass all of these keywords. For either of two keywords, write two rules.
 - `with_positional_args` matches calls with at least this many positional arguments.
 - With both, either one is enough.
 
@@ -363,7 +363,7 @@ match:
 ```yaml
 match:
   type: frappe_bound
-  frappe: "16.53.0"
+  frappe: "16.60.2"
 ```
 
 - Both read each app's `pyproject.toml`.
@@ -384,6 +384,7 @@ match:
 - `dependencies` is the target frappe's `[project].dependencies`, as written.
 - Reads `[project].dependencies` in the same apps' `pyproject.toml`, and reports a pin on the same package that no version satisfies together with frappe's.
 - Package names are compared the way pip compares them, so `PyYAML` is `pyyaml`.
+- A pin with an environment marker counts only where the marker holds, read on the machine running the scan.
 
 ### required_apps
 

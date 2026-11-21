@@ -39,7 +39,7 @@ A real run on a v15 site with erpnext. Each rule's explanation, printed under it
 
 ```text
 Preflight test.localhost: frappe 15.123.1 → v16
-Rules checked 2026-10-25 against frappe v16.53.0
+Rules checked 2026-11-22 against frappe v16.60.2
 Apps scanned: erpnext, print_designer
 
 ERROR (2)
