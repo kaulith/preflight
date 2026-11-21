@@ -1,0 +1,18 @@
+id: v16-unlock-document-args
+title: unlock_document no longer takes args
+severity: error
+match:
+  type: call
+  paths:
+    - frappe.model.document.unlock_document
+  with_kwargs:
+    - args
+message: >
+  On v15 unlock_document still reads a JSON args parameter for backward compatibility. v16 takes
+  only doctype and name, so a call that passes args raises TypeError.
+replacement: >
+  Pass unlock_document(doctype=..., name=...), which v15 also takes.
+fix: before
+references:
+  - https://github.com/frappe/frappe/blob/v15.127.1/frappe/model/document.py#L3182-L3185
+  - https://github.com/frappe/frappe/blob/2df0425571ebbaed878eabc3edc5b7e7c3327ae0/frappe/model/document.py#L3738

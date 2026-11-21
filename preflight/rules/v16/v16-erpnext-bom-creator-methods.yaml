@@ -1,0 +1,18 @@
+id: v16-erpnext-bom-creator-methods
+title: BOM Creator's get_children and get_item_details removed
+severity: error
+match:
+  type: import_path
+  paths:
+    - erpnext.manufacturing.doctype.bom_creator.bom_creator.get_children
+    - erpnext.manufacturing.doctype.bom_creator.bom_creator.get_item_details
+message: >
+  ERPNext v16 rebuilt BOM Creator and removed these two functions from its module. Importing one
+  raises ImportError, and a frappe.call to it from the browser fails.
+replacement: >
+  Rewrite the code against the BOM Creator Material and BOM Creator Operation tables and the
+  methods the v16 controller has.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/blob/v15.125.0/erpnext/manufacturing/doctype/bom_creator/bom_creator.py
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/manufacturing/doctype/bom_creator/bom_creator.py

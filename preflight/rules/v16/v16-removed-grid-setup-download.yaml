@@ -1,0 +1,17 @@
+id: v16-removed-grid-setup-download
+title: Grid's setup_download removed
+severity: error
+match:
+  type: pattern
+  patterns:
+    - \bgrid\.setup_download\(
+message: >
+  frappe v16 removed the child table grid's setup_download. Calling it raises TypeError in the
+  browser. The Upload and Download buttons on a bulk edit table now open frappe.ui.form.GridImport,
+  so code that wraps the old handlers no longer takes effect.
+replacement: >
+  Remove the call, and use frappe.ui.form.GridImport for a custom import or export on v16.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/blob/v15.127.1/frappe/public/js/frappe/form/grid.js#L1212
+  - https://github.com/frappe/frappe/blob/2df0425571ebbaed878eabc3edc5b7e7c3327ae0/frappe/public/js/frappe/form/grid.js#L1611

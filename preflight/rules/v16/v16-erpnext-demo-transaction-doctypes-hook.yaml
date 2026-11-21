@@ -1,0 +1,16 @@
+id: v16-erpnext-demo-transaction-doctypes-hook
+title: ERPNext no longer reads the demo_transaction_doctypes hook
+severity: info
+match:
+  type: hook_key
+  keys:
+    - demo_transaction_doctypes
+message: >
+  ERPNext v15 reads this hook to clear demo transactions. v16 has no code that reads it, so what
+  the app adds to it does nothing. Nothing raises.
+replacement: >
+  Remove the hook.
+fix: before
+references:
+  - https://github.com/frappe/erpnext/blob/v15.125.0/erpnext/setup/demo.py#L110
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/setup/demo.py

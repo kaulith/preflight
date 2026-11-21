@@ -1,0 +1,18 @@
+id: v16-erpnext-removed-argument-serial-nos-in-stock
+title: ERPNext's update_common_item_properties no longer takes serial_nos_in_stock
+severity: error
+match:
+  type: call
+  paths:
+    - erpnext.stock.doctype.pick_list.pick_list.update_common_item_properties
+  with_kwargs:
+    - serial_nos_in_stock
+message: >
+  The call passes serial_nos_in_stock by name, so it raises TypeError. On v16:
+  update_common_item_properties(item, location, moved_serial_nos), was (item, location, serial_nos_in_stock).
+replacement: >
+  Update the call to the v16 arguments, and check what each one now expects.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/blob/v15.125.0/erpnext/stock/doctype/pick_list/pick_list.py#L2138
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/stock/doctype/pick_list/pick_list.py#L2376

@@ -1,0 +1,22 @@
+id: v16-erpnext-removed-argument-item
+title: ERPNext functions no longer take item
+severity: error
+match:
+  type: call
+  paths:
+    - erpnext.stock.report.item_variant_details.item_variant_details.get_columns
+    - erpnext.stock.report.item_variant_details.item_variant_details.get_data
+  with_kwargs:
+    - item
+message: >
+  The call passes item by name, so it raises TypeError. On v16:
+  get_columns(templates), was (item).
+  get_data(templates, filters), was (item).
+replacement: >
+  Update the call to the v16 arguments, and check what each one now expects.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/blob/v15.125.0/erpnext/stock/report/item_variant_details/item_variant_details.py#L78
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/stock/report/item_variant_details/item_variant_details.py#L150
+  - https://github.com/frappe/erpnext/blob/v15.125.0/erpnext/stock/report/item_variant_details/item_variant_details.py#L21
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/stock/report/item_variant_details/item_variant_details.py#L58

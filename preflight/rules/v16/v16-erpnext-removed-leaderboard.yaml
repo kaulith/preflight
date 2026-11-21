@@ -1,0 +1,17 @@
+id: v16-erpnext-removed-leaderboard
+title: ERPNext's leaderboard module removed
+severity: error
+match:
+  type: import_path
+  paths:
+    - erpnext.startup.leaderboard
+message: >
+  ERPNext v16 deleted erpnext.startup.leaderboard, with its whitelisted get_all_customers,
+  get_all_items, get_all_suppliers, get_all_sales_partner and get_all_sales_person. Importing the
+  module raises ModuleNotFoundError, and a frappe.call to one of its methods fails.
+replacement: >
+  Copy the queries the app needs into the app, or read the same figures from a report.
+fix: before
+references:
+  - https://github.com/frappe/erpnext/blob/v15.125.0/erpnext/startup/leaderboard.py#L55-L198
+  - https://github.com/frappe/erpnext/tree/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/startup

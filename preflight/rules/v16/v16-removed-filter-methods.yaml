@@ -1,0 +1,18 @@
+id: v16-removed-filter-methods
+title: Filter and FilterGroup methods removed
+severity: error
+match:
+  type: pattern
+  patterns:
+    - \.(?:add_condition_help|bind_tag|get_filter_button_text|get_filter_tag_element|set_filter_button_text|update_filter_tag|add_filters_to_popover|init_filter_popover)\(
+message: >
+  frappe v16 rewrote the desk's filter UI and removed these methods of frappe.ui.Filter and
+  frappe.ui.FilterGroup. Calling one raises TypeError in the browser.
+replacement: >
+  Use what FilterGroup keeps on both versions: get_filters, add_filters, hide_popover and
+  toggle_empty_filters, and add_filter to build a row.
+fix: before
+references:
+  - https://github.com/frappe/frappe/blob/v15.127.1/frappe/public/js/frappe/ui/filters/filter.js#L172-L398
+  - https://github.com/frappe/frappe/blob/v15.127.1/frappe/public/js/frappe/ui/filters/filter_list.js#L42-L117
+  - https://github.com/frappe/frappe/blob/2df0425571ebbaed878eabc3edc5b7e7c3327ae0/frappe/public/js/frappe/ui/filters/filter_list.js

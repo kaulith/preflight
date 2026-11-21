@@ -1,0 +1,26 @@
+id: v16-erpnext-removed-argument-args
+title: ERPNext functions no longer take args
+severity: error
+match:
+  type: call
+  paths:
+    - erpnext.bulk_transaction.doctype.bulk_transaction_log.bulk_transaction_log.parse_list_filters
+    - erpnext.selling.doctype.customer.customer.send_emails
+    - erpnext.stock.stock_ledger.get_stock_reco_qty_shift
+  with_kwargs:
+    - args
+message: >
+  The call passes args by name, so it raises TypeError. On v16:
+  parse_list_filters(filters), was (args).
+  send_emails(customer, company), was (args).
+  get_stock_reco_qty_shift(kwargs), was (args).
+replacement: >
+  Update the call to the v16 arguments, and check what each one now expects.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/blob/v15.125.0/erpnext/bulk_transaction/doctype/bulk_transaction_log/bulk_transaction_log.py#L116
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/bulk_transaction/doctype/bulk_transaction_log/bulk_transaction_log.py#L125
+  - https://github.com/frappe/erpnext/blob/v15.125.0/erpnext/selling/doctype/customer/customer.py#L685
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/selling/doctype/customer/customer.py#L775
+  - https://github.com/frappe/erpnext/blob/v15.125.0/erpnext/stock/stock_ledger.py#L2726
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/stock/stock_ledger.py#L2800

@@ -1,0 +1,18 @@
+id: v16-removed-query-report-print-methods
+title: Query Report print methods removed
+severity: error
+match:
+  type: pattern
+  patterns:
+    - \b(?:query_report|report)\.(?:get_custom_format|get_print_template|add_portrait_warning)\(
+message: >
+  frappe v16 moved report printing to resolve_print_format and build_print_opts and removed
+  get_custom_format, get_print_template and add_portrait_warning. Calling one raises TypeError in
+  the browser, and an override of one never runs.
+replacement: >
+  Set html_format or get_pdf_format in the report's JavaScript, which both versions read.
+fix: before
+references:
+  - https://github.com/frappe/frappe/blob/v15.127.1/frappe/public/js/frappe/views/reports/query_report.js#L1538-L1555
+  - https://github.com/frappe/frappe/blob/v15.127.1/frappe/public/js/frappe/views/reports/query_report.js#L2033
+  - https://github.com/frappe/frappe/blob/2df0425571ebbaed878eabc3edc5b7e7c3327ae0/frappe/public/js/frappe/views/reports/query_report.js#L1837

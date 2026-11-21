@@ -1,0 +1,22 @@
+id: v16-delete-session-stored-id
+title: delete_session no longer deletes a session by its stored id
+severity: warning
+match:
+  type: call
+  paths:
+    - frappe.sessions.delete_session
+  with_positional_args: 1
+message: >
+  frappe v16 stores each session under a hash of its sid, and delete_session hashes the sid it is
+  given. A stored id, from tabSessions or get_sessions_to_clear, gets hashed a second time, so the
+  call deletes no row and no cache entry and raises nothing, and the user stays logged in. With
+  user= it also writes a Logout entry for a session that is still alive. Passing the raw cookie
+  value, such as frappe.session.sid, still works.
+replacement: >
+  Pass a stored id as delete_session(sid_hash=value), and keep the positional sid for a raw cookie
+  value only.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/pull/43201
+  - https://github.com/frappe/frappe/blob/v15.127.1/frappe/sessions.py#L83-L102
+  - https://github.com/frappe/frappe/blob/2df0425571ebbaed878eabc3edc5b7e7c3327ae0/frappe/sessions.py#L98-L127

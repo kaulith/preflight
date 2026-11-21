@@ -1,0 +1,19 @@
+id: v16-erpnext-removed-argument-demo
+title: ERPNext's create_bank_account no longer takes demo
+severity: error
+match:
+  type: call
+  paths:
+    - erpnext.setup.setup_wizard.operations.install_fixtures.create_bank_account
+  with_kwargs:
+    - demo
+  with_positional_args: 2
+message: >
+  The call passes demo by name, or more positional values than v16 takes, so it raises TypeError. On v16:
+  create_bank_account(args), was (args, demo).
+replacement: >
+  Update the call to the v16 arguments, and check what each one now expects.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/blob/v15.125.0/erpnext/setup/setup_wizard/operations/install_fixtures.py#L521
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/setup/setup_wizard/operations/install_fixtures.py#L550

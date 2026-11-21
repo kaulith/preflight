@@ -1,0 +1,19 @@
+id: v16-erpnext-removed-argument-accumulated-values
+title: ERPNext's compute_margin_view_data no longer takes accumulated_values
+severity: error
+match:
+  type: call
+  paths:
+    - erpnext.accounts.report.financial_statements.compute_margin_view_data
+  with_kwargs:
+    - accumulated_values
+  with_positional_args: 4
+message: >
+  The call passes accumulated_values by name, or more positional values than v16 takes, so it raises TypeError. On v16:
+  compute_margin_view_data(data, columns, base_row), was (data, columns, accumulated_values, base_row).
+replacement: >
+  Update the call to the v16 arguments, and check what each one now expects.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/blob/v15.125.0/erpnext/accounts/report/financial_statements.py#L739
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/accounts/report/financial_statements.py#L977

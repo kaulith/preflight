@@ -1,0 +1,18 @@
+id: v16-erpnext-removed-argument-fail-count
+title: ERPNext's show_job_status no longer takes fail_count
+severity: error
+match:
+  type: call
+  paths:
+    - erpnext.utilities.bulk_transaction.show_job_status
+  with_kwargs:
+    - fail_count
+message: >
+  The call passes fail_count by name, so it raises TypeError. On v16:
+  show_job_status(failed, deserialized_data_count, to_doctype), was (fail_count, deserialized_data_count, to_doctype).
+replacement: >
+  Update the call to the v16 arguments, and check what each one now expects.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/blob/v15.125.0/erpnext/utilities/bulk_transaction.py#L224
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/utilities/bulk_transaction.py#L247

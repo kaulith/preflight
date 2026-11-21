@@ -1,0 +1,19 @@
+id: v16-erpnext-removed-demo-setup
+title: ERPNext's demo data setup removed
+severity: error
+match:
+  type: import_path
+  paths:
+    - erpnext.setup.demo.setup_demo_data
+    - erpnext.setup.setup_wizard.setup_wizard.setup_demo
+message: >
+  ERPNext v16 no longer creates demo data: setup_demo_data and the setup wizard's setup_demo are
+  gone. Importing either raises ImportError, which stops the module that imports it from loading.
+  clear_demo_data stays.
+replacement: >
+  Remove the call. An app that needs sample records creates its own.
+fix: before
+references:
+  - https://github.com/frappe/erpnext/blob/v15.125.0/erpnext/setup/demo.py#L19
+  - https://github.com/frappe/erpnext/blob/v15.125.0/erpnext/setup/setup_wizard/setup_wizard.py#L67-L69
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/setup/demo.py

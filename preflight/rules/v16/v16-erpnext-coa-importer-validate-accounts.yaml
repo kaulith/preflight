@@ -1,0 +1,18 @@
+id: v16-erpnext-coa-importer-validate-accounts
+title: Chart of Accounts Importer's validate_accounts is no longer whitelisted
+severity: error
+match:
+  type: pattern
+  patterns:
+    - >-
+      ["']erpnext\.accounts\.doctype\.chart_of_accounts_importer\.chart_of_accounts_importer\.validate_accounts["']
+message: >
+  ERPNext v16 took the whitelist off validate_accounts in the Chart of Accounts Importer. A
+  frappe.call to it from the browser now fails as not whitelisted. Python code that imports and
+  calls it still works.
+replacement: >
+  Call it from a whitelisted method in the app that does its own permission check.
+fix: before
+references:
+  - https://github.com/frappe/erpnext/blob/v15.125.0/erpnext/accounts/doctype/chart_of_accounts_importer/chart_of_accounts_importer.py#L377-L378
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/accounts/doctype/chart_of_accounts_importer/chart_of_accounts_importer.py#L377

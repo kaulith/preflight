@@ -1,0 +1,19 @@
+id: v16-erpnext-removed-argument-company
+title: ERPNext's get_warehouses no longer takes company
+severity: error
+match:
+  type: call
+  paths:
+    - erpnext.stock.report.negative_batch_report.negative_batch_report.get_warehouses
+  with_kwargs:
+    - company
+  with_positional_args: 2
+message: >
+  The call passes company by name, or more positional values than v16 takes, so it raises TypeError. On v16:
+  get_warehouses(filters), was (filters, company).
+replacement: >
+  Update the call to the v16 arguments, and check what each one now expects.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/blob/v15.125.0/erpnext/stock/report/negative_batch_report/negative_batch_report.py#L141
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/stock/report/negative_batch_report/negative_batch_report.py#L140

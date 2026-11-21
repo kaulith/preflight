@@ -1,0 +1,19 @@
+id: v16-erpnext-removed-argument-bom-list
+title: ERPNext's get_ancestor_boms no longer takes bom_list
+severity: error
+match:
+  type: call
+  paths:
+    - erpnext.manufacturing.doctype.bom_update_log.bom_updation_utils.get_ancestor_boms
+  with_kwargs:
+    - bom_list
+  with_positional_args: 2
+message: >
+  The call passes bom_list by name, or more positional values than v16 takes, so it raises TypeError. On v16:
+  get_ancestor_boms(new_bom), was (new_bom, bom_list).
+replacement: >
+  Update the call to the v16 arguments, and check what each one now expects.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/blob/v15.125.0/erpnext/manufacturing/doctype/bom_update_log/bom_updation_utils.py#L69
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/manufacturing/doctype/bom_update_log/bom_updation_utils.py#L69

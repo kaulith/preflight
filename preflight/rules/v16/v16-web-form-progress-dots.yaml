@@ -1,0 +1,17 @@
+id: v16-web-form-progress-dots
+title: Web Form's render_progress_dots replaced
+severity: error
+match:
+  type: pattern
+  patterns:
+    - \bweb_form\.render_progress_dots\(
+message: >
+  frappe v16 replaced the multi-step Web Form's progress dots with a stepper. Calling
+  frappe.web_form.render_progress_dots() raises TypeError in the browser, in an app's script or a
+  Web Form's Client Script.
+replacement: >
+  Remove the call. v16 draws the steps through render_stepper, in the .web-form-stepper element.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/blob/v15.127.1/frappe/public/js/frappe/web_form/web_form.js#L287
+  - https://github.com/frappe/frappe/blob/2df0425571ebbaed878eabc3edc5b7e7c3327ae0/frappe/public/js/frappe/web_form/web_form.js#L309

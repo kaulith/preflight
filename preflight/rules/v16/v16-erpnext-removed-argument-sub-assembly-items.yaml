@@ -1,0 +1,18 @@
+id: v16-erpnext-removed-argument-sub-assembly-items
+title: ERPNext's get_sub_assembly_items no longer takes sub_assembly_items
+severity: error
+match:
+  type: call
+  paths:
+    - erpnext.manufacturing.doctype.production_plan.production_plan.get_sub_assembly_items
+  with_kwargs:
+    - sub_assembly_items
+message: >
+  The call passes sub_assembly_items by name, so it raises TypeError. On v16:
+  get_sub_assembly_items(bin_details, bom_no, bom_data, to_produce_qty, company, warehouse, indent, skip_available_sub_assembly_item, consider_process_loss), was (sub_assembly_items, bin_details, bom_no, bom_data, to_produce_qty, company, warehouse, indent, skip_available_sub_assembly_item).
+replacement: >
+  Update the call to the v16 arguments, and check what each one now expects.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/blob/v15.125.0/erpnext/manufacturing/doctype/production_plan/production_plan.py#L2057
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/manufacturing/doctype/production_plan/production_plan.py#L2572

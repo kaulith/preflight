@@ -1,0 +1,17 @@
+id: v16-erpnext-removed-lead-phone-lookup
+title: ERPNext's get_lead_with_phone_number removed
+severity: error
+match:
+  type: import_path
+  paths:
+    - erpnext.crm.doctype.lead.lead.get_lead_with_phone_number
+message: >
+  ERPNext v16 removed get_lead_with_phone_number, which returned the first matching lead's name.
+  Importing it raises ImportError, which stops the module that imports it from loading.
+replacement: >
+  Call get_leads_with_phone_number from the same module, which v15 also has. It returns a list, so
+  take leads[0] if leads else None where the code needs one name.
+fix: before
+references:
+  - https://github.com/frappe/erpnext/blob/v15.125.0/erpnext/crm/doctype/lead/lead.py#L522-L543
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/crm/doctype/lead/lead.py#L558

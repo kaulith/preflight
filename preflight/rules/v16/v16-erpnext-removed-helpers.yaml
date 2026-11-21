@@ -1,0 +1,26 @@
+id: v16-erpnext-removed-helpers
+title: ERPNext helper functions removed
+severity: error
+match:
+  type: import_path
+  paths:
+    - erpnext.accounts.doctype.payment_entry.payment_entry.add_income_discount_loss
+    - erpnext.accounts.doctype.payment_entry.payment_entry.add_tax_discount_loss
+    - erpnext.buying.doctype.supplier_quotation.supplier_quotation.get_purchased_items
+    - erpnext.manufacturing.doctype.job_card.job_card.OperationMismatchError
+    - erpnext.stock.doctype.packed_item.packed_item.get_cancelled_doc_packed_item_details
+    - erpnext.stock.doctype.packed_item.packed_item.update_packed_item_from_cancelled_doc
+    - erpnext.stock.report.item_variant_details.item_variant_details.get_open_sales_orders_count
+    - erpnext.stock.report.negative_batch_report.negative_batch_report.get_companies
+    - erpnext.stock.stock_ledger.is_transfer_stock_entry
+    - erpnext.support.doctype.service_level_agreement.service_level_agreement.change_service_level_agreement_and_priority
+    - erpnext.utilities.doctype.video.video.get_frequency
+message: >
+  ERPNext v15 has these functions, and OperationMismatchError, and v16 removed them. Importing one
+  raises ImportError, which stops the module that imports it from loading.
+replacement: >
+  Copy the logic the app needs into the app.
+fix: before
+references:
+  - https://github.com/frappe/erpnext/tree/v15.125.0/erpnext
+  - https://github.com/frappe/erpnext/tree/886ab6ae187244e7f1b852393384ab6019d56264/erpnext

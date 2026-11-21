@@ -1,0 +1,26 @@
+id: v16-removed-marketing-campaign
+title: Marketing Campaign replaced by UTM Campaign, and its records are not moved
+severity: error
+match:
+  type: doctype
+  doctypes:
+    - Marketing Campaign
+message: >
+  frappe v16 replaces the Marketing Campaign doctype with UTM Campaign. Its rename patch runs after
+  the model sync has already created an empty UTM Campaign, so the patch exits without renaming.
+  The migration then deletes the Marketing Campaign doctype as an orphan and leaves its rows in the
+  tabMarketing Campaign table, so UTM Campaign starts empty. frappe.get_all and frappe.get_list on
+  the old name raise DoesNotExistError, frappe.get_doc and frappe.new_doc raise ImportError, a Link
+  to it points at a doctype the site no longer has, and a Custom Field on it stays behind on the
+  deleted doctype.
+replacement: >
+  Point code and Link fields at UTM Campaign, and recreate any Custom Field on it. After the
+  migrate, copy the old records across with INSERT INTO `tabUTM Campaign` (name, creation,
+  modified, modified_by, owner, docstatus, idx, campaign_description) SELECT name, creation,
+  modified, modified_by, owner, docstatus, idx, campaign_description FROM `tabMarketing Campaign`.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/blob/2df0425571ebbaed878eabc3edc5b7e7c3327ae0/frappe/patches/v15_0/migrate_to_utm.py#L8-L15
+  - https://github.com/frappe/frappe/blob/2df0425571ebbaed878eabc3edc5b7e7c3327ae0/frappe/patches.txt#L201-L249
+  - https://github.com/frappe/frappe/blob/2df0425571ebbaed878eabc3edc5b7e7c3327ae0/frappe/migrate.py#L146-L155
+  - https://github.com/frappe/frappe/blob/2df0425571ebbaed878eabc3edc5b7e7c3327ae0/frappe/model/sync.py#L213-L238

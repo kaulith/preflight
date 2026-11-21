@@ -1,0 +1,16 @@
+id: v16-filter-hidden-argument
+title: add_filter no longer hides a filter
+severity: warning
+match:
+  type: pattern
+  patterns:
+    - \.add_filter\((?:[^,()]+,){4}\s*(?:true|1)\s*\)
+message: >
+  On v15 a fifth argument to add_filter applies the filter with its tag hidden. v16 drops the
+  argument, so the filter still applies but shows as a normal row the user can edit or remove.
+replacement: >
+  Apply a fixed condition in the list's get_query or a permission query instead of a hidden filter.
+fix: before
+references:
+  - https://github.com/frappe/frappe/blob/v15.127.1/frappe/public/js/frappe/ui/filters/filter_list.js#L175
+  - https://github.com/frappe/frappe/blob/2df0425571ebbaed878eabc3edc5b7e7c3327ae0/frappe/public/js/frappe/ui/filters/filter_list.js#L732

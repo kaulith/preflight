@@ -1,0 +1,21 @@
+id: v16-erpnext-bom-creator-item-fields
+title: BOM Creator Item lost its tree fields
+severity: error
+match:
+  type: doctype_field
+  fields:
+    - BOM Creator Item.fg_item
+    - BOM Creator Item.fg_reference_id
+    - BOM Creator Item.parent_row_no
+message: >
+  ERPNext v16 rebuilt BOM Creator around a part tree, with new BOM Creator Material and BOM Creator
+  Operation tables, and the migration moves the rows there. BOM Creator Item no longer has fg_item,
+  fg_reference_id or parent_row_no, so code that walks the old tree through them finds nothing or
+  raises.
+replacement: >
+  Rewrite the code against the BOM Creator Material and BOM Creator Operation tables.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/blob/v15.125.0/erpnext/manufacturing/doctype/bom_creator_item/bom_creator_item.json
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/manufacturing/doctype/bom_creator_item/bom_creator_item.json
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/patches/v16_0/move_bom_creator_items_to_part_tree.py

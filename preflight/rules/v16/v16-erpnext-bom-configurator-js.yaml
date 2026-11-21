@@ -1,0 +1,16 @@
+id: v16-erpnext-bom-configurator-js
+title: frappe.ui.BOMConfigurator removed
+severity: error
+match:
+  type: pattern
+  patterns:
+    - \bfrappe\.ui\.BOMConfigurator\b
+message: >
+  ERPNext v16 rebuilt BOM Creator and no longer ships the frappe.ui.BOMConfigurator class. Script
+  that creates or extends it raises TypeError in the browser.
+replacement: >
+  Remove the use, and build on the v16 BOM Creator form instead.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/blob/v15.125.0/erpnext/public/js/bom_configurator/bom_configurator.bundle.js
+  - https://github.com/frappe/erpnext/tree/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/public/js
