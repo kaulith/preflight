@@ -24,7 +24,7 @@ Scanned twelve app trees: two versions each of frappe and erpnext, plus crm, hel
 - Test files caused almost all the noise. `FrappeTestCase` alone had 263 findings in frappe and 163 in erpnext.
 - Outside the test helper rules, a rule passed 13 findings only in frappe's own two trees and in erpnext v15. frappe reports its own Octicons stylesheets, and on v15 the modules v16 moved out naming themselves. erpnext v15 has 84 for `v16-sql-function-string-fields` and 26 for `v16-erpnext-moved-settings`; erpnext's version-16 branch has 2 and 6.
 - That is why an app on frappe's version branch, such as erpnext, is listed apart as upstream: the branch switch replaces that code.
-- Every finding is saved, and the set was refrozen on 22 November 2026 with the 142 v16 rules. After any rule change, a rescan shows exactly what moved.
+- Every finding is saved, and the set was refrozen on 23 November 2026 with the 152 v16 rules. After any rule change, a rescan shows exactly what moved.
 
 ## 3. A real upgrade
 

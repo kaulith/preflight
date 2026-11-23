@@ -48,7 +48,7 @@ Some rules add a **Shim that runs on both versions**: a short snippet, such as a
 
 ```text
 Upstream apps, not counted (1)
-    erpnext on mergify/bp/version-15-hotfix/pr-58667: 613 found
+    erpnext on mergify/bp/version-15-hotfix/pr-58667: 696 found
 ```
 
 An app on frappe's own version branch, such as erpnext on `version-15-hotfix` or a branch cut from it, is switched to the target's branch by the upgrade, and that replaces its code. What Preflight finds in it is upstream's to fix, so it is listed here, left out of the counts, and never fails the command.
@@ -165,7 +165,7 @@ Findings left out by an ignore comment or by `--baseline` are counted on their o
     "below_severity": 0,
     "suppressed": 0,
     "baselined": 0,
-    "upstream": 613,
+    "upstream": 696,
     "ran_patches": 0
   },
   "apps": ["erpnext", "my_app"],

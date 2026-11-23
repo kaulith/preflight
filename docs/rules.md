@@ -4,7 +4,7 @@ A rule is one YAML file that describes one breaking change. `--target` picks the
 
 | Target | For | Rules |
 |---|---|---|
-| `v16` | A v15 site going to v16 | 142: 85 for frappe and the bench, 57 for ERPNext |
+| `v16` | A v15 site going to v16 | 152: 88 for frappe and the bench, 64 for ERPNext |
 
 Every v16 rule was checked against v16 source code or a merged pull request, or, for a change that comes with the new Python or a package v16 installs, against that project's source or release notes. They were last checked on 22 November 2026, against frappe v16.60.2 and ERPNext v16.60.0, and the report header says so. Each rule links to its proof.
 
@@ -67,6 +67,8 @@ The Changelog Feed hook rule reports the `get_changelog_feed` hook, which nothin
 - `v16-removed-octicons-import` (error): frappe's Octicons stylesheet in `frappe/public/css/octicons/`. v16.50.0 deleted it, so a stylesheet that imports it fails `bench build`
 - `v16-removed-python-stdlib` (error): Standard library modules and names that Python 3.12 to 3.14 removed, such as `distutils`, `imp`, `cgi` and `ast.Str`. v16 needs Python 3.14
 - `v16-removed-pkg-resources` (error): `pkg_resources`. A new Python 3.14 environment has no setuptools, or one too new to ship it
+- `v16-desktop-icon-fields` (warning): Eleven fields of the v15 Desktop Icon, such as `module_name` and `blocked`. The upgrade empties the table
+- `v16-notification-title-message` (warning): Notification's `notification_title` and `notification_message`. The in-app alert takes its title from the Subject
 - `v16-removed-rq-connection-helpers` (error): rq's `Connection` and the connection helpers next to it. v16 installs rq 2
 
 ## v16: packages frappe no longer installs
@@ -95,6 +97,7 @@ Nothing raises here. The code runs and gives a different result.
 - `v16-has-permission-hook-unreadable` (warning): The function a `has_permission` hook names is not in the app's own source, so Preflight can't tell whether it returns None. Check it by hand
 - `v16-value-cache-nested` (warning): `frappe.db.value_cache` is nested. The old flat key reads nothing
 - `v16-delete-session-stored-id` (warning): `delete_session` with a positional sid. A stored id gets hashed again, so the session is not deleted and the user stays logged in
+- `v16-session-id-stored-hashed` (warning): SQL reading `sid` on `tabSessions`. The column now holds a hash, so comparing it with `frappe.session.sid` matches no row
 - `v16-filter-hidden-argument` (warning): The fifth argument of `add_filter`. The filter still applies but no longer hides its tag
 - `v16-deprecated-gravatar-helpers` (warning): The gravatar helpers return an identicon or an empty string. v15.112.0 already does the same, so only a site on an older v15 sees the change
 - `v16-removed-octicons` (warning): The Octicons icon font is gone. An `octicon` class still renders, with a blank icon
@@ -149,12 +152,17 @@ ERPNext v16 removed or renamed doctypes, fields, modules, methods and a hook tha
   - `v16-erpnext-tax-withholding-doctypes`
 - `v16-erpnext-replaced-reports` (error): Employee Billing Summary, Project Billing Summary, BOM Stock Report, BOM Stock Calculated and Supplier-Wise Sales Analytics, replaced by new reports
 - `v16-erpnext-moved-settings` (error): The frozen accounts settings and the default manufacturing warehouses, moved to Company, and `post_change_gl_entries`, moved to POS Settings
+- `v16-erpnext-scrap-items-tables` (error): The `scrap_items` table of BOM and Job Card, replaced by `secondary_items`
+- `v16-erpnext-budget-accounts-table` (error): Budget's `accounts` table. A Budget now covers one account
+- `v16-erpnext-tax-withholding-tables` (error): Purchase Invoice's `advance_tax` and `tax_withheld_vouchers`, replaced by `tax_withholding_entries`
+- `v16-erpnext-payment-balance-settings` (error): Accounts Settings' `show_account_balance` and `show_party_balance`
 - `v16-erpnext-removed-methods` (error): Payment Entry's `get_party_and_account_balance`, Bank Account's `make_bank_account` and Pricing Rule's `make_pricing_rule`, removed with nothing in their place
 - `v16-erpnext-make-pricing-rule-js` (error): The form helper `erpnext.utils.make_pricing_rule`. `frappe.new_doc("Pricing Rule", ...)` works on both versions
 - `v16-erpnext-pos-closing-invoices` (error): POS Closing Entry's `get_pos_invoices`, replaced by `get_invoices`
 - `v16-erpnext-asset-repair-cost` (error): Asset Repair's `get_repair_cost_for_purchase_invoice`, replaced by `get_unallocated_repair_cost`
 - `v16-erpnext-default-supplier-purchase-orders` (error): Sales Order's `make_purchase_order_for_default_supplier` and Material Request's `get_default_supplier_query`
 - `v16-erpnext-lead-source` (error): The sales funnel's `get_opp_by_lead_source`, replaced by `get_opp_by_utm_source`
+- `v16-erpnext-methods-post-only` (error): A GET to one of seven methods that v15 took by any HTTP method, such as Sales Order's `update_status`
 - `v16-erpnext-removed-leaderboard` (error): The `erpnext.startup.leaderboard` module and its whitelisted methods
 - `v16-erpnext-removed-lead-phone-lookup` (error): `get_lead_with_phone_number`. `get_leads_with_phone_number` returns a list
 - `v16-erpnext-removed-helpers` (error): Eleven helpers v15 has and v16 removed, such as `is_transfer_stock_entry`
@@ -185,7 +193,9 @@ ERPNext v16 removed or renamed doctypes, fields, modules, methods and a hook tha
   - `v16-erpnext-depreciation-entry-cost-center`
 - `v16-erpnext-repost-allowed-types` (warning): Repost Allowed Types rows left unchecked on v15. v16 reads every row as allowed, so those doctypes can be reposted, along with the five the `repost_allowed_doctypes` hook adds. Nothing raises. Read from the site's records
 - `v16-erpnext-asset-fields` (warning): Asset, Asset Capitalization and Asset Repair fields, such as `gross_purchase_amount`, now `net_purchase_amount`
+- `v16-erpnext-bom-creator-row-settings` (warning): BOM Creator Item's `source_warehouse` and `allow_alternative_item`
 - `v16-erpnext-budget-fields` (warning): Budget's `fiscal_year` and `monthly_distribution`. A Budget now covers one account over a range of fiscal years
+- `v16-erpnext-inventory-dimension-mandatory` (warning): Inventory Dimension's `mandatory_depends_on`, whose condition the migration does not carry over. Conditions stored on the site are not read
 - `v16-erpnext-item-wise-tax-detail` (warning): The `item_wise_tax_detail` JSON on tax rows, replaced by the Item Wise Tax Detail table
 - `v16-erpnext-pos-fields` (warning): POS Profile's `disable_grand_total_to_default_mop`, turned around as `set_grand_total_to_default_mop`, and POS Closing Entry's tax `rate` and `pos_transactions` table, now `pos_invoices`
 - `v16-erpnext-removed-fields` (warning): Fields removed with nothing in their place, on Company, Customer, Item, Payment Entry, Job Card and Journal Entry
@@ -196,9 +206,9 @@ ERPNext v16 removed or renamed doctypes, fields, modules, methods and a hook tha
 - `v16-erpnext-utm-fields` (warning): `source` and `campaign` on Lead, Opportunity and the sales documents, replaced by `utm_source` and `utm_campaign`
 - `v16-erpnext-workstation-cost-fields` (warning): The four hourly rates of Workstation and Workstation Type, replaced by a `workstation_costs` table
 
-Most field rules are warnings. The migration leaves the old column behind with nothing writing it again, so on an upgraded site `frappe.get_all` and `frappe.db.get_value` return what the field held at the upgrade, while `frappe.get_list` leaves the field out. `v16-erpnext-moved-settings` is an error: `frappe.db.get_single_value` on an old field raises.
+Most field rules are warnings. The migration leaves the old column behind with nothing writing it again, so on an upgraded site `frappe.get_all` and `frappe.db.get_value` return what the field held at the upgrade, while `frappe.get_list` leaves the field out. The errors are where it raises: `frappe.db.get_single_value` on an old field (`v16-erpnext-moved-settings`, `v16-erpnext-payment-balance-settings`), and a removed table read off a document (`v16-erpnext-scrap-items-tables`, `v16-erpnext-budget-accounts-table`, `v16-erpnext-tax-withholding-tables`).
 
-A field rule reports a query that names the doctype and the field in the same call, such as `frappe.get_all("Lead", fields=["source"])`, a Property Setter or Custom Field on the field, and, in Python, the field read or set on a document whose doctype the code shows: one loaded or made in the same function (`frappe.get_doc("Lead", name)`, `frappe.new_doc`, `frappe.get_cached_doc`), the doc a `doc_events` hook hands its function, `self` in a class that `override_doctype_class` names or that is built on the doctype's controller, `doc` in a DocType Event server script, and `doc` in a Notification's condition. `doc.get("source")`, `doc.set` and `doc.db_set` count too. A document that arrives any other way, a row of its child table, and `frm.doc` in a form script are missed.
+A field rule reports a query that names the doctype and the field in the same call, such as `frappe.get_all("Lead", fields=["source"])`, a Property Setter or Custom Field on the field, and, in Python, the field read or set on a document whose doctype the code shows: one loaded or made in the same function (`frappe.get_doc("Lead", name)`, `frappe.new_doc`, `frappe.get_cached_doc`), the doc a `doc_events` hook hands its function, `self` in a class that `override_doctype_class` names or that is built on the doctype's controller, `doc` in a DocType Event server script, and `doc` in a Notification's condition. `doc.get("source")`, `doc.set` and `doc.db_set` count too. It also follows that document's child rows, reads `frm.doc` and the field methods of `frm` inside `frappe.ui.form.on`, and reads `doc` in Print Format and Notification templates. A document that arrives any other way is missed.
 
 ## Bench and app compatibility
 
@@ -237,7 +247,7 @@ An app's `pyproject.toml` is read only when the upgrade leaves the app on its br
 | `frappe.model.trace.traced_field_context` | A debugging helper that no app we scanned uses |
 | `modules.txt` | It is a file, not an API |
 | rq `use_connection` | Already gone in rq 1.15.1, which v15 installs |
-| A removed ERPNext field read off a document passed in from elsewhere, or off `frm.doc` | Nothing there says which doctype the document is |
+| A removed ERPNext field read off a document passed in from elsewhere | Nothing there says which doctype the document is |
 | Sales Order's `make_purchase_order` returns a list of Purchase Orders | `po = make_purchase_order(...)` reads the same on v15 and v16, and ERPNext v16's own code calls it that way |
 | Payment Entry's `get_account_details` no longer returns `account_balance` | A key of the returned dict; nothing ties the read to the call. The balance fields are under `v16-erpnext-removed-fields` |
 | A Sales Order's `make_sales_invoice` no longer skips permissions on the invoice unless asked | A correct call and a failing one differ only in who runs it |

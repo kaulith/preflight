@@ -95,6 +95,8 @@ A moved import is shimmed this way, which Preflight does not report (see `import
 | `doctype` | A removed doctype, wherever it is named |
 | `doctype_field` | A removed or renamed field on a doctype that stays |
 | `select_field` | A query field the target rejects, such as a SQL function written as a string |
+| `sql_text` | SQL text the target reads differently, in a query an app or a Query Report runs |
+| `http_method` | A request to a server method by an HTTP method the target refuses |
 | `undeclared_import` | An import of a package the target's frappe no longer installs, when the app does not declare it |
 | `site_record` | Records on the site, chosen by field values, that the target reads differently |
 | `bench_python` | A bench Python outside the target's range |
@@ -284,14 +286,20 @@ match:
   type: doctype_field
   fields:
     - Lead.source
-    - Opportunity.campaign
+    - Purchase Order Item.subcontracted_quantity
+  child_tables:
+    Purchase Order.items: Purchase Order Item
 ```
 
 - Each field is written as `Doctype.fieldname`.
+- `child_tables` maps each table field to its child doctype. A rule on a child doctype's field must list them: the scanners read it to follow rows, and to tell a child doctype from a parent in a form script.
 - Matches a query call that names the doctype and the field in the same call, such as `frappe.get_all("Lead", fields=["source"])` or `frappe.db.get_value("Lead", name, "source")`.
 - On the site, matches a Property Setter on the field and a Custom Field whose `insert_after` names it.
 - In Python, also matches the field read or set on a document whose doctype the code shows: one loaded or made in the same function (`frappe.get_doc("Lead", name)`, `frappe.new_doc`, `frappe.get_cached_doc`), the doc a `doc_events` hook hands its function, `self` in a class that `override_doctype_class` names or that is built on the doctype's controller, `doc` in a DocType Event server script, and `doc` in a Notification's condition. `doc.get("source")`, `doc.set` and `doc.db_set` count too.
-- A document that arrives any other way, a row of its child table, and `frm.doc` in a form script are missed, since nothing there says which doctype the document is.
+- In Python, follows that document's child rows through `child_tables`: `for row in doc.items`, `enumerate`, comprehensions, `doc.get("items")`, `doc.items[0]`, and `doc.append("items", {...})` with its keys.
+- In a form script, inside `frappe.ui.form.on("Lead", {...})`, matches `frm.doc.source`, `frm.fields_dict.source`, `frm` methods that take a fieldname first such as `frm.set_value("source", value)`, and a handler named after the field. In a child doctype's `form.on`, matches `locals[cdt][cdn].field`.
+- In a Jinja template, matches `doc.source` where the template's doctype is known: Print Formats and Notifications, on the site and in the app. Rows of `doc.items` are followed, and so is a doc a template loads with a literal doctype. `templates/`, `www/` and Email Templates render with no known doc, so only such a loaded doc is matched.
+- A document that arrives any other way is missed, since nothing there says which doctype it is.
 
 ### select_field
 
@@ -310,6 +318,36 @@ match:
 - A list built in a variable first is read, and so is an f-string, whose substitutions read as plain field names.
 - In JavaScript, reads the fields of `frappe.db.get_list` and `frappe.db.get_value`, and of a `frappe.call` or `frappe.xcall` to `frappe.client.get_list`, `frappe.client.get_value` or `frappe.desk.reportview.get_list`.
 - A dict and a `frappe.qb` term are not read.
+
+### sql_text
+
+```yaml
+match:
+  type: sql_text
+  patterns:
+    - (?is)\btabSessions\b.*\bsid\b|\bsid\b.*\btabSessions\b
+```
+
+- `patterns` are regular expressions searched across the whole query, so a query split over lines needs `(?s)`.
+- Reads the query of `frappe.db.sql` and each database's query in `frappe.db.multisql`: a string, an f-string whose substitutions read as plain field names, or a string a local name holds.
+- Reads the `query` of Query Reports, on the site and in the app's report JSON. A finding in the JSON carries no line.
+- A `frappe.qb` query is not read.
+
+### http_method
+
+```yaml
+match:
+  type: http_method
+  paths:
+    - erpnext.selling.doctype.sales_order.sales_order.update_status
+  rejected_methods:
+    - GET
+```
+
+- `paths` are whitelisted server methods, `rejected_methods` the HTTP methods the target refuses for them: any of `GET`, `POST`, `PUT`, `DELETE`.
+- In Python, reads `requests.get`, `requests.request`, `frappe.make_get_request` and `frappe.integrations.utils`' `make_get_request` and `make_request`, when the URL holds `/api/method/<path>`.
+- In JavaScript, reads `frappe.call` with `type`, `createResource` with `method`, `fetch`, `$.get`, `$.ajax` and `axios.get`. Each API's default counts: `frappe.call` sends POST, `fetch` and `$.ajax` send GET.
+- A method or URL built at run time is not matched.
 
 ### undeclared_import
 
