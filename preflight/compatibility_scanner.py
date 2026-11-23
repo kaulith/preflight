@@ -1,4 +1,5 @@
 import ast
+import json
 import re
 from pathlib import Path
 
@@ -131,6 +132,18 @@ def finding_on(rule: Rule, file: str, lines: list[str], line: int | None) -> Fin
 	return Finding(rule=rule, file=file, line=line, snippet=lines[line - 1].strip() if line else "")
 
 
+def read_config_file(path: Path) -> dict | None:
+	"""The JSON object in a site config file, {} when there is no file, None when it cannot be read."""
+	try:
+		require_regular_file(path)
+		config = json.loads(path.read_text(encoding="utf-8"))
+	except FileNotFoundError:
+		return {}
+	except (OSError, *MALFORMED_RECORD):
+		return None
+	return config if isinstance(config, dict) else None
+
+
 class CompatibilityScanner:
 	"""Rules on whether the bench can install the target: its Python, and each app's pyproject.toml
 	and required_apps."""
@@ -146,6 +159,36 @@ class CompatibilityScanner:
 			for rule in self.rules_by_type.get("bench_python", ())
 			if not SpecifierSet(rule.match.python).contains(python_version)
 		]
+
+	def scan_site_config(
+		self, site_path: Path, sites_path: Path, db_type: str
+	) -> tuple[list[Finding], list[str]]:
+		"""The site_config rules' keys and the Not checked lines for files that could not be read. As in
+		frappe's get_site_config, site_config.json wins over common_site_config.json, so a key is not
+		judged past a file that cannot be read. A config value never reaches a finding or a line."""
+		configs = [
+			("site_config.json", read_config_file(site_path / "site_config.json")),
+			("common_site_config.json", read_config_file(sites_path / "common_site_config.json")),
+		]
+		findings, unread = [], []
+		for rule in self.rules_by_type.get("site_config", ()):
+			if rule.match.db_type and rule.match.db_type != db_type:
+				continue
+			for key in rule.match.keys:
+				for file, config in configs:
+					if config is None:
+						if file not in unread:
+							unread.append(file)
+						break
+					if key in config:
+						if not config[key]:
+							findings.append(
+								Finding(
+									rule=rule, file=file, line=None, snippet=f"{key}: falsy", source="site"
+								)
+							)
+						break
+		return findings, [f"{file}: could not be read, its config keys not checked" for file in unread]
 
 	def scan_pyproject(self, source: str, file: str) -> list[Finding]:
 		"""Raises ValueError when the file, or a bound or dependency in it, does not parse."""

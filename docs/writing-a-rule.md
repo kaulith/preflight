@@ -99,6 +99,7 @@ A moved import is shimmed this way, which Preflight does not report (see `import
 | `http_method` | A request to a server method by an HTTP method the target refuses |
 | `undeclared_import` | An import of a package the target's frappe no longer installs, when the app does not declare it |
 | `site_record` | Records on the site, chosen by field values, that the target reads differently |
+| `site_config` | A site config key whose value the target no longer honours |
 | `bench_python` | A bench Python outside the target's range |
 | `requires_python` | An app's `requires-python` that rules out the target's Python |
 | `frappe_bound` | An app's frappe bound that leaves out the target |
@@ -387,6 +388,24 @@ match:
 - A doctype whose table is missing, or has no column for a filter or the title field, reports nothing: the app that brings it is not installed.
 - Write one only when the filters say which records break; a rule on every row of a doctype asks for an audit of records nothing is wrong with.
 - `--path` reads no site, so these rules are listed as not checked.
+
+### site_config
+
+```yaml
+match:
+  type: site_config
+  keys:
+    - use_mysqlclient
+  db_type: mariadb
+```
+
+- Reports a key that is present with a value Python reads as false. A key that is absent is not reported.
+- `db_type` is optional: the rule runs only on a site of that database, `mariadb`, `postgres` or `sqlite`.
+- Reads `site_config.json`, then `common_site_config.json`, so a key in the first wins, as in frappe's `get_site_config`. A value set by an `extra_config` hook or an environment variable is not read.
+- Site config holds secrets. Only the named keys are looked at, and no value reaches a finding: the snippet says `use_mysqlclient: falsy`, and the finding names the file that set it.
+- A file that is malformed or can't be read is listed under Not checked, and the scan goes on.
+- `--path` reads no site, so these rules are listed as not checked.
+- A key frappe reads from `common_site_config.json` alone, as `disable_render_safe_exec` on v16, doesn't fit: this type would honour it in `site_config.json` too.
 
 ### bench_python
 

@@ -17,6 +17,7 @@ FIELDNAME = re.compile(r"\w+")
 FILTER_FIELDNAME = re.compile(r"\w+(?:\.\w+)?")
 URL_HOSTS = ("private",)
 HTTP_METHODS = ("GET", "POST", "PUT", "DELETE")
+DB_TYPES = ("mariadb", "postgres", "sqlite")
 
 
 class RuleError(Exception):
@@ -146,6 +147,10 @@ def invalid_http_methods(key: str, value) -> str | None:
 	return None
 
 
+def invalid_db_type(key: str, value) -> str | None:
+	return None if value in DB_TYPES else f"{key} must be one of {DB_TYPES}, got {value!r}"
+
+
 def invalid_fix(key: str, value) -> str | None:
 	return None if value in FIX_TIMINGS else f"{key} must be one of {FIX_TIMINGS}, got {value!r}"
 
@@ -177,6 +182,7 @@ MATCH_KEY_CHECKS = {
 	"node": invalid_node_specifier,
 	"branch": invalid_text,
 	"dependencies": invalid_requirements,
+	"db_type": invalid_db_type,
 }
 
 MATCH_TYPE_KEYS = {
@@ -196,6 +202,7 @@ MATCH_TYPE_KEYS = {
 	"http_method": MatchKeys(("paths", "rejected_methods")),
 	"undeclared_import": MatchKeys(("paths", "dependencies")),
 	"site_record": MatchKeys(("doctypes",), ("filters", "title_field")),
+	"site_config": MatchKeys(("keys",), ("db_type",)),
 	"bench_python": MatchKeys(("python",)),
 	"requires_python": MatchKeys(("python",)),
 	"frappe_bound": MatchKeys(("frappe",)),

@@ -18,6 +18,7 @@ MATCH_TYPES = (
 	"http_method",
 	"undeclared_import",
 	"site_record",
+	"site_config",
 	"bench_python",
 	"requires_python",
 	"frappe_bound",
@@ -61,6 +62,7 @@ class Match:
 	dependencies: tuple[str, ...] = ()
 	child_tables: tuple[tuple[str, str], ...] = ()
 	rejected_methods: tuple[str, ...] = ()
+	db_type: str = ""
 
 
 @dataclass(frozen=True)

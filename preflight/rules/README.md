@@ -486,6 +486,21 @@ Write one only when the filters say which records break: a rule on every row of 
 for an audit of records nothing is wrong with. A `site_record` rule claims no doctype, so it can
 name one a `doctype` rule names. `--path` reads no site and lists the records as not checked.
 
+## `site_config`
+
+```yaml
+match:
+  type: site_config
+  keys:
+    - use_mysqlclient
+  db_type: mariadb
+```
+
+Reports a key that is present in the site's config with a value Python reads as false.
+`site_config.json` wins over `common_site_config.json`, as in frappe. `db_type` is optional and
+limits the rule to that database. Site config holds secrets, so no value reaches a finding. A file
+that can't be read goes under Not checked, and `--path` lists these rules as not checked.
+
 ## `bench_python`
 
 Matches the Python the bench environment runs against the target's `requires-python`:

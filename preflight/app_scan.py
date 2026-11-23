@@ -105,6 +105,8 @@ def build_path_report(
 		scan_app(report, scanners, app_path.name, app_path, skip_tests)
 		scan_pyproject(report, scanners.compatibility, app_path.name, app_path.parent)
 	report.not_checked += PATH_MODE_NOT_CHECKED
+	if "site_config" in scanners.compatibility.rules_by_type:
+		report.not_checked.append("site config: --path reads no site, its config keys not checked")
 	if online:
 		from preflight.online_scanner import OnlineScanner, scan_online
 

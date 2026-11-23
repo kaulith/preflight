@@ -102,6 +102,12 @@ def build_report(
 	scan_site_queries(report, scanners.python)
 	report.findings += [replace(finding, source="site") for finding in scanners.schema.scan(site_schema())]
 	report.findings += site_records(rules)
+	if "site_config" in scanners.compatibility.rules_by_type:
+		config_findings, unread_config = scanners.compatibility.scan_site_config(
+			Path(frappe.local.site_path), Path(frappe.local.sites_path), frappe.db.db_type
+		)
+		report.findings += config_findings
+		report.not_checked += unread_config
 
 	bench_app_paths = dict(app_paths)
 	if not apps:
