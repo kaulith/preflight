@@ -1,0 +1,32 @@
+{
+	"tree": "wiki",
+	"commit": "0941126e5d5ce6c9f7435e9da47b76d9a35c2301",
+	"counts": {
+		"v17-enqueue-job-name": 3
+	},
+	"counts_with_tests": {
+		"v17-enqueue-job-name": 3,
+		"v17-frappe-test-case": 9
+	},
+	"unparsable": [],
+	"findings": [
+		[
+			"v17-enqueue-job-name",
+			"wiki/wiki/doctype/wiki_github_webhook_log/wiki_github_webhook_log.py",
+			82,
+			"frappe.enqueue("
+		],
+		[
+			"v17-enqueue-job-name",
+			"wiki/wiki/doctype/wiki_space/wiki_space.py",
+			129,
+			"frappe.enqueue("
+		],
+		[
+			"v17-enqueue-job-name",
+			"wiki/wiki/doctype/wiki_space/wiki_space.py",
+			320,
+			"frappe.enqueue("
+		]
+	]
+}

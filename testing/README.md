@@ -43,7 +43,7 @@ packaging and semantic-version will do, and a v16 bench's `env/bin/python` has a
 scripts run from the repo root:
 
 ```
-PYTHONPATH=testing/bin:. python testing/bin/corpus_scan.py          # write testing/expected/<tree>.json
+PYTHONPATH=testing/bin:. python testing/bin/corpus_scan.py          # write testing/expected/[v17/]<tree>.json
 PYTHONPATH=testing/bin:. python testing/bin/corpus_scan.py --check  # compare with it, exit 1 on drift
 ```
 
@@ -121,8 +121,9 @@ sorted, the commit the tree was copied at, the unparsable files, and a count per
 with tests and with `--skip-tests`. The table on stdout prints them as `skipped/total`, so a
 rule that lives only in test files is visible as `0/263`. `--check` rescans and exits 1 on
 drift, naming each finding that appeared or disappeared, and flagging a tree whose commit has
-moved under the frozen file. It loads the v16 rules only; freezing v17 waits for the v17 backlog.
-Last refrozen on 23 November 2026, with the 152 v16 rules; `--check` exits 0.
+moved under the frozen file. It scans with both rule sets: v16 freezes in
+`testing/expected/<tree>.json` and the unreleased v17 in `testing/expected/v17/<tree>.json`.
+Last refrozen on 23 November 2026, with the 152 v16 and 37 v17 rules; `--check` exits 0.
 
 Two uses:
 

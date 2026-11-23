@@ -1,0 +1,69 @@
+{
+	"tree": "helpdesk",
+	"commit": "21fa9cdf6a4b894e51ea6bf28a4683c75328dd5b",
+	"counts": {
+		"v17-query-limit-page-length": 5,
+		"v17-query-limit-start": 1,
+		"v17-query-page-length": 1,
+		"v17-verify-password": 1
+	},
+	"counts_with_tests": {
+		"v17-frappe-test-case": 18,
+		"v17-query-limit-page-length": 5,
+		"v17-query-limit-start": 1,
+		"v17-query-page-length": 1,
+		"v17-tests-utils-helpers": 3,
+		"v17-verify-password": 1
+	},
+	"unparsable": [],
+	"findings": [
+		[
+			"v17-query-limit-page-length",
+			"helpdesk/api/contact.py",
+			26,
+			"return frappe.get_list("
+		],
+		[
+			"v17-query-limit-page-length",
+			"helpdesk/api/timeline.py",
+			17,
+			"rows = frappe.get_list("
+		],
+		[
+			"v17-query-limit-page-length",
+			"helpdesk/helpdesk/doctype/hd_ticket_feedback_option/patches/label_as_name.py",
+			6,
+			"options = frappe.get_list("
+		],
+		[
+			"v17-query-limit-page-length",
+			"helpdesk/patches/utils.py",
+			25,
+			"names = frappe.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"helpdesk/search_sqlite.py",
+			99,
+			"tickets = frappe.get_list("
+		],
+		[
+			"v17-query-limit-start",
+			"helpdesk/api/contact.py",
+			26,
+			"return frappe.get_list("
+		],
+		[
+			"v17-query-page-length",
+			"helpdesk/api/doc.py",
+			123,
+			"frappe.get_list("
+		],
+		[
+			"v17-verify-password",
+			"helpdesk/auth.py",
+			10,
+			"\"/api/method/frappe.core.doctype.user.user.verify_password\","
+		]
+	]
+}

@@ -1,0 +1,354 @@
+{
+	"tree": "erpnext-v15",
+	"commit": "31803451f1cfb27087f8e9c9ddc8798c19844427",
+	"counts": {
+		"v17-country-info-get-translated-dict": 1,
+		"v17-enqueue-job-name": 9,
+		"v17-get-number-format-info": 2,
+		"v17-query-limit-page-length": 22,
+		"v17-query-limit-start": 14,
+		"v17-query-page-length": 4,
+		"v17-query-start": 1,
+		"v17-read-multi-pdf": 1
+	},
+	"counts_with_tests": {
+		"v17-country-info-get-translated-dict": 1,
+		"v17-enqueue-job-name": 9,
+		"v17-frappe-test-case": 163,
+		"v17-get-number-format-info": 2,
+		"v17-get-test-records": 60,
+		"v17-query-limit-page-length": 22,
+		"v17-query-limit-start": 14,
+		"v17-query-page-length": 4,
+		"v17-query-start": 1,
+		"v17-read-multi-pdf": 1,
+		"v17-tests-utils-helpers": 48
+	},
+	"unparsable": [],
+	"findings": [
+		[
+			"v17-country-info-get-translated-dict",
+			"erpnext/hooks.py",
+			495,
+			"get_translated_dict = {(\"doctype\", \"Global Defaults\"): \"frappe.geo.country_info.get_translated_dict\"}"
+		],
+		[
+			"v17-enqueue-job-name",
+			"erpnext/accounts/doctype/process_payment_reconciliation/process_payment_reconciliation.py",
+			162,
+			"frappe.enqueue("
+		],
+		[
+			"v17-enqueue-job-name",
+			"erpnext/accounts/doctype/process_payment_reconciliation/process_payment_reconciliation.py",
+			180,
+			"frappe.enqueue("
+		],
+		[
+			"v17-enqueue-job-name",
+			"erpnext/accounts/doctype/process_payment_reconciliation/process_payment_reconciliation.py",
+			254,
+			"frappe.enqueue("
+		],
+		[
+			"v17-enqueue-job-name",
+			"erpnext/accounts/doctype/process_payment_reconciliation/process_payment_reconciliation.py",
+			275,
+			"frappe.enqueue("
+		],
+		[
+			"v17-enqueue-job-name",
+			"erpnext/accounts/doctype/process_payment_reconciliation/process_payment_reconciliation.py",
+			293,
+			"frappe.enqueue("
+		],
+		[
+			"v17-enqueue-job-name",
+			"erpnext/accounts/doctype/process_payment_reconciliation/process_payment_reconciliation.py",
+			380,
+			"frappe.enqueue("
+		],
+		[
+			"v17-enqueue-job-name",
+			"erpnext/accounts/doctype/process_payment_reconciliation/process_payment_reconciliation.py",
+			492,
+			"frappe.enqueue("
+		],
+		[
+			"v17-enqueue-job-name",
+			"erpnext/accounts/doctype/process_period_closing_voucher/process_period_closing_voucher.py",
+			315,
+			"frappe.enqueue("
+		],
+		[
+			"v17-enqueue-job-name",
+			"erpnext/accounts/doctype/repost_payment_ledger/repost_payment_ledger.py",
+			128,
+			"frappe.enqueue("
+		],
+		[
+			"v17-get-number-format-info",
+			"erpnext/accounts/utils.py",
+			25,
+			"get_number_format_info,"
+		],
+		[
+			"v17-get-number-format-info",
+			"erpnext/stock/doctype/quality_inspection/quality_inspection.py",
+			9,
+			"from frappe.utils import cint, cstr, flt, get_link_to_form, get_number_format_info"
+		],
+		[
+			"v17-query-limit-page-length",
+			"erpnext/accounts/doctype/bank_statement_import/bank_statement_import.py",
+			288,
+			"return frappe.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"erpnext/accounts/doctype/bank_transaction/auto_match_party.py",
+			62,
+			"party_result = frappe.db.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"erpnext/accounts/doctype/bank_transaction/auto_match_party.py",
+			73,
+			"if employee_result := frappe.db.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"erpnext/controllers/queries.py",
+			432,
+			"return frappe.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"erpnext/controllers/queries.py",
+			832,
+			"item_manufacturers = frappe.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"erpnext/controllers/queries.py",
+			997,
+			"return frappe.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"erpnext/controllers/queries.py",
+			1007,
+			"return frappe.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"erpnext/controllers/website_list_for_contact.py",
+			167,
+			"for r in frappe.get_list("
+		],
+		[
+			"v17-query-limit-page-length",
+			"erpnext/manufacturing/doctype/bom/bom.py",
+			1604,
+			"return frappe.get_list("
+		],
+		[
+			"v17-query-limit-page-length",
+			"erpnext/manufacturing/doctype/bom_update_log/bom_update_log.py",
+			89,
+			"wip_log = frappe.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"erpnext/manufacturing/doctype/bom_update_tool/bom_update_tool.py",
+			52,
+			"wip_log = frappe.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"erpnext/manufacturing/doctype/job_card/job_card.py",
+			1142,
+			"return frappe.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"erpnext/manufacturing/doctype/work_order/work_order.py",
+			1042,
+			"for d in frappe.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"erpnext/projects/doctype/project/project.py",
+			464,
+			"return frappe.get_list("
+		],
+		[
+			"v17-query-limit-page-length",
+			"erpnext/stock/dashboard/item_dashboard.py",
+			39,
+			"items = frappe.db.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"erpnext/stock/dashboard/warehouse_capacity_dashboard.py",
+			66,
+			"capacity_data = frappe.db.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"erpnext/stock/dashboard_chart_source/warehouse_wise_stock_value/warehouse_wise_stock_value.py",
+			32,
+			"warehouses = frappe.get_list("
+		],
+		[
+			"v17-query-limit-page-length",
+			"erpnext/stock/doctype/quality_inspection/quality_inspection.py",
+			425,
+			"return frappe.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"erpnext/stock/doctype/stock_entry/stock_entry.py",
+			2461,
+			"manufacture_entries = frappe.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"erpnext/templates/pages/projects.py",
+			32,
+			"tasks = frappe.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"erpnext/templates/pages/projects.py",
+			79,
+			"timesheets = frappe.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"erpnext/templates/pages/projects.py",
+			87,
+			"info = frappe.get_all("
+		],
+		[
+			"v17-query-limit-start",
+			"erpnext/controllers/queries.py",
+			432,
+			"return frappe.get_all("
+		],
+		[
+			"v17-query-limit-start",
+			"erpnext/controllers/queries.py",
+			832,
+			"item_manufacturers = frappe.get_all("
+		],
+		[
+			"v17-query-limit-start",
+			"erpnext/controllers/queries.py",
+			997,
+			"return frappe.get_all("
+		],
+		[
+			"v17-query-limit-start",
+			"erpnext/controllers/queries.py",
+			1007,
+			"return frappe.get_all("
+		],
+		[
+			"v17-query-limit-start",
+			"erpnext/controllers/website_list_for_contact.py",
+			167,
+			"for r in frappe.get_list("
+		],
+		[
+			"v17-query-limit-start",
+			"erpnext/manufacturing/doctype/bom/bom.py",
+			1604,
+			"return frappe.get_list("
+		],
+		[
+			"v17-query-limit-start",
+			"erpnext/manufacturing/doctype/job_card/job_card.py",
+			1142,
+			"return frappe.get_all("
+		],
+		[
+			"v17-query-limit-start",
+			"erpnext/projects/doctype/project/project.py",
+			464,
+			"return frappe.get_list("
+		],
+		[
+			"v17-query-limit-start",
+			"erpnext/stock/dashboard/item_dashboard.py",
+			39,
+			"items = frappe.db.get_all("
+		],
+		[
+			"v17-query-limit-start",
+			"erpnext/stock/dashboard/warehouse_capacity_dashboard.py",
+			66,
+			"capacity_data = frappe.db.get_all("
+		],
+		[
+			"v17-query-limit-start",
+			"erpnext/stock/doctype/quality_inspection/quality_inspection.py",
+			425,
+			"return frappe.get_all("
+		],
+		[
+			"v17-query-limit-start",
+			"erpnext/templates/pages/projects.py",
+			32,
+			"tasks = frappe.get_all("
+		],
+		[
+			"v17-query-limit-start",
+			"erpnext/templates/pages/projects.py",
+			79,
+			"timesheets = frappe.get_all("
+		],
+		[
+			"v17-query-limit-start",
+			"erpnext/templates/pages/projects.py",
+			87,
+			"info = frappe.get_all("
+		],
+		[
+			"v17-query-page-length",
+			"erpnext/selling/page/point_of_sale/point_of_sale.py",
+			352,
+			"invoices_by_customer = frappe.db.get_list("
+		],
+		[
+			"v17-query-page-length",
+			"erpnext/selling/page/point_of_sale/point_of_sale.py",
+			362,
+			"invoices_by_name = frappe.db.get_list("
+		],
+		[
+			"v17-query-page-length",
+			"erpnext/selling/page/point_of_sale/point_of_sale.py",
+			371,
+			"invoice_list = frappe.db.get_list("
+		],
+		[
+			"v17-query-page-length",
+			"erpnext/stock/doctype/inventory_dimension/inventory_dimension.py",
+			325,
+			"return frappe.get_all("
+		],
+		[
+			"v17-query-start",
+			"erpnext/stock/doctype/inventory_dimension/inventory_dimension.py",
+			325,
+			"return frappe.get_all("
+		],
+		[
+			"v17-read-multi-pdf",
+			"erpnext/regional/report/irs_1099/irs_1099.py",
+			12,
+			"from frappe.utils.print_format import read_multi_pdf"
+		]
+	]
+}

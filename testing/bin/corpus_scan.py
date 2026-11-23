@@ -1,18 +1,20 @@
 """Scan every app in the corpus and freeze the result, so a rule change shows a diff.
 
-PYTHONPATH=testing/bin:. python testing/bin/corpus_scan.py          # write testing/expected/<tree>.json
+PYTHONPATH=testing/bin:. python testing/bin/corpus_scan.py          # write testing/expected/[v17/]<tree>.json
 PYTHONPATH=testing/bin:. python testing/bin/corpus_scan.py --check  # compare with it, exit 1 on drift
 """
 
 import json
 import sys
 from collections import Counter
+from pathlib import Path
 
 from harness import CORPUS, TESTING, app_path, scan_tree
 
 from preflight.rule_loader import load_rules
 
 EXPECTED = TESTING / "expected"
+FROZEN = {"v16": EXPECTED, "v17": EXPECTED / "v17"}
 
 
 def trees() -> list[str]:
@@ -51,10 +53,10 @@ def table(profiles: list[dict]) -> str:
 	return "\n".join(lines)
 
 
-def check(profiles: list[dict]) -> int:
+def check(profiles: list[dict], expected: Path) -> int:
 	drift = 0
 	for new in profiles:
-		path = EXPECTED / f"{new['tree']}.json"
+		path = expected / f"{new['tree']}.json"
 		if not path.exists():
 			print(f"{new['tree']}: nothing frozen yet")
 			drift = 1
@@ -74,12 +76,16 @@ def check(profiles: list[dict]) -> int:
 
 
 if __name__ == "__main__":
-	rules = load_rules("v16")
-	profiles = [profile(tree, rules) for tree in trees()]
-	print(table(profiles))
-	if "--check" in sys.argv:
-		sys.exit(check(profiles))
-	EXPECTED.mkdir(parents=True, exist_ok=True)
-	for p in profiles:
-		(EXPECTED / f"{p['tree']}.json").write_text(json.dumps(p, indent="\t") + "\n")
-	print(f"\nfrozen in {EXPECTED}")
+	drift = 0
+	for target, expected in FROZEN.items():
+		rules = load_rules(target)
+		profiles = [profile(tree, rules) for tree in trees()]
+		print(f"\n{target}\n{table(profiles)}")
+		if "--check" in sys.argv:
+			drift = check(profiles, expected) or drift
+			continue
+		expected.mkdir(parents=True, exist_ok=True)
+		for p in profiles:
+			(expected / f"{p['tree']}.json").write_text(json.dumps(p, indent="\t") + "\n")
+		print(f"\nfrozen in {expected}")
+	sys.exit(drift)

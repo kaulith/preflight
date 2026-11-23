@@ -1,0 +1,54 @@
+{
+	"tree": "crm",
+	"commit": "1b93aa89c863b85e2f30da4a2a692b77776d2971",
+	"counts": {
+		"v17-query-limit-page-length": 1,
+		"v17-query-limit-start": 1,
+		"v17-query-page-length": 4
+	},
+	"counts_with_tests": {
+		"v17-frappe-test-case": 7,
+		"v17-query-limit-page-length": 2,
+		"v17-query-limit-start": 1,
+		"v17-query-page-length": 4
+	},
+	"unparsable": [],
+	"findings": [
+		[
+			"v17-query-limit-page-length",
+			"crm/api/contact.py",
+			132,
+			"results = frappe.get_list("
+		],
+		[
+			"v17-query-limit-start",
+			"crm/api/contact.py",
+			132,
+			"results = frappe.get_list("
+		],
+		[
+			"v17-query-page-length",
+			"crm/api/doc.py",
+			359,
+			"frappe.get_list("
+		],
+		[
+			"v17-query-page-length",
+			"crm/api/doc.py",
+			426,
+			"column_data = frappe.get_list("
+		],
+		[
+			"v17-query-page-length",
+			"crm/api/doc.py",
+			566,
+			"records = frappe.get_list("
+		],
+		[
+			"v17-query-page-length",
+			"crm/api/doc.py",
+			577,
+			"remaining_records = frappe.get_list("
+		]
+	]
+}

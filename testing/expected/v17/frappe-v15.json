@@ -1,0 +1,374 @@
+{
+	"tree": "frappe-v15",
+	"commit": "5e57d292b1c5d2a8ae5a8172ab2bd0652c13daa6",
+	"counts": {
+		"v17-enqueue-job-name": 4,
+		"v17-get-number-format-info": 1,
+		"v17-get-pdf-smart-shrinking": 1,
+		"v17-gravatar-helpers": 1,
+		"v17-moved-doctype-layout": 1,
+		"v17-moved-max-password-size": 1,
+		"v17-query-limit-page-length": 17,
+		"v17-query-limit-start": 8,
+		"v17-query-page-length": 1,
+		"v17-query-start": 2,
+		"v17-sendmail-retry": 2,
+		"v17-show-progress": 1,
+		"v17-slack-webhook-url": 1,
+		"v17-verify-password": 1,
+		"v17-weasyprint": 3,
+		"v17-weasyprint-download-pdf": 2,
+		"v17-whoosh-search": 6,
+		"v17-wkhtmltopdf-helpers": 1
+	},
+	"counts_with_tests": {
+		"v17-enqueue-job-name": 4,
+		"v17-frappe-test-case": 263,
+		"v17-get-number-format-info": 1,
+		"v17-get-pdf-smart-shrinking": 2,
+		"v17-get-test-records": 17,
+		"v17-gravatar-helpers": 1,
+		"v17-moved-doctype-layout": 1,
+		"v17-moved-max-password-size": 1,
+		"v17-query-limit-page-length": 18,
+		"v17-query-limit-start": 9,
+		"v17-query-page-length": 1,
+		"v17-query-start": 2,
+		"v17-sendmail-retry": 2,
+		"v17-show-progress": 1,
+		"v17-slack-webhook-url": 1,
+		"v17-tests-utils-helpers": 24,
+		"v17-verify-password": 1,
+		"v17-weasyprint": 3,
+		"v17-weasyprint-download-pdf": 2,
+		"v17-whoosh-search": 7,
+		"v17-wkhtmltopdf-helpers": 4
+	},
+	"unparsable": [],
+	"findings": [
+		[
+			"v17-enqueue-job-name",
+			"frappe/email/doctype/email_account/email_account.py",
+			879,
+			"enqueue("
+		],
+		[
+			"v17-enqueue-job-name",
+			"frappe/email/doctype/email_queue/email_queue.py",
+			812,
+			"frappe.enqueue("
+		],
+		[
+			"v17-enqueue-job-name",
+			"frappe/twofactor.py",
+			325,
+			"enqueue("
+		],
+		[
+			"v17-enqueue-job-name",
+			"frappe/twofactor.py",
+			460,
+			"enqueue("
+		],
+		[
+			"v17-get-number-format-info",
+			"frappe/model/meta.py",
+			848,
+			"from frappe.utils import get_number_format_info"
+		],
+		[
+			"v17-get-pdf-smart-shrinking",
+			"frappe/utils/print_format.py",
+			272,
+			"frappe.local.response.filecontent = get_pdf("
+		],
+		[
+			"v17-gravatar-helpers",
+			"frappe/utils/safe_exec.py",
+			453,
+			"get_gravatar=frappe.utils.get_gravatar_url,"
+		],
+		[
+			"v17-moved-doctype-layout",
+			"frappe/custom/doctype/doctype_layout/doctype_layout.py",
+			21,
+			"from frappe.custom.doctype.doctype_layout_field.doctype_layout_field import DocTypeLayoutField"
+		],
+		[
+			"v17-moved-max-password-size",
+			"frappe/core/doctype/user/user.py",
+			15,
+			"from frappe.auth import MAX_PASSWORD_SIZE"
+		],
+		[
+			"v17-query-limit-page-length",
+			"frappe/core/doctype/data_export/exporter.py",
+			376,
+			"self.data = frappe.get_list("
+		],
+		[
+			"v17-query-limit-page-length",
+			"frappe/core/doctype/data_import/data_import.py",
+			266,
+			"return frappe.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"frappe/core/doctype/data_import/data_import.py",
+			339,
+			"for doc in frappe.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"frappe/core/doctype/data_import/exporter.py",
+			173,
+			"parent_data = frappe.db.get_list("
+		],
+		[
+			"v17-query-limit-page-length",
+			"frappe/core/doctype/role/role.py",
+			163,
+			"return frappe.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"frappe/core/doctype/user/user.py",
+			1094,
+			"return frappe.get_list("
+		],
+		[
+			"v17-query-limit-page-length",
+			"frappe/core/doctype/user_type/user_type.py",
+			193,
+			"doctypes = frappe.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"frappe/desk/notifications.py",
+			115,
+			"doc_list = frappe.get_list("
+		],
+		[
+			"v17-query-limit-page-length",
+			"frappe/desk/search.py",
+			222,
+			"values = frappe.get_list("
+		],
+		[
+			"v17-query-limit-page-length",
+			"frappe/email/__init__.py",
+			26,
+			"contacts = frappe.get_list("
+		],
+		[
+			"v17-query-limit-page-length",
+			"frappe/patches/v16_0/backfill_notification_email_type_preferences.py",
+			93,
+			"batch = frappe.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"frappe/share.py",
+			195,
+			"shared_docs = frappe.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"frappe/utils/diff.py",
+			60,
+			"results = frappe.get_list("
+		],
+		[
+			"v17-query-limit-page-length",
+			"frappe/utils/nestedset.py",
+			398,
+			"return frappe.get_all("
+		],
+		[
+			"v17-query-limit-page-length",
+			"frappe/utils/nestedset.py",
+			415,
+			"return frappe.get_list("
+		],
+		[
+			"v17-query-limit-page-length",
+			"frappe/website/doctype/web_form/web_form.py",
+			966,
+			"return frappe.get_list("
+		],
+		[
+			"v17-query-limit-page-length",
+			"frappe/www/list.py",
+			258,
+			"return frappe.get_list("
+		],
+		[
+			"v17-query-limit-start",
+			"frappe/core/doctype/role/role.py",
+			163,
+			"return frappe.get_all("
+		],
+		[
+			"v17-query-limit-start",
+			"frappe/core/doctype/user/user.py",
+			1094,
+			"return frappe.get_list("
+		],
+		[
+			"v17-query-limit-start",
+			"frappe/core/doctype/user_type/user_type.py",
+			193,
+			"doctypes = frappe.get_all("
+		],
+		[
+			"v17-query-limit-start",
+			"frappe/desk/form/load.py",
+			189,
+			"return frappe.get_all("
+		],
+		[
+			"v17-query-limit-start",
+			"frappe/desk/search.py",
+			222,
+			"values = frappe.get_list("
+		],
+		[
+			"v17-query-limit-start",
+			"frappe/utils/diff.py",
+			60,
+			"results = frappe.get_list("
+		],
+		[
+			"v17-query-limit-start",
+			"frappe/website/doctype/web_form/web_form.py",
+			966,
+			"return frappe.get_list("
+		],
+		[
+			"v17-query-limit-start",
+			"frappe/www/list.py",
+			258,
+			"return frappe.get_list("
+		],
+		[
+			"v17-query-page-length",
+			"frappe/core/api/file.py",
+			51,
+			"files = frappe.get_list("
+		],
+		[
+			"v17-query-start",
+			"frappe/core/api/file.py",
+			51,
+			"files = frappe.get_list("
+		],
+		[
+			"v17-query-start",
+			"frappe/desk/page/user_profile/user_profile.py",
+			95,
+			"return frappe.db.get_list("
+		],
+		[
+			"v17-sendmail-retry",
+			"frappe/core/doctype/user/user.py",
+			471,
+			"return frappe.sendmail("
+		],
+		[
+			"v17-sendmail-retry",
+			"frappe/twofactor.py",
+			355,
+			"frappe.sendmail("
+		],
+		[
+			"v17-show-progress",
+			"frappe/core/doctype/deleted_document/deleted_document.py",
+			8,
+			"from frappe.desk.doctype.bulk_update.bulk_update import show_progress"
+		],
+		[
+			"v17-slack-webhook-url",
+			"frappe/email/doctype/notification/notification.py",
+			13,
+			"from frappe.integrations.doctype.slack_webhook_url.slack_webhook_url import send_slack_message"
+		],
+		[
+			"v17-verify-password",
+			"frappe/public/js/frappe/ui/messages.js",
+			348,
+			"method: \"frappe.core.doctype.user.user.verify_password\","
+		],
+		[
+			"v17-weasyprint",
+			"frappe/__init__.py",
+			2194,
+			"from frappe.utils.weasyprint import PrintFormatGenerator"
+		],
+		[
+			"v17-weasyprint",
+			"frappe/printing/doctype/print_format/print_format.py",
+			11,
+			"from frappe.utils.weasyprint import download_pdf, get_html"
+		],
+		[
+			"v17-weasyprint",
+			"frappe/www/printview.py",
+			53,
+			"from frappe.utils.weasyprint import get_html"
+		],
+		[
+			"v17-weasyprint-download-pdf",
+			"frappe/printing/page/print/print.js",
+			639,
+			"let w = window.open(`/api/method/frappe.utils.weasyprint.download_pdf?${params}`);"
+		],
+		[
+			"v17-weasyprint-download-pdf",
+			"frappe/public/js/print_format_builder/Preview.vue",
+			81,
+			"type.value == \"PDF\" ? `/api/method/frappe.utils.weasyprint.download_pdf` : \"/printpreview\";"
+		],
+		[
+			"v17-whoosh-search",
+			"frappe/commands/site.py",
+			1278,
+			"from frappe.search.website_search import build_index_for_all_routes"
+		],
+		[
+			"v17-whoosh-search",
+			"frappe/migrate.py",
+			24,
+			"from frappe.search.website_search import build_index_for_all_routes"
+		],
+		[
+			"v17-whoosh-search",
+			"frappe/search/__init__.py",
+			5,
+			"from frappe.search.full_text_search import FullTextSearch"
+		],
+		[
+			"v17-whoosh-search",
+			"frappe/search/__init__.py",
+			7,
+			"from frappe.search.website_search import WebsiteSearch"
+		],
+		[
+			"v17-whoosh-search",
+			"frappe/search/website_search.py",
+			10,
+			"from frappe.search.full_text_search import FullTextSearch"
+		],
+		[
+			"v17-whoosh-search",
+			"frappe/website/website_generator.py",
+			7,
+			"from frappe.search.website_search import remove_document_from_index, update_index_for_path"
+		],
+		[
+			"v17-wkhtmltopdf-helpers",
+			"frappe/printing/page/print/print.js",
+			613,
+			"const is_valid = await frappe.xcall(\"frappe.utils.pdf.is_wkhtmltopdf_valid\");"
+		]
+	]
+}

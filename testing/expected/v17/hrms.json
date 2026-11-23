@@ -1,0 +1,44 @@
+{
+	"tree": "hrms",
+	"commit": "f3bd97d93912080291d286c4f2f4c200ce4a2f4a",
+	"counts": {
+		"v17-get-number-format-info": 1,
+		"v17-query-limit-page-length": 1,
+		"v17-query-limit-start": 1,
+		"v17-query-start": 1
+	},
+	"counts_with_tests": {
+		"v17-get-number-format-info": 1,
+		"v17-get-test-records": 2,
+		"v17-query-limit-page-length": 1,
+		"v17-query-limit-start": 1,
+		"v17-query-start": 1
+	},
+	"unparsable": [],
+	"findings": [
+		[
+			"v17-get-number-format-info",
+			"hrms/hr/utils.py",
+			25,
+			"get_number_format_info,"
+		],
+		[
+			"v17-query-limit-page-length",
+			"hrms/hr/doctype/interview/interview.py",
+			397,
+			"return frappe.get_all("
+		],
+		[
+			"v17-query-limit-start",
+			"hrms/hr/doctype/interview/interview.py",
+			397,
+			"return frappe.get_all("
+		],
+		[
+			"v17-query-start",
+			"hrms/hr/page/team_updates/team_updates.py",
+			9,
+			"data = frappe.get_all("
+		]
+	]
+}
