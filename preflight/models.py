@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 SEVERITIES = ("error", "warning", "info")
 MATCH_TYPES = (
@@ -116,6 +116,16 @@ class Report:
 		return fail_on != "never" and any(
 			meets_severity(finding.rule.severity, fail_on) for finding in self.findings
 		)
+
+
+def script_registration_rule(rule: Rule) -> Rule:
+	"""A doctype rule as it reads for a form or list script registered on the doctype. frappe loads that
+	script only with the doctype, so without it the script stops running and nothing raises."""
+	return replace(
+		rule,
+		severity="warning",
+		message=f"{rule.message} A form or list script registered for it raises nothing; it stops running.",
+	)
 
 
 def rules_by_doctype(rules: list[Rule]) -> dict[str, Rule]:

@@ -3,7 +3,7 @@ import re
 from collections.abc import Iterator
 from pathlib import Path
 
-from preflight.models import Finding, Rule
+from preflight.models import Finding, Rule, script_registration_rule
 from preflight.python_scanner import FileVisitor, PythonScanner, controller_name, string_value
 
 # Hooks keyed by doctype name: every one v15 reads, and extend_doctype_class, which v16 added.
@@ -26,6 +26,9 @@ DOCTYPE_HOOKS = frozenset(
 		"webform_include_css",
 	}
 )
+
+# Hooks that add a script to the doctype's form, list, tree or calendar, read only when its meta loads.
+SCRIPT_HOOKS = frozenset({"doctype_js", "doctype_list_js", "doctype_tree_js", "doctype_calendar_js"})
 
 # Hooks that hand the doc of the doctype each entry is keyed by to the function or the class it names.
 DOC_HOOKS = frozenset({"doc_events", "override_doctype_class"})
@@ -290,13 +293,18 @@ def functions_matching(
 
 
 def keys_naming_a_doctype(
-	doctype_rules: dict[str, Rule], node: ast.Assign | ast.AnnAssign, file: str, lines: list[str]
+	doctype_rules: dict[str, Rule], hook: str, node: ast.Assign | ast.AnnAssign, file: str, lines: list[str]
 ) -> list[Finding]:
 	"""One finding per key of a doctype-keyed hook that names a doctype a rule matches."""
 	if not isinstance(node.value, ast.Dict):
 		return []
 	return [
-		Finding(rule=rule, file=file, line=key.lineno, snippet=lines[key.lineno - 1].strip())
+		Finding(
+			rule=script_registration_rule(rule) if hook in SCRIPT_HOOKS else rule,
+			file=file,
+			line=key.lineno,
+			snippet=lines[key.lineno - 1].strip(),
+		)
 		for key in node.value.keys
 		if isinstance(key, ast.Constant) and (rule := doctype_rules.get(key.value))
 	]
@@ -345,7 +353,7 @@ class HooksScanner:
 					for rule in self.rules_by_key.get(name.id, ())
 				]
 				if name.id in DOCTYPE_HOOKS:
-					findings += keys_naming_a_doctype(self.python.doctype_rules, node, file, lines)
+					findings += keys_naming_a_doctype(self.python.doctype_rules, name.id, node, file, lines)
 				if app_path:
 					for rule in self.override_rules_by_key.get(name.id, ()):
 						findings += overrides_missing_the_controller(rule, node, file, lines, app_path)

@@ -278,7 +278,12 @@ def format_sarif(report: Report, minimum: str = "info", fail_on: str = "error") 
 	findings = [
 		finding for finding in shown if finding.source == "app" and finding.rule.match.type != "target_branch"
 	]
-	rules = sorted({finding.rule for finding in findings}, key=lambda rule: rule.id)
+	# SARIF describes a rule id once, so at its worst severity; each result keeps its own level.
+	rules_by_id: dict[str, Rule] = {}
+	for finding in sorted(findings, key=lambda finding: SEVERITIES.index(finding.rule.severity)):
+		rules_by_id.setdefault(finding.rule.id, finding.rule)
+	rules = sorted(rules_by_id.values(), key=lambda rule: rule.id)
+	rule_indexes = {rule.id: index for index, rule in enumerate(rules)}
 	descriptors = []
 	for rule in rules:
 		help_text = f"{FIX_LABELS[rule.fix]}: {rule.replacement}"
@@ -300,7 +305,7 @@ def format_sarif(report: Report, minimum: str = "info", fail_on: str = "error") 
 		"results": [
 			{
 				"ruleId": finding.rule.id,
-				"ruleIndex": rules.index(finding.rule),
+				"ruleIndex": rule_indexes[finding.rule.id],
 				"level": SARIF_LEVELS[finding.rule.severity],
 				"message": {
 					"text": finding.rule.message

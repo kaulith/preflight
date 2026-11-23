@@ -458,8 +458,9 @@ if (dropped.length) {
 
 const rules = new Map();
 for (const finding of report.findings) {
-	if (!rules.has(finding.rule)) {
-		rules.set(finding.rule, {
+	const card = `${finding.rule} ${finding.severity}`;
+	if (!rules.has(card)) {
+		rules.set(card, {
 			id: finding.rule,
 			severity: finding.severity,
 			title: finding.title,
@@ -471,7 +472,7 @@ for (const finding of report.findings) {
 			findings: [],
 		});
 	}
-	rules.get(finding.rule).findings.push(finding);
+	rules.get(card).findings.push(finding);
 }
 
 function renderPath(file) {

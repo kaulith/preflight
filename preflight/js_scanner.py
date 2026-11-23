@@ -3,12 +3,13 @@ from bisect import bisect_right
 from collections.abc import Iterator
 from typing import NamedTuple
 
-from preflight.models import Finding, Rule, rules_by_doctype, rules_by_doctype_field
+from preflight.models import Finding, Rule, rules_by_doctype, rules_by_doctype_field, script_registration_rule
 from preflight.python_scanner import FIELD_REFERENCE, FIELD_SEPARATOR, rejects_select_field
 
 QUOTE = "[\"'`]"
 NOT_QUOTE_OR_LINE_BREAK = "[^\"'`\\n]*"
 SNIPPET_LENGTH = 200
+SCRIPT_REGISTRATION = re.compile(r"frappe\s*\.\s*(?:ui\s*\.\s*form\s*\.\s*on\b|listview_settings\b)")
 
 # Client APIs whose first argument is a doctype name, and set_route, which carries
 # it as the second.
@@ -385,13 +386,21 @@ class JSScanner:
 			for regex, rule in self.matchers:
 				if regex.search(text):
 					report(rule, line)
+		registrations = []
 		for regex, rule in self.doctype_matchers:
 			for reference in regex.finditer(code):
-				report(rule, bisect_right(line_starts, reference.end() - 1))
+				line = bisect_right(line_starts, reference.end() - 1)
+				if SCRIPT_REGISTRATION.match(reference.group()):
+					registrations.append((rule, line))
+				else:
+					report(rule, line)
 		for offset, text in strings:
 			for index, rule in self.string_hits(text):
 				report(rule, bisect_right(line_starts, offset + index))
 		if self.select_field_rules or self.field_rules:
 			for offset, rule in self.query_hits(strings, syntax):
 				report(rule, bisect_right(line_starts, offset))
+		# Last, so a call on the same line that does raise keeps the finding at its error.
+		for rule, line in registrations:
+			report(script_registration_rule(rule), line)
 		return list(findings.values())
