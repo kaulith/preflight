@@ -35,11 +35,13 @@ def read_baseline(path: Path) -> Counter:
 	"""The findings of a report written earlier with --format json, each as often as it appears."""
 	try:
 		data = json.loads(path.read_text(encoding="utf-8"))
-	except (OSError, ValueError) as e:
+	except (OSError, RecursionError, ValueError) as e:
 		raise click.UsageError(f"--baseline {path}: {e}") from e
 	findings = data.get("findings") if isinstance(data, dict) else None
 	if not isinstance(findings, list) or not all(
-		isinstance(entry, dict) and all(key in entry for key in BASELINE_KEYS) for entry in findings
+		isinstance(entry, dict)
+		and all(key in entry and isinstance(entry[key], str | None) for key in BASELINE_KEYS)
+		for entry in findings
 	):
 		raise click.UsageError(f"--baseline {path}: not a report written with --format json")
 	return Counter(tuple(entry[key] for key in BASELINE_KEYS) for entry in findings)

@@ -1,5 +1,7 @@
+import errno
 import os
 import re
+import stat
 from pathlib import Path
 
 SKIP_DIRS = frozenset({".git", "__pycache__", "node_modules", "dist"})
@@ -7,6 +9,8 @@ TEST_DIRS = frozenset({"tests", "cypress", "e2e"})
 TEST_FILE = re.compile(r"^test_|\.(?:spec|test|cy)\.")
 FRONTEND_SUFFIXES = (".js", ".mjs", ".ts", ".jsx", ".tsx", ".vue", ".scss")
 LONGEST_WRITTEN_LINE = 2000
+# What reading a JSON or TOML record raises when a value has the wrong shape or nests too deep to decode.
+MALFORMED_RECORD = (AttributeError, KeyError, RecursionError, TypeError, ValueError)
 
 
 def source_files(root: Path, suffix: str | tuple[str, ...], skip_tests: bool = False) -> list[Path]:
@@ -37,9 +41,17 @@ def is_bundle(source: str) -> bool:
 	return any(len(line) > LONGEST_WRITTEN_LINE for line in source.split("\n"))
 
 
+def require_regular_file(path: Path):
+	"""Raises OSError for anything else: a repository can hold a symlink to a pipe or a device, and reading
+	one never ends."""
+	if not stat.S_ISREG(path.stat().st_mode):
+		raise OSError(errno.EINVAL, "not a regular file", str(path))
+
+
 def read_source(path: Path, file: str, unreadable: list[str]) -> str | None:
 	"""The file's text, or None, with `file` and the reason added to `unreadable`, when it cannot be read."""
 	try:
+		require_regular_file(path)
 		return path.read_text(encoding="utf-8", errors="replace")
 	except OSError as error:
 		unreadable.append(f"{file}: {error.strerror}")

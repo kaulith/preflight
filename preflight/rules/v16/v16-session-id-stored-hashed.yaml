@@ -4,7 +4,7 @@ severity: warning
 match:
   type: sql_text
   patterns:
-    - (?is)\btabSessions\b.*\bsid\b|\bsid\b.*\btabSessions\b
+    - (?is)\A(?=.*\btabSessions\b)(?=.*\bsid\b).*?\b(tabSessions|sid)\b
 message: >
   frappe v16 stores the sha256 of each session id in tabSessions.sid, and a patch rewrites the
   rows already there. frappe.session.sid and the browser's cookie stay the raw id, so a query

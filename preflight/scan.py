@@ -4,6 +4,7 @@ from dataclasses import replace
 from pathlib import Path
 
 import frappe
+from jinja2.lexer import newline_re
 
 from preflight.app_scan import (
 	Scanners,
@@ -11,6 +12,7 @@ from preflight.app_scan import (
 	note_unparsed_templates,
 	patch_places,
 	scan_app,
+	scan_js,
 	scan_pyproject,
 	scan_python,
 	scan_template,
@@ -18,7 +20,7 @@ from preflight.app_scan import (
 from preflight.compatibility_scanner import CompatibilityScanner, checked_out_branch, is_frappe_branch
 from preflight.jinja_scanner import JinjaScanner, renders_html, renders_layout, renders_subject
 from preflight.models import Finding, Report, Rule
-from preflight.python_scanner import PythonScanner
+from preflight.python_scanner import PYTHON_PARSE_ERRORS, PythonScanner
 from preflight.schema_scanner import LINK_FIELDTYPES, SchemaRecord
 
 # Where a site stores code, as (doctype, field, language, filters). A disabled script never runs, and a
@@ -157,7 +159,7 @@ def scan_bench(report: Report, scanner: CompatibilityScanner, app_paths: dict[st
 			source = hooks.read_text(encoding="utf-8", errors="replace")
 			try:
 				findings = scanner.scan_required_apps(source, file, apps_on_bench)
-			except SyntaxError:
+			except PYTHON_PARSE_ERRORS:
 				if f"{app}/{file}" not in report.unparsable_files:
 					report.unparsable_files.append(f"{app}/{file}")
 				continue
@@ -221,10 +223,11 @@ def move_ran_patch_findings(report: Report, app_paths: dict[str, Path]):
 
 def scan_site_scripts(report: Report, scanners: Scanners):
 	for label, language, script, docs in site_scripts():
+		script = newline_re.sub("\n", script)
 		if language == "python":
 			findings = scan_python(report, scanners.python, label, script, docs=docs) or []
 		else:
-			findings = scanners.js.scan(script, label)
+			findings = scan_js(report, scanners.js, label, script)
 		add_findings(report, findings, script, source="site")
 
 

@@ -15,6 +15,7 @@ except ModuleNotFoundError:  # python 3.10, which frappe v15 still runs on
 
 from preflight.hooks_scanner import assigned_names
 from preflight.models import Finding, Rule
+from preflight.sources import MALFORMED_RECORD, require_regular_file
 
 PYTHON_RELEASES = tuple(Version(f"3.{minor}.{patch}") for minor in range(8, 30) for patch in (0, 99))
 
@@ -52,11 +53,13 @@ def declared_dependencies(app_root: Path) -> set[str]:
 	nothing."""
 	requirements = []
 	try:
+		require_regular_file(app_root / "pyproject.toml")
 		data = tomllib.loads((app_root / "pyproject.toml").read_text(encoding="utf-8"))
 		requirements += data.get("project", {}).get("dependencies", [])
-	except (OSError, ValueError):
+	except (OSError, *MALFORMED_RECORD):
 		pass
 	try:
+		require_regular_file(app_root / "requirements.txt")
 		lines = (app_root / "requirements.txt").read_text(encoding="utf-8").splitlines()
 		requirements += [line.partition("#")[0].strip() for line in lines]
 	except (OSError, ValueError):
@@ -65,7 +68,7 @@ def declared_dependencies(app_root: Path) -> set[str]:
 	for requirement in requirements:
 		try:
 			names.add(canonicalize_name(Requirement(requirement).name))
-		except InvalidRequirement:
+		except (InvalidRequirement, TypeError):
 			continue
 	return names
 

@@ -25,6 +25,7 @@ from preflight.compatibility_scanner import (
 	toml_line,
 )
 from preflight.models import Finding, Report, Rule
+from preflight.sources import MALFORMED_RECORD
 
 TIMEOUT = 30
 PYPI_PROJECT = "https://pypi.org/pypi/{}/json"
@@ -200,7 +201,7 @@ class OnlineScanner:
 					(app, source.splitlines(), dependency, Requirement(dependency))
 					for dependency in tomllib.loads(source).get("project", {}).get("dependencies", ())
 				]
-			except (OSError, ValueError) as error:
+			except (OSError, *MALFORMED_RECORD) as error:
 				report.not_checked.append(f"{app}/pyproject.toml: {error}, dependency wheels not checked")
 		for reason, apps in unread.items():
 			report.not_checked.append(

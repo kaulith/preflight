@@ -1,5 +1,5 @@
 import re
-from bisect import bisect_right
+from bisect import bisect_left, bisect_right
 from collections.abc import Iterator
 from typing import NamedTuple
 
@@ -11,7 +11,7 @@ from preflight.models import (
 	rules_by_doctype_field,
 	script_registration_rule,
 )
-from preflight.python_scanner import API_METHOD, FIELD_REFERENCE, FIELD_SEPARATOR, rejects_select_field
+from preflight.python_scanner import API_METHOD, FIELD_REFERENCE, rejects_select_field, split_fields
 
 QUOTE = "[\"'`]"
 NOT_QUOTE_OR_LINE_BREAK = "[^\"'`\\n]*"
@@ -47,7 +47,8 @@ COMMENT_CLOSE = {"//": "\n", "/*": "*/", "<!--": "-->"}
 NOT_LINE_BREAK = re.compile(r"[^\n]")
 QUOTED_TEXT = {quote: re.compile(rf"(?:[^{quote}\\\n]|\\[\s\S])*") for quote in "\"'"}
 TEMPLATE_TEXT = re.compile(r"(?:[^`\\$]|\\[\s\S]|\$(?!\{))*")
-REGEX_LITERAL = re.compile(r"/(?:[^/\\\[\n]|\\.|\[(?:[^\]\\\n]|\\.)*\])+/")
+# Bounded, as a site script has no line limit and each unclosed `/[` on a line would read the rest of it.
+REGEX_LITERAL = re.compile(r"/(?:[^/\\\[\n]|\\.|\[(?:[^\]\\\n]|\\.){0,2000}\]){1,2000}/")
 # A `/` after one of these characters or keywords opens a regex literal; after anything else it divides.
 REGEX_PRECEDERS = frozenset("(,=:[!&|?{};+-*%<>~^")
 REGEX_KEYWORDS = frozenset(
@@ -115,6 +116,13 @@ CONTROL_STATEMENT = re.compile(r"(?<![\w$.])(?:if|for|while|switch|with)\s*\(")
 FUNCTION_BODY = re.compile(r"\s*(?:=>\s*)?(\{)|\s*=>")
 EXPRESSION_END = re.compile(r"[,;)\]}(\[{]")
 EXPRESSION_CONTINUES = re.compile(r"\s*[?|&+\-*/%<>=(]")
+IDENTIFIER = re.compile(r"(?<![\w$.])[A-Za-z_$][\w$]*")
+DECLARED_NAME = re.compile(r"\b(?:let|const|var)\s+(?=([A-Za-z_$][\w$]*))")
+ASSIGNMENT = re.compile(r"\s*=(?![=>])")
+NOT_SPACE = re.compile(r"\S")
+# How far a parameter list is read and how deep form scripts may nest, so a hostile file stays linear.
+LONGEST_PARAMETERS = 256
+DEEPEST_FORM_SCRIPTS = 32
 
 # The methods of frappe's Form that take a fieldname first. add_fetch is not one: with no target doctype
 # its link field can be a child table's.
@@ -204,8 +212,10 @@ class LiteralReader:
 	def value(self, start: int, end: int):
 		"""What syntax[start:end] holds: a Literal, a list for an array, a dict keyed by Literal for an
 		object, or None for anything else."""
-		text = self.syntax[start:end]
-		start, end = start + len(text) - len(text.lstrip()), end - len(text) + len(text.rstrip())
+		while start < end and self.syntax[start].isspace():
+			start += 1
+		while start < end and self.syntax[end - 1].isspace():
+			end -= 1
 		if start >= end:
 			return None
 		first = self.syntax[start]
@@ -245,18 +255,41 @@ class FormScriptReader(LiteralReader):
 
 	def __init__(self, strings: list[tuple[int, str]], syntax: str):
 		super().__init__(strings, syntax)
+		self.blocks = sorted(opening for opening in self.pairs if syntax[opening] == "{")
+		self.stops = [stop.start() for stop in EXPRESSION_END.finditer(syntax)]
+		self.stop_ends = self.expression_ends()
+		self.identifiers: dict[str, list[int]] = {}
+		self.rebound: dict[str, list[int]] = {}
+		declared = {name.start(1) for name in DECLARED_NAME.finditer(syntax)}
+		for identifier in IDENTIFIER.finditer(syntax):
+			self.identifiers.setdefault(identifier[0], []).append(identifier.start())
+			if identifier.start() in declared or ASSIGNMENT.match(syntax, identifier.end()):
+				self.rebound.setdefault(identifier[0], []).append(identifier.start())
 		statements = {statement.end() - 1 for statement in CONTROL_STATEMENT.finditer(syntax)}
-		heads = [(arrow.start(), [arrow[1]], arrow.end()) for arrow in SINGLE_PARAMETER.finditer(syntax)]
-		heads += [
-			(opening, PLAIN_KEY.findall(syntax, opening, closing), closing + 1)
-			for opening, closing in self.pairs.items()
-			if syntax[opening] == "(" and opening not in statements
-		]
-		self.functions = [
-			(start, names, end)
-			for start, names, parameters_end in heads
-			if (end := self.function_end(parameters_end)) is not None
-		]
+		spans: dict[str, set[tuple[int, int]]] = {}
+		for arrow in SINGLE_PARAMETER.finditer(syntax):
+			if (end := self.function_end(arrow.end())) is not None:
+				spans.setdefault(arrow[1], set()).add((arrow.start(), end))
+		for opening, closing in self.pairs.items():
+			if syntax[opening] != "(" or opening in statements:
+				continue
+			if (end := self.function_end(closing + 1)) is not None:
+				for name in PLAIN_KEY.findall(syntax, opening, min(closing, opening + LONGEST_PARAMETERS)):
+					spans.setdefault(name, set()).add((opening, end))
+		self.functions = {name: sorted(held) for name, held in spans.items()}
+
+	def expression_ends(self) -> list[int | None]:
+		"""For each of `stops`, where an expression reaching it ends: at the stop, or past the bracket it
+		opens. None when that bracket never closes."""
+		ends: list[int | None] = [None] * len(self.stops)
+		for index in reversed(range(len(self.stops))):
+			stop = self.stops[index]
+			if self.syntax[stop] not in "([{":
+				ends[index] = stop
+			elif (closing := self.pairs.get(stop)) is not None:
+				after = bisect_right(self.stops, closing)
+				ends[index] = ends[after] if after < len(ends) else None
+		return ends
 
 	def function_end(self, parameters_end: int) -> int | None:
 		"""Where the function whose parameters end at `parameters_end` ends, or None if no body follows."""
@@ -264,8 +297,9 @@ class FormScriptReader(LiteralReader):
 			return None
 		if body[1]:
 			return self.pairs.get(body.start(1))
-		end = self.skip_brackets(EXPRESSION_END, body.end(), len(self.syntax))
-		return end.start() if end else len(self.syntax)
+		index = bisect_left(self.stops, body.end())
+		end = self.stop_ends[index] if index < len(self.stops) else None
+		return len(self.syntax) if end is None else end
 
 	def passed(self, opening: int) -> list[tuple[int, int]]:
 		"""The spans of the arguments of the call whose parenthesis opens at `opening`, without the empty
@@ -273,7 +307,9 @@ class FormScriptReader(LiteralReader):
 		if (closing := self.pairs.get(opening)) is None:
 			return []
 		return [
-			(start, end) for start, end in self.parts(opening + 1, closing) if self.syntax[start:end].strip()
+			(start, end)
+			for start, end in self.parts(opening + 1, closing)
+			if NOT_SPACE.search(self.syntax, start, end)
 		]
 
 	def handlers(self, start: int, end: int) -> Iterator[tuple[Literal, list[str], int, int]]:
@@ -302,19 +338,21 @@ class FormScriptReader(LiteralReader):
 	def reads(self, name: str, start: int, end: int) -> list[int]:
 		"""Where syntax[start:end] reads a name bound just before it, outside the nested functions with a
 		parameter of that name. A name declared or assigned again there is not followed at all."""
-		word = rf"(?<![\w$.]){re.escape(name)}(?![\w$])"
-		if re.compile(rf"\b(?:let|const|var)\s+{word}|{word}\s*=(?![=>])").search(self.syntax, start, end):
+		rebound = self.rebound.get(name, ())
+		if bisect_left(rebound, start) != bisect_left(rebound, end):
 			return []
-		hidden = [
-			(function_start, function_end)
-			for function_start, names, function_end in self.functions
-			if name in names and start <= function_start < end
-		]
-		return [
-			read.start()
-			for read in re.compile(word).finditer(self.syntax, start, end)
-			if not any(low <= read.start() < high for low, high in hidden)
-		]
+		positions = self.identifiers.get(name, ())
+		hidden = self.functions.get(name, ())
+		function = bisect_left(hidden, (start,))
+		hidden_until = start
+		visible = []
+		for read in positions[bisect_left(positions, start) : bisect_left(positions, end)]:
+			while function < len(hidden) and hidden[function][0] <= read:
+				hidden_until = max(hidden_until, hidden[function][1])
+				function += 1
+			if read >= hidden_until:
+				visible.append(read)
+		return visible
 
 	def member(self, end: int) -> Literal | None:
 		"""The name read off the expression ending at `end`, by a dot or by a literal in brackets."""
@@ -358,20 +396,20 @@ class FormScriptReader(LiteralReader):
 			rf"(?<![\w$.])locals\s*\[\s*(?P<cdt>{re.escape(cdt)})\s*\]\s*\[\s*(?P<cdn>{re.escape(cdn)})\s*\]"
 		)
 		visible = {*self.reads(cdt, start, end), *self.reads(cdn, start, end)}
+		next_block = bisect_left(self.blocks, start)
+		open_blocks: list[int] = []
 		for access in row.finditer(self.syntax, start, end):
+			while next_block < len(self.blocks) and self.blocks[next_block] < access.start():
+				open_blocks.append(self.pairs[self.blocks[next_block]])
+				next_block += 1
+			while open_blocks and open_blocks[-1] <= access.start():
+				open_blocks.pop()
 			if not {access.start("cdt"), access.start("cdn")} <= visible:
 				continue
 			if field := self.member(access.end()):
 				yield field
 			elif access["bound"] and not EXPRESSION_CONTINUES.match(self.syntax, access.end()):
-				block_end = min(
-					(
-						closing
-						for opening, closing in self.pairs.items()
-						if self.syntax[opening] == "{" and opening < access.start() < closing
-					),
-					default=end,
-				)
+				block_end = open_blocks[-1] if open_blocks else end
 				for read in self.reads(access["bound"], access.end(), min(block_end, end)):
 					if field := self.member(read + len(access["bound"])):
 						yield field
@@ -454,7 +492,7 @@ def named_fields(doctype: str, keyword: str, value) -> Iterator[tuple[str, str, 
 					yield doctype, names[0].text, names[0]
 		return
 	for literal in [*literals(value), *(value if isinstance(value, dict) else ())]:
-		for field in FIELD_SEPARATOR.split(literal.text):
+		for field in split_fields(literal.text):
 			if reference := FIELD_REFERENCE.fullmatch(field.strip()):
 				yield reference.group(1) or doctype, reference.group(2), literal
 
@@ -564,6 +602,7 @@ class JSScanner:
 			elif rule.match.type == "import_path":
 				for path in rule.match.paths:
 					self.import_rules.setdefault(tuple(path.split(".")), []).append(rule)
+		self.longest_import_path = max(map(len, self.import_rules), default=0)
 		self.doctype_matchers = [
 			(doctype_reference(doctype), rule) for doctype, rule in self.doctype_rules.items()
 		]
@@ -578,7 +617,7 @@ class JSScanner:
 			parts = tuple(text.split("."))
 			hits = [
 				(0, rule)
-				for end in range(1, len(parts) + 1)
+				for end in range(1, min(len(parts), self.longest_import_path) + 1)
 				for rule in self.import_rules.get(parts[:end], ())
 			]
 		return hits + [
@@ -611,8 +650,15 @@ class JSScanner:
 		"""The doctype_field rules the handlers of its form scripts reach, each with the offset of the
 		field reference. A child doctype's handlers get the parent's form, so only their row is its own."""
 		reader = None
+		enclosing: list[int] = []
 		for call in FORM_SCRIPT.finditer(syntax):
 			reader = reader or FormScriptReader(strings, syntax)
+			while enclosing and enclosing[-1] <= call.start():
+				enclosing.pop()
+			if len(enclosing) == DEEPEST_FORM_SCRIPTS:
+				raise RecursionError("frappe.ui.form.on calls nested too deep to read")
+			if (closing := reader.pairs.get(call.end() - 1)) is not None:
+				enclosing.append(closing)
 			parts = reader.passed(call.end() - 1)
 			if len(parts) != 2 or not isinstance(doctype := reader.value(*parts[0]), Literal):
 				continue

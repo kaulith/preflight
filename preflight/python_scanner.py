@@ -99,8 +99,7 @@ SELECT_FIELD_APIS = frozenset(
 	}
 )
 
-# frappe.database.query's COMMA_PATTERN: a fields string splits on the commas outside parentheses.
-FIELD_SEPARATOR = re.compile(r",\s*(?![^()]*\))")
+FIELD_MARK = re.compile(r"[(),]")
 
 # One field a select, an order by or a group by names: plain or backticked, qualified by its doctype's
 # table or not, with an alias or a sort order after it.
@@ -129,6 +128,11 @@ REQUEST_APIS = {
 
 IMPORT_ERRORS = frozenset({"ImportError", "ModuleNotFoundError"})
 
+# What parsing a file raises when it cannot be read as code: a null byte, or nesting past the parser's stack.
+PYTHON_PARSE_ERRORS = (SyntaxError, ValueError, RecursionError, MemoryError)
+
+LONGEST_ATTRIBUTE_CHAIN = 64
+
 # Framework APIs that resolve a dotted path given as a string.
 ATTR_APIS = frozenset(
 	{
@@ -139,6 +143,23 @@ ATTR_APIS = frozenset(
 		"frappe.utils.background_jobs.enqueue",
 	}
 )
+
+
+def split_fields(text: str) -> list[str]:
+	"""frappe.database.query's COMMA_PATTERN, `,\\s*(?![^()]*\\))`: a comma splits unless the next parenthesis
+	after it closes. Read from the end, as that regex rescans the rest of the string at every comma."""
+	fields = []
+	end = len(text)
+	inside = False
+	for mark in reversed(list(FIELD_MARK.finditer(text))):
+		if mark[0] == ",":
+			if not inside:
+				fields.append(text[mark.end() : end])
+				end = mark.start()
+		else:
+			inside = mark[0] == ")"
+	fields.append(text[:end])
+	return fields[::-1]
 
 
 def call_uses_argument(node: ast.Call, match: Match) -> bool:
@@ -274,7 +295,7 @@ def rejects_select_field(accepted: list[re.Pattern], fields: str) -> bool:
 	"""True when one of the fields in `fields`, split the way v16 splits it, matches none of `accepted`."""
 	return any(
 		not any(pattern.search(field) for pattern in accepted)
-		for field in map(str.strip, FIELD_SEPARATOR.split(fields))
+		for field in map(str.strip, split_fields(fields))
 		if field
 	)
 
@@ -313,6 +334,7 @@ class PythonScanner:
 				table = self.call_rules if rule.match.type == "call" else self.import_rules
 				for path in rule.match.paths:
 					table.setdefault(tuple(path.split(".")), []).append(rule)
+		self.longest_import_path = max(map(len, self.import_rules), default=0)
 
 	def scan_sql(self, query: str, file: str) -> list[Finding]:
 		"""The sql_text rules a stored query matches, each on the line its first match starts."""
@@ -321,7 +343,7 @@ class PythonScanner:
 		for patterns, rule in self.sql_rules:
 			for pattern in patterns:
 				if found := pattern.search(query):
-					line = query.count("\n", 0, found.start()) + 1
+					line = query.count("\n", 0, found.start(found.lastindex or 0)) + 1
 					findings.setdefault(
 						rule.id, Finding(rule=rule, file=file, line=line, snippet=lines[line - 1].strip())
 					)
@@ -384,17 +406,21 @@ class FileVisitor(ast.NodeVisitor):
 			)
 
 	def check_path(self, parts: tuple[str, ...], line: int):
-		for end in range(1, len(parts) + 1):
+		for end in range(1, min(len(parts), self.rules.longest_import_path) + 1):
 			self.report(self.rules.import_rules.get(parts[:end], ()), line)
 
 	def resolve(self, node: ast.expr) -> tuple[str, ...] | None:
+		"""The dotted path of a name and its attributes. Past LONGEST_ATTRIBUTE_CHAIN it is None: each shorter
+		chain inside it is visited and resolved on its own, so a rule's path is still found."""
 		attributes = []
 		while isinstance(node, ast.Attribute):
-			attributes.insert(0, node.attr)
+			if len(attributes) == LONGEST_ATTRIBUTE_CHAIN:
+				return None
+			attributes.append(node.attr)
 			node = node.value
 		if not isinstance(node, ast.Name):
 			return None
-		return self.aliases.get(node.id, (node.id,)) + tuple(attributes)
+		return self.aliases.get(node.id, (node.id,)) + tuple(reversed(attributes))
 
 	def visit_Import(self, node: ast.Import):
 		for alias in node.names:
@@ -701,7 +727,7 @@ class FileVisitor(ast.NodeVisitor):
 			if isinstance(value, ast.Dict):
 				strings += [key for key in value.keys if string_value(key) is not None]
 			for string in strings:
-				for field in FIELD_SEPARATOR.split(string.value):
+				for field in split_fields(string.value):
 					if reference := FIELD_REFERENCE.fullmatch(field.strip()):
 						yield reference.group(1) or doctype, reference.group(2), string
 

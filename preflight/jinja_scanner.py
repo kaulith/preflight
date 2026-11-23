@@ -14,6 +14,7 @@ from jinja2.visitor import NodeVisitor
 from preflight.js_scanner import SNIPPET_LENGTH
 from preflight.models import Finding, Rule, child_doctypes, rules_by_doctype, rules_by_doctype_field
 from preflight.python_scanner import DOC_APIS
+from preflight.sources import MALFORMED_RECORD
 
 # What marks a template Jinja cannot read as a frappe client-side microtemplate: a `{%=` or `{%~` tag, or
 # a tag opening or closing a JavaScript block, `{% if(!doc) { %}` and `{% } %}`.
@@ -155,7 +156,7 @@ class JinjaScanner:
 						found += self.scan(field.get("html") or field.get("options") or "", file, (doctype,))
 					except (TemplateSyntaxError, RecursionError):
 						unparsed += 1
-		except (AttributeError, KeyError, TypeError, ValueError):
+		except MALFORMED_RECORD:
 			return [], 1
 		return list(dict.fromkeys(replace(finding, line=None) for finding in found)), unparsed
 

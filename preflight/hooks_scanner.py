@@ -4,7 +4,13 @@ from collections.abc import Iterator
 from pathlib import Path
 
 from preflight.models import Finding, Rule, script_registration_rule
-from preflight.python_scanner import FileVisitor, PythonScanner, controller_name, string_value
+from preflight.python_scanner import (
+	PYTHON_PARSE_ERRORS,
+	FileVisitor,
+	PythonScanner,
+	controller_name,
+	string_value,
+)
 
 # Hooks keyed by doctype name: every one v15 reads, and extend_doctype_class, which v16 added.
 DOCTYPE_HOOKS = frozenset(
@@ -63,7 +69,7 @@ def hooked_doctypes(app_path: Path) -> dict[str, dict[str, set[str]]]:
 	override_doctype_class, by module and then by name. A hooks.py that cannot be read or parsed hooks none."""
 	try:
 		tree = ast.parse((app_path / "hooks.py").read_text(encoding="utf-8", errors="replace"))
-	except (OSError, SyntaxError):
+	except (OSError, *PYTHON_PARSE_ERRORS):
 		return {}
 	hooked: dict[str, dict[str, set[str]]] = {}
 	for node in tree.body:
@@ -179,7 +185,7 @@ class OverrideResolver:
 		if path not in self.parsed:
 			try:
 				tree = ast.parse(path.read_text(encoding="utf-8", errors="replace"), filename=str(path))
-			except SyntaxError:
+			except (OSError, *PYTHON_PARSE_ERRORS):
 				self.parsed[path] = ({}, {}, {})
 				return self.parsed[path]
 			classes: dict[str, ast.ClassDef] = {}

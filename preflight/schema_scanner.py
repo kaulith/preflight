@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from preflight.models import Finding, Rule, rules_by_doctype, rules_by_doctype_field
-from preflight.sources import source_files
+from preflight.sources import MALFORMED_RECORD, require_regular_file, source_files
 
 # Fieldtypes whose options name a doctype.
 LINK_FIELDTYPES = ("Link", "Table", "Table MultiSelect")
@@ -25,16 +25,21 @@ def app_doctype_fields(app_path: Path) -> list[SchemaRecord]:
 	for path in source_files(app_path, ".json"):
 		if path.stem != path.parent.name or path.parent.parent.name != "doctype":
 			continue
-		try:
-			fields = json.loads(path.read_text(encoding="utf-8"))["fields"]
-		except (OSError, ValueError, KeyError, TypeError):
-			continue
 		file = str(path.relative_to(app_path.parent))
-		records += [
-			SchemaRecord(file, field["options"], f"{field['fieldtype'].lower()} field {field['fieldname']}")
-			for field in fields
-			if field.get("fieldtype") in LINK_FIELDTYPES and field.get("options")
-		]
+		try:
+			require_regular_file(path)
+			fields = json.loads(path.read_text(encoding="utf-8"))["fields"]
+			records += [
+				SchemaRecord(
+					file, field["options"], f"{field['fieldtype'].lower()} field {field['fieldname']}"
+				)
+				for field in fields
+				if field.get("fieldtype") in LINK_FIELDTYPES
+				and field.get("options")
+				and isinstance(field["options"], str)
+			]
+		except (OSError, *MALFORMED_RECORD):
+			continue
 	return records
 
 

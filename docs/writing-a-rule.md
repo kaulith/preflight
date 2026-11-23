@@ -325,10 +325,11 @@ match:
 match:
   type: sql_text
   patterns:
-    - (?is)\btabSessions\b.*\bsid\b|\bsid\b.*\btabSessions\b
+    - (?is)\A(?=.*\btabSessions\b)(?=.*\bsid\b).*?\b(tabSessions|sid)\b
 ```
 
 - `patterns` are regular expressions searched across the whole query, so a query split over lines needs `(?s)`.
+- A query can be any size and comes from the code being scanned, so anchor a pattern that looks for two words, as above, rather than retrying from each. The finding is on the line of the pattern's last capture group, or of the match when it has none.
 - Reads the query of `frappe.db.sql` and each database's query in `frappe.db.multisql`: a string, an f-string whose substitutions read as plain field names, or a string a local name holds.
 - Reads the `query` of Query Reports, on the site and in the app's report JSON. A finding in the JSON carries no line.
 - A `frappe.qb` query is not read.

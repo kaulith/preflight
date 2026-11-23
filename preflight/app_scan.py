@@ -16,13 +16,20 @@ from preflight.hooks_scanner import HooksScanner, hooked_doctypes
 from preflight.jinja_scanner import JinjaScanner, renders_html, renders_layout, renders_subject
 from preflight.js_scanner import JSScanner
 from preflight.models import Finding, Report, Rule
-from preflight.python_scanner import PythonScanner
+from preflight.python_scanner import PYTHON_PARSE_ERRORS, PythonScanner
 from preflight.schema_scanner import SchemaScanner, app_doctype_fields
-from preflight.sources import frontend_files, is_bundle, read_source, source_files
+from preflight.sources import (
+	MALFORMED_RECORD,
+	frontend_files,
+	is_bundle,
+	read_source,
+	require_regular_file,
+	source_files,
+)
 
-# Inside a comment: `#` in Python, TOML and patches.txt, `//` or `/*` in JS and SCSS, `<!--` in a Vue
-# template.
-IGNORE_COMMENT = re.compile(r"(?:#|//|/\*|<!--).*?\bpreflight:\s*ignore\[([^\]]*)\]")
+# `#` in Python, TOML and patches.txt, `//` or `/*` in JS and SCSS, `<!--` in a Vue template.
+COMMENT_OPENING = re.compile(r"#|//|/\*|<!--")
+IGNORE_OPENING = re.compile(r"\bpreflight:\s*ignore\[")
 # What --path cannot check, having no bench and no site to read.
 PATH_MODE_NOT_CHECKED = (
 	"required_apps: --path reads no bench to find them on, not checked",
@@ -50,11 +57,17 @@ class Scanners:
 
 def ignored_rules(line: str) -> set[str]:
 	"""The rule ids a `preflight: ignore[rule-a, rule-b]` comment on the line names."""
-	return {
-		rule_id.strip()
-		for comment in IGNORE_COMMENT.finditer(line)
-		for rule_id in comment.group(1).split(",")
-	}
+	rule_ids = set()
+	position = 0
+	while (comment := COMMENT_OPENING.search(line, position)) and (
+		opening := IGNORE_OPENING.search(line, comment.end())
+	):
+		closing = line.find("]", opening.end())
+		if closing == -1:
+			break
+		rule_ids.update(rule_id.strip() for rule_id in line[opening.end() : closing].split(","))
+		position = closing + 1
+	return rule_ids
 
 
 def add_findings(
@@ -106,6 +119,7 @@ def patch_places(app: str, app_path: Path) -> Iterator[tuple[str, set[tuple[str,
 	comment and all; a `finally:` patch is logged without the tag. A module patch is its file; an
 	`execute:` patch is its patches.txt line."""
 	try:
+		require_regular_file(app_path / "patches.txt")
 		text = (app_path / "patches.txt").read_text(encoding="utf-8", errors="replace")
 	except OSError:
 		return
@@ -161,15 +175,18 @@ def scan_app(report: Report, scanners: Scanners, app: str, app_path: Path, skip_
 		if findings is None:
 			continue
 		if path == app_path / "hooks.py":
-			findings += scanners.hooks.scan(source, file, app_path) + scanners.hooks.missing_hooks(
-				source, file, app_path
-			)
+			try:
+				findings += scanners.hooks.scan(source, file, app_path) + scanners.hooks.missing_hooks(
+					source, file, app_path
+				)
+			except PYTHON_PARSE_ERRORS as error:
+				report.unreadable_files.append(f"{app}/{file}: {error}")
 		add_findings(report, findings, source, app, declared=declared)
 	for path in frontend_files(app_root, skip_tests):
 		file = str(path.relative_to(app_root))
 		source = read_source(path, f"{app}/{file}", report.unreadable_files)
 		if source is not None and not is_bundle(source):
-			add_findings(report, scanners.js.scan(source, file), source, app)
+			add_findings(report, scan_js(report, scanners.js, file, source, app), source, app)
 	scan_templates(report, scanners.jinja, app, app_path, skip_tests)
 	scan_query_reports(report, scanners.python, app, app_path, skip_tests)
 	scan_patches(report, scanners.python, app, app_path, declared)
@@ -283,15 +300,14 @@ def scan_templates(report: Report, scanner: JinjaScanner, app: str, app_path: Pa
 			continue
 		try:
 			record = json.loads(source)
-		except ValueError:
+			if not isinstance(record, dict):
+				continue
+			if record.get("doctype") == "Print Format":
+				unparsed += scan_print_format(report, scanner, app, app_root, path, record)
+			elif record.get("doctype") == "Notification":
+				unparsed += scan_notification(report, scanner, app, app_root, path, record)
+		except MALFORMED_RECORD:
 			unparsed += 1
-			continue
-		if not isinstance(record, dict):
-			continue
-		if record.get("doctype") == "Print Format":
-			unparsed += scan_print_format(report, scanner, app, app_root, path, record)
-		elif record.get("doctype") == "Notification":
-			unparsed += scan_notification(report, scanner, app, app_root, path, record)
 	note_unparsed_templates(report, app, unparsed)
 
 
@@ -310,17 +326,16 @@ def scan_query_reports(
 			continue
 		try:
 			record = json.loads(source)
-		except ValueError:
+			if (
+				isinstance(record, dict)
+				and record.get("report_type") == "Query Report"
+				and record.get("query")
+				and not record.get("disabled")
+			):
+				findings = scanner.scan_sql(record["query"], file)
+				add_findings(report, [replace(finding, line=None) for finding in findings], source, app)
+		except MALFORMED_RECORD:
 			report.unparsable_files.append(f"{app}/{file}")
-			continue
-		if (
-			isinstance(record, dict)
-			and record.get("report_type") == "Query Report"
-			and record.get("query")
-			and not record.get("disabled")
-		):
-			findings = scanner.scan_sql(record["query"], file)
-			add_findings(report, [replace(finding, line=None) for finding in findings], source, app)
 
 
 def scan_patches(report: Report, scanner: PythonScanner, app: str, app_path: Path, declared: set[str]):
@@ -348,10 +363,22 @@ def scan_pyproject(report: Report, scanner: CompatibilityScanner, app: str, app_
 		return
 	try:
 		findings = scanner.scan_pyproject(source, "pyproject.toml")
-	except ValueError:
+	except MALFORMED_RECORD:
 		report.unparsable_files.append(f"{app}/pyproject.toml")
 		return
 	add_findings(report, findings, source, app)
+
+
+def scan_js(
+	report: Report, scanner: JSScanner, file: str, source: str, app: str | None = None
+) -> list[Finding]:
+	"""The file's findings, or none when it nests too deep to read, with the file named in the report's
+	lists, under `app` when it is one of an app's."""
+	try:
+		return scanner.scan(source, file)
+	except RecursionError as error:
+		report.unreadable_files.append(f"{f'{app}/{file}' if app else file}: {error}")
+		return []
 
 
 def scan_python(
@@ -370,6 +397,6 @@ def scan_python(
 		return scanner.scan(source, file, hooked, docs)
 	except SyntaxError:
 		report.unparsable_files.append(listed)
-	except (ValueError, RecursionError) as error:
+	except (ValueError, RecursionError, MemoryError) as error:
 		report.unreadable_files.append(f"{listed}: {error}")
 	return None
