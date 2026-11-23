@@ -89,7 +89,12 @@ def scan_site(
 )
 @click.option("--target", required=True, help="Version to check against, selects the rule set (e.g. v16)")
 @click.option("--unreleased", is_flag=True, hidden=True, help="Allow a target that is not released yet")
-@click.option("--app", "apps", multiple=True, help="Scan only this app of the site; repeatable")
+@click.option(
+	"--app",
+	"apps",
+	multiple=True,
+	help="Scan only this app's code; the site's scripts, customisations and records are always read; repeatable",
+)
 @click.option(
 	"--severity",
 	type=click.Choice(SEVERITIES),

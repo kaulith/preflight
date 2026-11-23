@@ -26,7 +26,7 @@ Two kinds of finding are listed apart and not counted:
 - **Upstream apps.** An app on frappe's own version branch, such as erpnext on `version-15-hotfix`, is switched to the target's branch by the upgrade, which replaces its code. Name it with `--app` to count it.
 - **Patches already run.** A finding in a patch the site has already run is listed apart, as that patch never runs again. One in a patch still to run is counted and marked, since `bench migrate` runs it on the new version.
 
-With `--path` there is no site and no bench, so the site's scripts and customisations, Patch Log, the bench's Python and `required_apps` are not checked; the report says so. Each `pyproject.toml` is read whatever branch the app is on.
+With `--path` there is no site and no bench, so the site's scripts and customisations, Patch Log, the bench's Python and `required_apps` are not checked; the report says so. Each `pyproject.toml` is read whatever branch the app is on. Findings in the app's patches stay counted, since a patch still to run stops `bench migrate`, and the report says how many. `--site` sets aside those already run, and `--baseline` records them.
 
 ## What it does not do
 
@@ -38,7 +38,7 @@ With `--path` there is no site and no bench, so the site's scripts and customisa
 A real run on a v15 site with erpnext. Each rule's explanation, printed under its title, is left out here.
 
 ```text
-Preflight test.localhost: frappe 15.123.1 → v16
+Preflight test.localhost: frappe 15.126.1 → v16
 Rules checked 2026-11-22 against frappe v16.60.2
 Apps scanned: erpnext, print_designer
 
@@ -51,7 +51,7 @@ ERROR (2)
   doctypes, or drop the customisation and the code that reads it.
 
 Upstream apps, not counted (1)
-    erpnext on mergify/bp/version-15-hotfix/pr-58667: 188 found
+    erpnext on mergify/bp/version-15-hotfix/pr-58667: 613 found
   These apps are on frappe's own version branch: switching them to the v16 branch replaces this
   code, so what is found in it is upstream's to fix and not in the counts below. --app <name>
   lists an app's findings.
@@ -59,7 +59,7 @@ Upstream apps, not counted (1)
 2 error
 ```
 
-erpnext here is on a branch cut from `version-15-hotfix`, which counts as frappe's version branch. `--app erpnext` lists its 188 findings and counts them.
+erpnext here is on a branch cut from `version-15-hotfix`, which counts as frappe's version branch. `--app erpnext` lists them and counts those not in a patch the site already ran.
 
 ## Options
 
@@ -67,7 +67,7 @@ erpnext here is on a branch cut from `version-15-hotfix`, which counts as frappe
 - `--path`: scan the app in this directory, its repository root or its package (the directory
   holding `hooks.py`), with no site or bench. Can be repeated.
 - `--target`: the version to check against, `v16`. Required.
-- `--app`: scan only this app of the site. Can be repeated. Default: every app except frappe.
+- `--app`: scan only this app's code. The site's scripts, customisations and records are always read, so they can still fail the command. Can be repeated. Default: every app except frappe.
 - `--severity`: the lowest level to print. Default `info`.
 - `--fail-on`: the lowest level that fails the command; `never` always passes. Default `error`.
 - `--format`: `text`, `json`, `sarif` for code scanning tools, or `html`: one page to open in a

@@ -350,6 +350,11 @@ These places are looked at, and each finding says which one it came from:
 - a key of a hook keyed by doctype in `hooks.py` (`doctype_js`, `doc_events`,
   `has_permission` and the rest of `hooks_scanner.DOCTYPE_HOOKS`)
 
+A script registered on the doctype is reported as a warning, whatever the rule's severity:
+`frappe.ui.form.on`, `frappe.listview_settings`, and the `doctype_js`, `doctype_list_js`,
+`doctype_tree_js` and `doctype_calendar_js` hooks. frappe loads it only with the doctype,
+so it stops running and nothing raises.
+
 A doctype belongs to one `doctype` rule. The loader rejects a second one naming the
 same doctype, because the scanners key a doctype to a single rule and the other one
 would never fire.

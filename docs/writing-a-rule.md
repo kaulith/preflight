@@ -273,6 +273,8 @@ Looks in these places:
 - `frappe.listview_settings["Blog Post"]` in JavaScript
 - The keys of hooks keyed by doctype in `hooks.py`, such as `doctype_js` and `doc_events`
 
+A script registered on the doctype is reported as a warning, whatever the rule's severity: `frappe.ui.form.on`, `frappe.listview_settings`, and the `doctype_js`, `doctype_list_js`, `doctype_tree_js` and `doctype_calendar_js` hooks. frappe loads it only with the doctype, so it stops running and nothing raises.
+
 A doctype can belong to only one rule.
 
 ### doctype_field

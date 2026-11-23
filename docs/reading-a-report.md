@@ -48,7 +48,7 @@ Some rules add a **Shim that runs on both versions**: a short snippet, such as a
 
 ```text
 Upstream apps, not counted (1)
-    erpnext on mergify/bp/version-15-hotfix/pr-58667: 188 found
+    erpnext on mergify/bp/version-15-hotfix/pr-58667: 613 found
 ```
 
 An app on frappe's own version branch, such as erpnext on `version-15-hotfix` or a branch cut from it, is switched to the target's branch by the upgrade, and that replaces its code. What Preflight finds in it is upstream's to fix, so it is listed here, left out of the counts, and never fails the command.
@@ -114,6 +114,7 @@ Also listed here:
 - With `--online`, a check that could not reach what it asks, such as no node on the PATH, a git remote that failed, or PyPI being down. It is never read as clean.
 - An app with findings and no branch checked out, as every app on Frappe Cloud: nothing shows whether the upgrade replaces its code, so its findings stay counted. Pass `--app` for each of your own apps to leave the rest out.
 - With `--path`, what needs a site or a bench: the site's scripts, Custom Fields, Property Setters, records and Patch Log, the bench's Python and `required_apps`.
+- With `--path`, how many counted findings are in the app's patches. With no Patch Log, those already run can't be told from those still to run, so all stay counted. `--site` sets aside the ones already run, and `--baseline` records them.
 
 ## Hidden findings
 
@@ -164,7 +165,7 @@ Findings left out by an ignore comment or by `--baseline` are counted on their o
     "below_severity": 0,
     "suppressed": 0,
     "baselined": 0,
-    "upstream": 188,
+    "upstream": 613,
     "ran_patches": 0
   },
   "apps": ["erpnext", "my_app"],
