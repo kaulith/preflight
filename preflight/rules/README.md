@@ -82,9 +82,9 @@ loads, so its rules are tested with the rest, but `--target` refuses it unless t
 says `released: false`, and `--target` refuses it. Its API rules were last checked on 2026-10-25
 against develop at `c4e97234b4`. It holds three kinds of rule:
 
-- `v17-deprecated-*`, severity `warning`: a deprecation whose dumpster entry or deprecation
+- Deprecations, severity `warning`: a deprecation whose dumpster entry or deprecation
   warning names v17 as the removal and that is still present on develop. Nothing breaks yet.
-- `v17-removed-*` and `v17-moved-*`, severity `error`: a path that is gone from develop, with
+- Removals and `v17-moved-*`, severity `error`: a path that is gone from develop, with
   the PR that removed it as the reference.
 - `v17-bench-python` and `v17-app-*`: what the bench must satisfy to install develop, checked
   against develop at `191a3e2664` on 2026-10-24, and `v17-app-dependency-pins` at `c4e97234b4`
@@ -92,8 +92,8 @@ against develop at `c4e97234b4`. It holds three kinds of rule:
   `requires-python` (`error`), bench only warns on a frappe bound (`warning`), and a clashing pin
   leaves frappe or the app on a version it does not allow (`error`).
 
-A deprecated rule becomes an error, and is renamed, only once the path is gone from develop.
-Recheck the directory against develop before each release, and pin dumpster references to the
+A v17 id carries no status word, so a deprecation that becomes an error once its path is gone
+from develop keeps its id, and ignore lists and baselines naming it keep working. Recheck the directory against develop before each release, and pin dumpster references to the
 commit that was checked, since a branch link stops proving anything once the entry is deleted.
 
 ## `import_path`

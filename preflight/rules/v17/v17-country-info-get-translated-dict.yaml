@@ -1,4 +1,4 @@
-id: v17-deprecated-country-info-get-translated-dict
+id: v17-country-info-get-translated-dict
 title: country_info.get_translated_dict is marked for removal in v17
 severity: warning
 match:

@@ -1,4 +1,4 @@
-id: v17-removed-whoosh-search
+id: v17-whoosh-search
 title: Whoosh-backed website search removed
 severity: error
 match:

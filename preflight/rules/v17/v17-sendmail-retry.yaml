@@ -1,4 +1,4 @@
-id: v17-deprecated-sendmail-retry
+id: v17-sendmail-retry
 title: sendmail(retry=...) is marked for removal in v17
 severity: warning
 match:

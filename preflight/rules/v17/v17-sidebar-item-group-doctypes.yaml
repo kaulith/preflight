@@ -1,4 +1,4 @@
-id: v17-removed-sidebar-item-group-doctypes
+id: v17-sidebar-item-group-doctypes
 title: Sidebar Item Group doctypes removed
 severity: error
 match:

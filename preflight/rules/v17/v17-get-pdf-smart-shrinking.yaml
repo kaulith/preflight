@@ -1,4 +1,4 @@
-id: v17-removed-get-pdf-smart-shrinking
+id: v17-get-pdf-smart-shrinking
 title: get_pdf() no longer accepts smart_shrinking
 severity: error
 match:

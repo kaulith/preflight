@@ -120,7 +120,7 @@ def test_path_that_only_shares_a_prefix_is_not_reported():
 def test_string_a_string_rule_reports_is_not_reported_again_as_an_import():
 	source = 'frappe.call({ method: "frappe.utils.weasyprint.download_pdf" });\n'
 	findings = JSScanner(load_rules("v17")).scan(source, "fixture.js")
-	assert [finding.rule.id for finding in findings] == ["v17-removed-weasyprint-download-pdf"]
+	assert [finding.rule.id for finding in findings] == ["v17-weasyprint-download-pdf"]
 
 
 def test_commented_out_code_is_not_reported():

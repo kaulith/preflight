@@ -1,4 +1,4 @@
-id: v17-deprecated-get-test-records
+id: v17-get-test-records
 title: frappe.get_test_records is marked for removal in v17
 severity: warning
 match:

@@ -1,4 +1,4 @@
-id: v17-removed-weasyprint-download-pdf
+id: v17-weasyprint-download-pdf
 title: The frappe.utils.weasyprint.download_pdf endpoint removed
 severity: error
 match:

@@ -1,4 +1,4 @@
-id: v17-removed-weasyprint
+id: v17-weasyprint
 title: frappe.utils.weasyprint removed
 severity: error
 match:

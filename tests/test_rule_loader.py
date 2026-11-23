@@ -6,11 +6,20 @@ from preflight.rule_loader import MATCH_TYPE_KEYS, RULES_PATH, RuleError, load_r
 MAKE_ESC_RULE = (RULES_PATH / "v16" / "v16-deprecated-make-esc.yaml").read_text()
 LIST_SIDEBAR_RULE = (RULES_PATH / "v16" / "v16-removed-list-sidebar.yaml").read_text()
 BLOG_DOCTYPES_RULE = (RULES_PATH / "v16" / "v16-removed-blog-doctypes.yaml").read_text()
-ENQUEUE_JOB_NAME_RULE = (RULES_PATH / "v17" / "v17-deprecated-enqueue-job-name.yaml").read_text()
+ENQUEUE_JOB_NAME_RULE = (RULES_PATH / "v17" / "v17-enqueue-job-name.yaml").read_text()
 DEPENDENCY_PINS_RULE = (RULES_PATH / "v16" / "v16-app-dependency-pins.yaml").read_text()
 REPOST_TYPES_RULE = (RULES_PATH / "v16" / "v16-erpnext-repost-allowed-types.yaml").read_text()
 SUBCONTRACTED_QUANTITY_RULE = (RULES_PATH / "v16" / "v16-erpnext-subcontracted-quantity.yaml").read_text()
 RULESET = 'released: true\nchecked: "2026-10-25"\nagainst: frappe v16.53.0\n'
+V17_REMOVALS = {
+	"v17-get-pdf-smart-shrinking",
+	"v17-sidebar-item-group-doctypes",
+	"v17-slack-webhook-url",
+	"v17-weasyprint",
+	"v17-weasyprint-download-pdf",
+	"v17-whoosh-search",
+	"v17-wkhtmltopdf-helpers",
+}
 
 
 def write_rule(tmp_path, content, name="v16-deprecated-make-esc.yaml"):
@@ -34,10 +43,11 @@ def test_v16_rules_load():
 def test_v17_rule_still_on_develop_is_a_warning():
 	rules = load_rules("v17")
 	assert len(rules) == len(rule_files("v17"))
-	assert {rule.severity for rule in rules if rule.id.startswith("v17-deprecated-")} == {"warning"}
-	assert {rule.severity for rule in rules if rule.id.startswith(("v17-removed-", "v17-moved-"))} == {
-		"error"
-	}
+	deprecations = [
+		rule for rule in rules if "marked for removal" in rule.title or "deprecated" in rule.title
+	]
+	assert {rule.severity for rule in deprecations} == {"warning"}
+	assert {rule.severity for rule in rules if rule.id in V17_REMOVALS or "-moved-" in rule.id} == {"error"}
 
 
 def test_unknown_target_lists_only_released_targets():
@@ -134,9 +144,7 @@ def test_invalid_pattern_rule_names_the_problem(tmp_path, original, broken, mess
 )
 def test_invalid_call_rule_names_the_problem(tmp_path, original, broken, message):
 	assert original in ENQUEUE_JOB_NAME_RULE
-	write_rule(
-		tmp_path, ENQUEUE_JOB_NAME_RULE.replace(original, broken), "v17-deprecated-enqueue-job-name.yaml"
-	)
+	write_rule(tmp_path, ENQUEUE_JOB_NAME_RULE.replace(original, broken), "v17-enqueue-job-name.yaml")
 	with pytest.raises(RuleError, match=message):
 		load_rules("v16", rules_path=tmp_path)
 

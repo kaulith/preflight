@@ -1,4 +1,4 @@
-id: v17-deprecated-install-fixtures-underscore
+id: v17-install-fixtures-underscore
 title: The setup wizard's _ marker is deprecated
 severity: warning
 match:

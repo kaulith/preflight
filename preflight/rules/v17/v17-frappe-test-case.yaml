@@ -1,4 +1,4 @@
-id: v17-deprecated-frappe-test-case
+id: v17-frappe-test-case
 title: FrappeTestCase is marked for removal in v17
 severity: warning
 match:

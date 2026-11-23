@@ -1,4 +1,4 @@
-id: v17-deprecated-gzip-helpers
+id: v17-gzip-helpers
 title: The frappe.utils gzip helpers are marked for removal in v17
 severity: warning
 match:

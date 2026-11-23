@@ -1,4 +1,4 @@
-id: v17-removed-wkhtmltopdf-helpers
+id: v17-wkhtmltopdf-helpers
 title: The wkhtmltopdf helpers in frappe.utils.pdf removed
 severity: error
 match:

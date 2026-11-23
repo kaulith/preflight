@@ -1,4 +1,4 @@
-id: v17-removed-slack-webhook-url
+id: v17-slack-webhook-url
 title: Slack Webhook URL replaced by Notification Webhook URL
 severity: error
 match:

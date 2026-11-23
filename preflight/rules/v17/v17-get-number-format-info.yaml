@@ -1,4 +1,4 @@
-id: v17-deprecated-get-number-format-info
+id: v17-get-number-format-info
 title: get_number_format_info is marked for removal
 severity: warning
 match:
