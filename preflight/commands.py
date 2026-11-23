@@ -9,7 +9,7 @@ from pathlib import Path
 import click
 
 from preflight import __version__
-from preflight.app_scan import build_path_report
+from preflight.app_scan import build_path_report, note_counted_patch_findings
 from preflight.formatter import format_html, format_json, format_report, format_sarif
 from preflight.models import SEVERITIES, Report, Rule
 from preflight.rule_loader import RuleError, load_rules, load_ruleset, released_targets
@@ -159,6 +159,8 @@ def preflight_command(
 			else:
 				counted.append(finding)
 		report.findings = counted
+		if paths:
+			note_counted_patch_findings(report, app_paths)
 		click.echo(FORMATTERS[output_format](report, severity, fail_on))
 		if open_report:
 			with tempfile.NamedTemporaryFile(

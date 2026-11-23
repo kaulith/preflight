@@ -5,7 +5,7 @@ from pathlib import Path
 
 import frappe
 
-from preflight.app_scan import Scanners, add_findings, scan_app, scan_pyproject, scan_python
+from preflight.app_scan import Scanners, add_findings, patch_places, scan_app, scan_pyproject, scan_python
 from preflight.compatibility_scanner import CompatibilityScanner, checked_out_branch, is_frappe_branch
 from preflight.models import Finding, Report, Rule
 from preflight.schema_scanner import LINK_FIELDTYPES, SchemaRecord
@@ -187,30 +187,12 @@ def move_upstream_findings(
 
 def move_ran_patch_findings(report: Report, app_paths: dict[str, Path]):
 	"""Set aside the findings in patches the site has run, which never run again, and mark the ones in
-	patches still to run, which `bench migrate` runs on the target, where they raise.
-
-	Patches are told apart the way frappe's patch_handler tells them: by the patches.txt line, stripped,
-	`#` comment and all, against the Patch Log rows not skipped; a `finally:` patch is logged without
-	the tag. A module patch is its file; an `execute:` patch is its patches.txt line."""
+	patches still to run, which `bench migrate` runs on the target, where they raise. A patch has run
+	when the Patch Log rows not skipped name it."""
 	executed = set(frappe.get_all("Patch Log", filters={"skipped": 0}, pluck="patch"))
 	ran, pending = set(), set()
 	for app, app_path in app_paths.items():
-		try:
-			text = (app_path / "patches.txt").read_text(encoding="utf-8", errors="replace")
-		except OSError:
-			continue
-		for number, line in enumerate(text.split("\n"), 1):
-			patch = line.strip()
-			if not patch or patch.startswith(("#", ";", "[")):
-				continue
-			if patch.startswith("finally:"):
-				patch = patch.replace("finally:", "")
-			if patch.startswith("execute:"):
-				places = {(app, f"{app_path.name}/patches.txt", number)}
-			else:
-				module = patch.split(maxsplit=1)[0].replace(".", "/")
-				package = module.split("/")[0]
-				places = {(package, f"{module}.py", None), (package, f"{module}/__init__.py", None)}
+		for patch, places in patch_places(app, app_path):
 			(ran if patch in executed else pending).update(places)
 	counted = []
 	for finding in report.findings:

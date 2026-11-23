@@ -1,7 +1,7 @@
 """The scan of an app's own files, which needs only the files: no site, no bench, and no frappe."""
 
 import re
-from collections.abc import Collection, Mapping
+from collections.abc import Collection, Iterator, Mapping
 from dataclasses import replace
 from pathlib import Path
 
@@ -91,6 +91,49 @@ def build_path_report(
 		app_roots = {app_path.name: app_path.parent for app_path in app_paths}
 		scan_online(report, OnlineScanner(rules), app_roots, None)
 	return report
+
+
+def patch_places(app: str, app_path: Path) -> Iterator[tuple[str, set[tuple[str, str, int | None]]]]:
+	"""Each patch of the app's patches.txt as Patch Log names it, with the places a finding in it is read
+	from. Patches are told apart the way frappe's patch_handler tells them: by the line, stripped, `#`
+	comment and all; a `finally:` patch is logged without the tag. A module patch is its file; an
+	`execute:` patch is its patches.txt line."""
+	try:
+		text = (app_path / "patches.txt").read_text(encoding="utf-8", errors="replace")
+	except OSError:
+		return
+	for number, line in enumerate(text.split("\n"), 1):
+		patch = line.strip()
+		if not patch or patch.startswith(("#", ";", "[")):
+			continue
+		if patch.startswith("finally:"):
+			patch = patch.replace("finally:", "")
+		if patch.startswith("execute:"):
+			yield patch, {(app, f"{app_path.name}/patches.txt", number)}
+		else:
+			module = patch.split(maxsplit=1)[0].replace(".", "/")
+			package = module.split("/")[0]
+			yield patch, {(package, f"{module}.py", None), (package, f"{module}/__init__.py", None)}
+
+
+def note_counted_patch_findings(report: Report, app_paths: list[Path]):
+	"""Say how many counted findings are in patches. --path has no Patch Log to set aside the ones already
+	run, and leaving them all out would hide a patch still to run, which stops `bench migrate`."""
+	places = {
+		place
+		for app_path in app_paths
+		for _, patch_place in patch_places(app_path.name, app_path)
+		for place in patch_place
+	}
+	found = sum(
+		bool(places & {(finding.app, finding.file, finding.line), (finding.app, finding.file, None)})
+		for finding in report.findings
+	)
+	if found:
+		report.not_checked.append(
+			"patches: --path reads no Patch Log to show which already ran, so what is found in them is counted"
+			f" ({found} found); --site sets aside those already run, --baseline records them"
+		)
 
 
 def scan_app(report: Report, scanners: Scanners, app: str, app_path: Path, skip_tests: bool = False):
