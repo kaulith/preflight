@@ -152,6 +152,23 @@ def test_each_baseline_entry_excuses_one_finding(app_path, tmp_path):
 	assert "1 error" in result.output
 
 
+def test_path_scan_says_how_many_findings_are_in_patches(app_path):
+	(app_path / "patches.txt").write_text(f"execute:{BLOG_SETTINGS}", encoding="utf-8")
+	result = CliRunner().invoke(
+		commands.preflight_command, ["--path", str(app_path), "--target", "v16", "--format", "json"]
+	)
+	assert "(1 found)" in json.loads(result.output)["not_checked"][-1]
+
+
+def test_path_scan_leaves_baselined_patch_findings_out_of_the_count(app_path, tmp_path):
+	(app_path / "patches.txt").write_text(f"execute:{BLOG_SETTINGS}", encoding="utf-8")
+	arguments = ["--path", str(app_path), "--target", "v16", "--format", "json"]
+	baseline = tmp_path / "baseline.json"
+	baseline.write_text(CliRunner().invoke(commands.preflight_command, arguments).output, encoding="utf-8")
+	result = CliRunner().invoke(commands.preflight_command, [*arguments, "--baseline", str(baseline)])
+	assert not any(line.startswith("patches:") for line in json.loads(result.output)["not_checked"])
+
+
 def test_a_baseline_that_is_not_a_report_exits_2(app_path, tmp_path):
 	(tmp_path / "baseline.json").write_text('{"findings": [{"rule": "v16-removed-blog"}]}', encoding="utf-8")
 	result = CliRunner().invoke(
