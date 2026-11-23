@@ -1,0 +1,19 @@
+id: v17-build-xlsx-data-ignore-visible-idx
+title: build_xlsx_data no longer takes ignore_visible_idx
+severity: error
+match:
+  type: call
+  paths:
+    - frappe.desk.query_report.build_xlsx_data
+  with_kwargs:
+    - ignore_visible_idx
+message: >
+  frappe develop, which becomes v17, removed the ignore_visible_idx argument of build_xlsx_data. A
+  call that passes it raises TypeError after the upgrade.
+replacement: >
+  Remove the argument. Without visible_idx, build_xlsx_data keeps every row on v16 and v17.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/47946
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/desk/query_report.py#L699-L702
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/desk/query_report.py#L677-L684

@@ -1,0 +1,22 @@
+id: v17-build-xlsx-data-visible-idx
+title: build_xlsx_data no longer takes visible_idx, and its flags are keyword-only
+severity: error
+match:
+  type: call
+  paths:
+    - frappe.desk.query_report.build_xlsx_data
+  with_kwargs:
+    - visible_idx
+  with_positional_args: 2
+message: >
+  frappe develop, which becomes v17, removed the visible_idx argument of build_xlsx_data and made
+  every argument after data keyword-only. A call that passes visible_idx, or a second argument by
+  position, raises TypeError after the upgrade.
+replacement: >
+  Filter data.result to the rows you want first, then call build_xlsx_data(data,
+  include_indentation=...) with its flags by keyword. This form works on v16 and v17.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/47946
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/desk/query_report.py#L646-L655
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/desk/query_report.py#L677-L684

@@ -1,0 +1,32 @@
+id: v17-desk-methods-post-only
+title: Eight desk methods accept only POST in v17
+severity: error
+match:
+  type: http_method
+  paths:
+    - frappe.automation.doctype.assignment_rule.assignment_rule.bulk_apply
+    - frappe.automation_engine.api.run_manually
+    - frappe.automation_engine.api.trial_run
+    - frappe.core.doctype.deleted_document.deleted_document.bulk_restore
+    - frappe.core.doctype.error_log.error_log.clear_error_logs
+    - frappe.core.doctype.recorder.recorder.add_indexes
+    - frappe.core.doctype.recorder.recorder.optimize
+    - frappe.core.doctype.scheduled_job_type.scheduled_job_type.execute_event
+  rejected_methods:
+    - GET
+    - PUT
+    - DELETE
+message: >
+  frappe v17 whitelists these methods for POST only, where v16 took any HTTP method. Any other method
+  raises a PermissionError. frappe.call sends POST unless told otherwise, and Python calls and background
+  jobs are not checked, so only a caller that asks for another method breaks, such as a script or a cron
+  curl.
+replacement: >
+  Send the request as POST, with the CSRF token or API key it needs.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/47153
+  - https://github.com/frappe/frappe/pull/46929
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/core/doctype/error_log/error_log.py#L49-L50
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/core/doctype/error_log/error_log.py#L56-L57
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/automation_engine/api.py#L91-L92

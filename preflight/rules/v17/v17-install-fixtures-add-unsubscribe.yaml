@@ -1,0 +1,18 @@
+id: v17-install-fixtures-add-unsubscribe
+title: install_fixtures.add_unsubscribe no longer exists
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.desk.page.setup_wizard.install_fixtures.add_unsubscribe
+message: >
+  frappe develop, which becomes v17, creates the placeholder Email Unsubscribe records when a site
+  is installed and dropped add_unsubscribe from the setup wizard fixtures. Importing or calling it
+  raises after the upgrade.
+replacement: >
+  Remove the call. frappe creates the records itself on both versions.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/48000
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/desk/page/setup_wizard/install_fixtures.py#L58-L66
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/utils/install.py#L122-L123

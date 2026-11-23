@@ -1,0 +1,20 @@
+id: v17-raise-error-on-no-output
+title: raise_error_on_no_output and get_default_args left frappe.utils.error
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.utils.error.raise_error_on_no_output
+    - frappe.utils.error.get_default_args
+message: >
+  frappe develop, which becomes v17, no longer has the raise_error_on_no_output decorator or its
+  get_default_args helper. Importing either from frappe.utils.error raises ImportError after the
+  upgrade.
+replacement: >
+  Call frappe.throw in the function when its result is empty. Where get_default_args read a
+  function's defaults, use inspect.signature.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/47944
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/utils/error.py#L178-L229
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/utils/error.py

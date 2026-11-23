@@ -1,0 +1,19 @@
+id: v17-postgres-get-transaction-status
+title: frappe.db._conn.get_transaction_status is gone on Postgres
+severity: error
+match:
+  type: call
+  paths:
+    - frappe.db._conn.get_transaction_status
+message: >
+  frappe v17 connects to Postgres through psycopg 3, whose connection has no
+  get_transaction_status, so this call raises AttributeError. The method is psycopg2's, so code
+  calling it only ever ran on Postgres.
+replacement: >
+  Read frappe.db._conn.info.transaction_status. It works on psycopg2 and psycopg 3, and the status
+  numbers are the same in both.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/44718
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/database/postgres/database.py#L216
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/database/postgres/database.py#L419

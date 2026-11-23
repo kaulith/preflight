@@ -1,0 +1,29 @@
+id: v17-guest-methods-post-only
+title: Seven guest methods accept only POST in v17
+severity: error
+match:
+  type: http_method
+  paths:
+    - frappe.core.doctype.user.user.sign_up
+    - frappe.core.doctype.user.user.test_password_strength
+    - frappe.integrations.doctype.ldap_settings.ldap_settings.login
+    - frappe.templates.includes.comments.comments.add_comment
+    - frappe.website.doctype.help_article.help_article.add_feedback
+    - frappe.website.doctype.web_page_view.web_page_view.make_view_log
+    - frappe.www.contact.send_message
+  rejected_methods:
+    - GET
+    - PUT
+    - DELETE
+message: >
+  frappe v17 whitelists these guest methods for POST only, where v16 took any HTTP method. Any other
+  method raises a PermissionError. frappe.call sends POST unless told otherwise, and Python calls are not
+  checked, so only a caller that asks for another method breaks.
+replacement: >
+  Send the request as POST.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/47976
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/core/doctype/user/user.py#L1230-L1231
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/core/doctype/user/user.py#L1373-L1375
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/www/contact.py#L32-L34

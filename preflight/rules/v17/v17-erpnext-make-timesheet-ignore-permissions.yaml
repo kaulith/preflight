@@ -1,0 +1,21 @@
+id: v17-erpnext-make-timesheet-ignore-permissions
+title: Task make_timesheet no longer takes ignore_permissions
+severity: error
+match:
+  type: call
+  paths:
+    - erpnext.projects.doctype.task.task.make_timesheet
+  with_kwargs:
+    - ignore_permissions
+  with_positional_args: 3
+message: >
+  ERPNext develop, which becomes v17, removed the ignore_permissions argument of Task's
+  make_timesheet. A call that passes it, by keyword or as the third argument, raises TypeError
+  after the upgrade.
+replacement: >
+  Remove the argument and run the call as a user who can create a Timesheet.
+fix: before
+references:
+  - https://github.com/frappe/erpnext/pull/66314
+  - https://github.com/frappe/erpnext/blob/v16.60.0/erpnext/projects/doctype/task/task.py#L579
+  - https://github.com/frappe/erpnext/blob/feefe15ca5b57c2601d57a673720f4196bd9ec2e/erpnext/projects/doctype/task/task.py#L622

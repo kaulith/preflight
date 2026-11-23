@@ -1,0 +1,23 @@
+id: v17-pdfkit
+title: frappe v17 no longer installs pdfkit
+severity: error
+match:
+  type: undeclared_import
+  paths:
+    - pdfkit
+  dependencies:
+    - pdfkit
+message: >
+  The app imports pdfkit without declaring it in pyproject.toml or requirements.txt. frappe v16
+  installs pdfkit for wkhtmltopdf. frappe develop, which becomes v17, renders every PDF with
+  Chromium and dropped it, so in a new environment the import raises ModuleNotFoundError. An
+  environment upgraded in place keeps the package until it is rebuilt.
+replacement: >
+  Render the PDF with frappe.utils.pdf.get_pdf, which works on both versions. To keep pdfkit,
+  declare pdfkit~=1.0.0 in the app's [project] dependencies and keep the wkhtmltopdf program on
+  the server.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/44253
+  - https://github.com/frappe/frappe/blob/v16.60.2/pyproject.toml#L62
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/pyproject.toml#L11-L117

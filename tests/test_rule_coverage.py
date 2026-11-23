@@ -32,5 +32,6 @@ def test_every_shipped_rule_has_a_violation_line(target):
 	findings += compatibility.scan_required_apps(
 		(FIXTURES / "hooks_violations.py").read_text(), "hooks.py", set()
 	)
-	fixture_rules = {rule.id for rule in rules if rule.match.type not in (*ONLINE_MATCH_TYPES, "site_record")}
+	site_types = ("site_record", "site_config")
+	fixture_rules = {rule.id for rule in rules if rule.match.type not in (*ONLINE_MATCH_TYPES, *site_types)}
 	assert {finding.rule.id for finding in findings} == fixture_rules

@@ -1,0 +1,24 @@
+id: v17-mariadb-mysqlclient
+title: frappe.database.mariadb.mysqlclient no longer exists
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.database.mariadb.mysqlclient
+message: >
+  frappe develop, which becomes v17, dropped its PyMySQL connector and folded the
+  frappe.database.mariadb.mysqlclient module into frappe.database.mariadb.database. Importing the
+  old module raises ModuleNotFoundError after the upgrade.
+replacement: >
+  Import from frappe.database.mariadb.database. On v16 that module still holds the PyMySQL
+  classes, so code that runs on both versions needs the shim.
+fix: with-upgrade
+shim: |
+  try:
+  	from frappe.database.mariadb.mysqlclient import MariaDBDatabase
+  except ImportError:
+  	from frappe.database.mariadb.database import MariaDBDatabase
+references:
+  - https://github.com/frappe/frappe/pull/47981
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/database/mariadb/mysqlclient.py#L196
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/database/mariadb/database.py#L209

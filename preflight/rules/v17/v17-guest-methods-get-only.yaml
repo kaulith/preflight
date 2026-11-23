@@ -1,0 +1,28 @@
+id: v17-guest-methods-get-only
+title: Six guest methods accept only GET in v17
+severity: error
+match:
+  type: http_method
+  paths:
+    - frappe.email.queue.unsubscribe
+    - frappe.realtime.get_user_info
+    - frappe.realtime.has_permission
+    - frappe.website.doctype.personal_data_deletion_request.personal_data_deletion_request.confirm_deletion
+    - frappe.website.doctype.web_form.web_form.get_web_form_list
+    - frappe.workflow.doctype.workflow_action.workflow_action.apply_action
+  rejected_methods:
+    - POST
+    - PUT
+    - DELETE
+message: >
+  frappe v17 whitelists these guest methods for GET only, where v16 took any HTTP method. Any other
+  method raises a PermissionError. frappe.call sends POST unless told otherwise, so a call to one of them
+  without type "GET" breaks. Python calls are not checked.
+replacement: >
+  Pass type: "GET" to frappe.call, or send a GET request.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/47976
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/email/queue.py#L96-L97
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/email/queue.py#L96-L97
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/realtime/__init__.py#L125-L126

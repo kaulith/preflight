@@ -1,0 +1,19 @@
+id: v17-event-delete-communication
+title: The Event delete_communication method no longer exists
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.desk.doctype.event.event.delete_communication
+message: >
+  frappe develop, which becomes v17, dropped the whitelisted delete_communication method of Event.
+  Saving an Event now deletes the Communications of participants removed from it. Importing the
+  method or calling it by path fails after the upgrade.
+replacement: >
+  Remove the call and save the Event without the participant. On v16 saving does not do this
+  cleanup, so the call has to stay until the upgrade.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/pull/46534
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/desk/doctype/event/event.py#L264-L265
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/desk/doctype/event/event.py#L127-L131

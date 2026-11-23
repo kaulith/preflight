@@ -1,0 +1,21 @@
+id: v17-erpnext-tax-rule-item-filters
+title: ERPNext Tax Rule has no item or item_group field on v17
+severity: warning
+match:
+  type: doctype_field
+  fields:
+    - Tax Rule.item
+    - Tax Rule.item_group
+message: >
+  ERPNext v17 drops the item and item_group fields from Tax Rule. ERPNext's own tax lookup never
+  passed them, so the taxes a rule applies do not change. Code that reads them does: on an upgraded
+  site the old columns stay with nothing writing them, so frappe.get_all and frappe.db.get_value
+  return what they held at the upgrade. On a site installed on v17 the columns do not exist, and
+  those queries raise.
+replacement: >
+  Set item level tax with an Item Tax Template, and drop the reads of these fields.
+fix: before
+references:
+  - https://github.com/frappe/erpnext/pull/68061
+  - https://github.com/frappe/erpnext/blob/v16.60.0/erpnext/accounts/doctype/tax_rule/tax_rule.json#L100
+  - https://github.com/frappe/erpnext/blob/v16.60.0/erpnext/accounts/party.py#L834

@@ -1,0 +1,21 @@
+id: v17-postgres-set-isolation-level
+title: frappe.db._conn.set_isolation_level no longer sets the level on Postgres
+severity: error
+match:
+  type: call
+  paths:
+    - frappe.db._conn.set_isolation_level
+message: >
+  frappe v17 connects to Postgres through psycopg 3 and opens transactions itself. Inside a
+  transaction this call raises ProgrammingError. Outside one it changes nothing, since psycopg
+  applies the level only to a BEGIN of its own, which frappe turns off. The numbers differ too: 2
+  was REPEATABLE READ on psycopg2 and is READ COMMITTED on psycopg 3.
+replacement: >
+  Run frappe.db.sql("SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL READ COMMITTED")
+  with the level you need. It works on v16 and v17, and applies from the next transaction.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/44718
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/automation_engine/drainer.py#L89
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/automation_engine/drainer.py#L89
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/database/postgres/database.py#L374-L391

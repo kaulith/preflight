@@ -1,0 +1,26 @@
+id: v17-render-exec-config
+title: is_render_exec_enabled and RENDER_EXEC_CONFIG_KEY left frappe.utils.safe_exec
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.utils.safe_exec.is_render_exec_enabled
+    - frappe.utils.safe_exec.RENDER_EXEC_CONFIG_KEY
+message: >
+  frappe develop, which becomes v17, removed the disable_render_safe_exec config key, along with
+  is_render_exec_enabled and RENDER_EXEC_CONFIG_KEY that read it. Importing either raises
+  ImportError after the upgrade. Default Jinja rendering on v17 always uses the restricted globals.
+replacement: >
+  Remove the check and treat rendering as restricted. On v16 the check is False unless the config
+  key is set to 0, so code that runs on both versions needs the shim, which answers True on v17.
+fix: with-upgrade
+shim: |
+  try:
+  	from frappe.utils.safe_exec import is_render_exec_enabled
+  except ImportError:
+  	def is_render_exec_enabled():
+  		return True
+references:
+  - https://github.com/frappe/frappe/pull/48008
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/utils/safe_exec.py#L91-L92
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/utils/jinja.py#L13-L14

@@ -1,0 +1,26 @@
+id: v17-psycopg2
+title: frappe v17 no longer installs psycopg2
+severity: error
+match:
+  type: undeclared_import
+  paths:
+    - psycopg2
+  dependencies:
+    - psycopg2
+    - psycopg2-binary
+message: >
+  The app imports psycopg2 without declaring it in pyproject.toml or requirements.txt. frappe v16
+  installs psycopg2-binary. frappe develop, which becomes v17, moved to psycopg 3 and installs
+  that instead, so in a new environment the import raises ModuleNotFoundError, on a MariaDB bench
+  too. An environment upgraded in place keeps the old package, but frappe's Postgres errors are
+  psycopg classes there, so except psycopg2.Error no longer catches them.
+replacement: >
+  Declare psycopg2-binary~=2.9.11 in the app's [project] dependencies, and read database errors
+  through frappe.db's is_* helpers such as frappe.db.is_deadlocked. Or port the code to psycopg 3
+  with the upgrade.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/44718
+  - https://github.com/frappe/frappe/blob/v16.60.2/pyproject.toml#L66
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/pyproject.toml#L60
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/database/postgres/database.py#L8-L9

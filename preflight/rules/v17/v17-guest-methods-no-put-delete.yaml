@@ -1,0 +1,42 @@
+id: v17-guest-methods-no-put-delete
+title: 23 guest methods no longer accept PUT or DELETE
+severity: error
+match:
+  type: http_method
+  paths:
+    - frappe.client.get_time_zone
+    - frappe.core.api.file.get_max_file_size
+    - frappe.desk.desk_page.getpage
+    - frappe.geo.country_info.get_country_timezone_info
+    - frappe.handler.download_file
+    - frappe.integrations.oauth2_logins.custom
+    - frappe.integrations.oauth2_logins.login_via_facebook
+    - frappe.integrations.oauth2_logins.login_via_fairlogin
+    - frappe.integrations.oauth2_logins.login_via_frappe
+    - frappe.integrations.oauth2_logins.login_via_github
+    - frappe.integrations.oauth2_logins.login_via_google
+    - frappe.integrations.oauth2_logins.login_via_keycloak
+    - frappe.integrations.oauth2_logins.login_via_office365
+    - frappe.integrations.oauth2_logins.login_via_salesforce
+    - frappe.ping
+    - frappe.translate.get_all_languages
+    - frappe.utils.global_search.web_search
+    - frappe.utils.print_format.download_pdf
+    - frappe.utils.telemetry.pulse.client.boot_config
+    - frappe.website.doctype.web_form.web_form.get_form_data
+    - frappe.website.doctype.web_form.web_form.get_web_form_filters
+    - frappe.website.doctype.website_settings.website_settings.get_auto_account_deletion
+    - frappe.www.login.login_via_token
+  rejected_methods:
+    - PUT
+    - DELETE
+message: >
+  frappe v17 whitelists these guest methods for GET and POST only, where v16 took any HTTP method.
+  A PUT or DELETE request raises a PermissionError. Python calls are not checked.
+replacement: >
+  Send the request as GET or POST.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/47976
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/__init__.py#L454
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/handler.py#L296

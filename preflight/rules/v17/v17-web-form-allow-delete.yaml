@@ -1,0 +1,24 @@
+id: v17-web-form-allow-delete
+title: Saving a Web Form without Allow multiple responses turns Allow delete off
+severity: warning
+match:
+  type: site_record
+  doctypes:
+    - Web Form
+  filters:
+    is_standard: 0
+    allow_delete: 1
+    allow_multiple: 0
+message: >
+  frappe develop, which becomes v17, clears Allow delete whenever a Web Form is saved without Allow
+  multiple responses. Nothing raises. The form keeps its delete action after the upgrade until its
+  next save, and from then on people can no longer delete their response.
+replacement: >
+  If people should keep deleting responses, turn on Allow multiple responses, with Login required
+  or Key required, since v17 clears both flags on a form with neither. That also lets each person
+  send more than one response and turns on Show list. Otherwise turn Allow delete off.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/46534
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/website/doctype/web_form/web_form.py#L117-L123
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/website/doctype/web_form/web_form.py#L1074-L1079

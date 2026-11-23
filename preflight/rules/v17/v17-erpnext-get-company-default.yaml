@@ -1,0 +1,22 @@
+id: v17-erpnext-get-company-default
+title: ERPNext accounts.utils.get_company_default needs Company read on v17
+severity: warning
+match:
+  type: call
+  paths:
+    - erpnext.accounts.utils.get_company_default
+message: >
+  On ERPNext v17 this function needs read on the Company. The check is inside the function, so a
+  call from an app's Python runs it too, and a logged-in user without read gets a PermissionError.
+  By default a user whose only access to Company comes from HR User, Auditor or Desk User holds
+  select, not read. Code running as Administrator passes. The get_company_default method on an
+  accounts document is not affected.
+replacement: >
+  In server code that does not act on the user's behalf, read the value with
+  frappe.get_cached_value("Company", company, fieldname), and throw when a required value is empty.
+  This works on v16 too.
+fix: before
+references:
+  - https://github.com/frappe/erpnext/pull/68578
+  - https://github.com/frappe/erpnext/blob/feefe15ca5b57c2601d57a673720f4196bd9ec2e/erpnext/accounts/utils.py#L1266
+  - https://github.com/frappe/erpnext/blob/v16.60.0/erpnext/accounts/utils.py#L1257

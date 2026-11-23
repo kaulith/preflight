@@ -1,0 +1,30 @@
+id: v17-datepicker-options
+title: air-datepicker options, callback arguments and date formats change in v17
+severity: warning
+match:
+  type: pattern
+  patterns:
+    - 'datepicker\??\.update\(\s*\{[^}]{0,400}\b(?:language|todayButton|clearButton|minSeconds|maxSeconds|secondsStep|onChangeMonth|onChangeYear|onChangeDecade)\s*:'
+    - '\bdatepicker_options\??\.(?:language|todayButton|clearButton|minSeconds|maxSeconds|secondsStep|onChangeMonth|onChangeYear|onChangeDecade)\b'
+    - '\bdatepicker_options\b[^;{]{0,80}\{[^}]{0,400}\b(?:language|todayButton|clearButton|minSeconds|maxSeconds|secondsStep|onChangeMonth|onChangeYear|onChangeDecade)\s*:'
+    - '(?:datepicker\??\.update\(\s*\{[^}]{0,400}|\bdatepicker_options\??\.)\bdateFormat\s*[:=]\s*["''`][^"''`]{0,40}\b(?:mm?|MM?|DD?|ii|ss)\b'
+    - '\bonRenderCell\s*(?:[:=]\s*)?(?:function\s*)?\(\s*\w+\s*,\s*cellType\b'
+    - '\bonSelect\s*(?:[:=]\s*)?(?:function\s*)?\(\s*formattedDate\b'
+    - '\bon(?:Show|Hide)\s*(?:[:=]\s*)?(?:function\s*)?\(\s*\w+\s*,\s*animation_?[cC]ompleted\b'
+message: >
+  air-datepicker 3 ignores language, todayButton, clearButton, minSeconds, maxSeconds, secondsStep,
+  onChangeMonth, onChangeYear and onChangeDecade with no error. onSelect, onRenderCell, onShow and onHide
+  receive different arguments. Date formats change meaning: mm is now minutes and MM the month number, so
+  "dd-mm-yyyy" prints minutes where the month was.
+replacement: >
+  Use locale for language (frappe.ui.form.get_datepicker_locale() in the desk), buttons for the today and
+  clear buttons, and onChangeViewDate for the month, year and decade callbacks. Read onSelect and
+  onRenderCell values from the one object they receive; onShow and onHide receive only isAnimationComplete.
+  Rewrite formats: month mm to MM, month name MM to MMMM, short month M to MMM, minutes ii to mm, day names D
+  to E and DD to EEEE. Seconds have no option; frappe adds its slider with
+  frappe.ui.form.add_seconds_slider(picker).
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/pull/46237
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/public/js/frappe/form/controls/date.js#L66-L88
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/public/js/frappe/form/controls/date.js#L66-L76

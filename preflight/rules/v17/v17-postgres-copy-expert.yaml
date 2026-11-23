@@ -1,0 +1,18 @@
+id: v17-postgres-copy-expert
+title: frappe.db._cursor.copy_expert is gone on Postgres
+severity: error
+match:
+  type: call
+  paths:
+    - frappe.db._cursor.copy_expert
+message: >
+  frappe v17 connects to Postgres through psycopg 3, whose cursor has no copy_expert, so this call
+  raises AttributeError. The method is psycopg2's, so code calling it only ever ran on Postgres.
+replacement: >
+  Use frappe.db._cursor.copy(statement) as a context manager and read or write through the object
+  it yields. It exists only on psycopg 3, so make the change with the upgrade.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/pull/44718
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/database/postgres/database.py#L32
+  - https://www.psycopg.org/psycopg3/docs/basic/copy.html

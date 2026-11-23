@@ -1,0 +1,22 @@
+id: v17-use-mysqlclient-config
+title: use_mysqlclient set to 0 no longer keeps a site on PyMySQL
+severity: warning
+match:
+  type: site_config
+  keys:
+    - use_mysqlclient
+  db_type: mariadb
+message: >
+  This site turns mysqlclient off in its config, so frappe v16 connects it through PyMySQL. frappe
+  develop, which becomes v17, dropped its PyMySQL connector and no longer reads the key, so the
+  site moves to mysqlclient with no error or notice. Driver details change with it, such as the
+  exception classes and the objects behind frappe.db._conn and frappe.db._cursor.
+replacement: >
+  Remove use_mysqlclient from the config and test the site on v16, which then connects through
+  mysqlclient as v17 will.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/47981
+  - https://github.com/frappe/frappe/pull/47983
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/database/__init__.py#L78-L88
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/database/__init__.py#L64-L84

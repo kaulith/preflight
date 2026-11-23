@@ -1,0 +1,23 @@
+id: v17-auto-email-report-run-as
+title: An Auto Email Report run as Administrator can be changed only by Administrator
+severity: warning
+match:
+  type: site_record
+  doctypes:
+    - Auto Email Report
+  filters:
+    user: Administrator
+message: >
+  frappe develop, which becomes v17, checks Based on Permissions For User on save, Download and
+  Send Now. When that user is Administrator, anyone else needs the impersonate permission on User,
+  which no role holds by default, so another System Manager gets a PermissionError. Scheduled
+  sends keep working.
+replacement: >
+  Set Based on Permissions For User to a real user whose permissions fit what the report should
+  contain, since the report runs with them. Or leave it and have Administrator make the changes.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/45585
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/email/doctype/auto_email_report/auto_email_report.py#L85-L103
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/email/doctype/auto_email_report/auto_email_report.py#L332-L356
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/email/doctype/auto_email_report/auto_email_report.py#L303-L325

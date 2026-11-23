@@ -1,0 +1,18 @@
+id: v17-postgres-modify-values
+title: modify_values is gone from frappe's Postgres database module
+severity: error
+match:
+  type: import_path
+  paths:
+    - frappe.database.postgres.database.modify_values
+message: >
+  frappe v17 replaced modify_values with its own value binding when it moved Postgres to psycopg 3.
+  Importing it from frappe.database.postgres.database raises ImportError on any site, MariaDB
+  included.
+replacement: >
+  Drop the call and pass the values to frappe.db.sql, which converts them on both v16 and v17.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/44718
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/database/postgres/database.py#L550
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/database/postgres/database.py#L1127-L1141

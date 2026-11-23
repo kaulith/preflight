@@ -1,0 +1,27 @@
+id: v17-server-script-guest-rate-limit
+title: An API Server Script open to guests needs a rate limit to be saved
+severity: error
+match:
+  type: site_record
+  doctypes:
+    - Server Script
+  filters:
+    script_type: API
+    allow_guest: 1
+    enable_rate_limit: 0
+    disabled: 0
+message: >
+  frappe develop, which becomes v17, refuses to save an enabled API Server Script that allows
+  guests and has Enable Rate Limit off. The script keeps serving requests after the upgrade, but
+  its next save raises a validation error. If an app ships it as a fixture, bench migrate and app
+  install stop on it, since fixtures are imported with validation on.
+replacement: >
+  Turn on Enable Rate Limit and set Rate Limit Count and Rate Limit Seconds to fit the endpoint's
+  real traffic, since the defaults allow 5 calls in 24 hours. Change the app's fixture too if it
+  ships the script. Or disable the script.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/47976
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/core/doctype/server_script/server_script.py#L153-L166
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/utils/fixtures.py#L45-L46
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/core/doctype/server_script/server_script.py#L179-L185

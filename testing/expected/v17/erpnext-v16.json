@@ -3,7 +3,13 @@
 	"commit": "69063c402427590168c217a29ca9f6e03c0d3d05",
 	"counts": {
 		"v17-country-info-get-translated-dict": 1,
+		"v17-datepicker-update-change-event": 3,
 		"v17-enqueue-job-name": 9,
+		"v17-erpnext-buying-show-pay-button": 1,
+		"v17-erpnext-get-bank-cash-account": 2,
+		"v17-erpnext-get-company-default": 2,
+		"v17-erpnext-grey-letterhead": 3,
+		"v17-erpnext-plaid-link-token-update": 1,
 		"v17-get-number-format-info": 1,
 		"v17-query-limit-page-length": 24,
 		"v17-query-limit-start": 16,
@@ -13,9 +19,17 @@
 	},
 	"counts_with_tests": {
 		"v17-country-info-get-translated-dict": 1,
+		"v17-datepicker-update-change-event": 3,
 		"v17-enqueue-job-name": 9,
+		"v17-erpnext-buying-show-pay-button": 1,
+		"v17-erpnext-get-bank-cash-account": 2,
+		"v17-erpnext-get-company-default": 2,
+		"v17-erpnext-grey-letterhead": 4,
+		"v17-erpnext-outstanding-reference-documents": 4,
+		"v17-erpnext-plaid-link-token-update": 1,
 		"v17-get-number-format-info": 1,
 		"v17-get-test-records": 1,
+		"v17-pdfkit": 2,
 		"v17-query-limit-page-length": 24,
 		"v17-query-limit-start": 16,
 		"v17-query-page-length": 10,
@@ -29,6 +43,24 @@
 			"erpnext/hooks.py",
 			513,
 			"get_translated_dict = {(\"doctype\", \"Global Defaults\"): \"frappe.geo.country_info.get_translated_dict\"}"
+		],
+		[
+			"v17-datepicker-update-change-event",
+			"erpnext/public/js/controllers/buying.js",
+			692,
+			"frm.fields_dict[\"schedule_date\"].datepicker?.update({"
+		],
+		[
+			"v17-datepicker-update-change-event",
+			"erpnext/selling/doctype/sales_order/sales_order.js",
+			1865,
+			"frm.fields_dict[\"delivery_date\"].datepicker?.update({"
+		],
+		[
+			"v17-datepicker-update-change-event",
+			"erpnext/setup/doctype/employee/employee.js",
+			47,
+			"frm.fields_dict.date_of_birth.datepicker?.update({ maxDate: new Date() });"
 		],
 		[
 			"v17-enqueue-job-name",
@@ -83,6 +115,60 @@
 			"erpnext/accounts/doctype/repost_payment_ledger/repost_payment_ledger.py",
 			128,
 			"frappe.enqueue("
+		],
+		[
+			"v17-erpnext-buying-show-pay-button",
+			"erpnext/templates/pages/order.py",
+			73,
+			"and frappe.db.get_single_value(\"Buying Settings\", \"show_pay_button\")"
+		],
+		[
+			"v17-erpnext-get-bank-cash-account",
+			"erpnext/accounts/doctype/journal_entry/journal_entry.py",
+			1358,
+			"account = get_bank_cash_account(mode_of_payment, company).get(\"account\")"
+		],
+		[
+			"v17-erpnext-get-bank-cash-account",
+			"erpnext/accounts/doctype/pos_invoice/pos_invoice.py",
+			1117,
+			"payment.account = get_bank_cash_account(payment.mode_of_payment, doc.company).get(\"account\")"
+		],
+		[
+			"v17-erpnext-get-company-default",
+			"erpnext/controllers/accounts_controller.py",
+			2374,
+			"return get_company_default(self.company, fieldname, ignore_validation=ignore_validation)"
+		],
+		[
+			"v17-erpnext-get-company-default",
+			"erpnext/stock/doctype/stock_reconciliation/stock_reconciliation.py",
+			1419,
+			"account = get_company_default(company, \"stock_adjustment_account\")"
+		],
+		[
+			"v17-erpnext-grey-letterhead",
+			"erpnext/public/js/print.js",
+			28,
+			"const allowed_letterheads = [\"Company Letterhead\", \"Company Letterhead - Grey\"];"
+		],
+		[
+			"v17-erpnext-grey-letterhead",
+			"erpnext/setup/install.py",
+			375,
+			"\"Company Letterhead - Grey\": \"company_letterhead_grey.html\","
+		],
+		[
+			"v17-erpnext-grey-letterhead",
+			"erpnext/setup/install.py",
+			387,
+			"\"is_default\": 1 if name == \"Company Letterhead - Grey\" else 0,"
+		],
+		[
+			"v17-erpnext-plaid-link-token-update",
+			"erpnext/accounts/doctype/bank/bank.js",
+			59,
+			"\"erpnext.erpnext_integrations.doctype.plaid_settings.plaid_settings.get_link_token_for_update\","
 		],
 		[
 			"v17-get-number-format-info",

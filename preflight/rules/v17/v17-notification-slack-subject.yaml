@@ -1,0 +1,24 @@
+id: v17-notification-slack-subject
+title: A Slack notification with no subject can no longer be saved
+severity: error
+match:
+  type: site_record
+  doctypes:
+    - Notification
+  filters:
+    channel: Slack
+    is_standard: 0
+    subject: ""
+    email_template: ""
+message: >
+  frappe develop, which becomes v17, moves Slack notifications to the Webhook channel and refuses
+  to save one with no Subject. It keeps sending after the upgrade, but its next save raises
+  MandatoryError. If an app ships it as a fixture, bench migrate and app install stop on it.
+replacement: >
+  Fill in Subject, here and in the app's fixture if it ships one.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/46534
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/email/doctype/notification/notification.py#L185-L191
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/patches/v16_0/migrate_slack_notifications.py#L10-L14
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/email/doctype/notification/notification.py#L155-L190

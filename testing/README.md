@@ -123,7 +123,7 @@ rule that lives only in test files is visible as `0/263`. `--check` rescans and 
 drift, naming each finding that appeared or disappeared, and flagging a tree whose commit has
 moved under the frozen file. It scans with both rule sets: v16 freezes in
 `testing/expected/<tree>.json` and the unreleased v17 in `testing/expected/v17/<tree>.json`.
-Last refrozen on 23 November 2026, with the 152 v16 and 37 v17 rules; `--check` exits 0.
+Last refrozen on 23 November 2026, with the 152 v16 and 76 v17 rules; `--check` exits 0.
 
 Two uses:
 

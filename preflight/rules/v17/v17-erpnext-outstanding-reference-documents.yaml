@@ -1,0 +1,21 @@
+id: v17-erpnext-outstanding-reference-documents
+title: ERPNext get_outstanding_reference_documents checks the user's permission on v17
+severity: warning
+match:
+  type: call
+  paths:
+    - erpnext.accounts.doctype.payment_entry.payment_entry.get_outstanding_reference_documents
+message: >
+  On ERPNext v17 this function needs create on Payment Entry, and read on the Company when one is
+  passed. The check is inside the function, so a call from an app's Python runs it too, and a
+  logged-in user without them gets a PermissionError. Vouchers the user cannot read are left out
+  of the result with no error. By default only Accounts User and Accounts Manager can create a
+  Payment Entry. Code running as Administrator passes.
+replacement: >
+  Give the role that runs this code create on Payment Entry and read on the Company and the
+  vouchers it needs. The same grants work on v16.
+fix: before
+references:
+  - https://github.com/frappe/erpnext/pull/67136
+  - https://github.com/frappe/erpnext/blob/feefe15ca5b57c2601d57a673720f4196bd9ec2e/erpnext/accounts/doctype/payment_entry/payment_entry.py#L2245
+  - https://github.com/frappe/erpnext/blob/v16.60.0/erpnext/accounts/doctype/payment_entry/payment_entry.py#L2493

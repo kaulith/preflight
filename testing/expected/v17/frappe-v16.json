@@ -2,16 +2,26 @@
 	"tree": "frappe-v16",
 	"commit": "4f40f4acbb3cc296f0e9cbc69ce2bb49ccd8208a",
 	"counts": {
+		"v17-build-xlsx-data-ignore-visible-idx": 1,
+		"v17-build-xlsx-data-visible-idx": 1,
 		"v17-client-get-js": 1,
+		"v17-datepicker-css-classes": 7,
+		"v17-datepicker-instance-api": 9,
+		"v17-datepicker-jquery-plugin": 18,
+		"v17-datepicker-options": 1,
 		"v17-enqueue-job-name": 4,
+		"v17-event-delete-communication": 1,
 		"v17-get-pdf-smart-shrinking": 2,
+		"v17-get-route-for-icon": 4,
 		"v17-gravatar-helpers": 1,
+		"v17-mariadb-mysqlclient": 4,
 		"v17-moved-chromium-pdf-generator": 6,
 		"v17-moved-doctype-layout": 1,
 		"v17-query-limit-page-length": 18,
 		"v17-query-limit-start": 8,
 		"v17-query-page-length": 1,
 		"v17-query-start": 1,
+		"v17-render-exec-config": 1,
 		"v17-sendmail-retry": 2,
 		"v17-show-progress": 1,
 		"v17-sidebar-item-group-doctypes": 2,
@@ -24,17 +34,28 @@
 		"v17-wkhtmltopdf-helpers": 1
 	},
 	"counts_with_tests": {
+		"v17-build-xlsx-data-ignore-visible-idx": 1,
+		"v17-build-xlsx-data-visible-idx": 4,
 		"v17-client-get-js": 1,
+		"v17-datepicker-css-classes": 27,
+		"v17-datepicker-instance-api": 9,
+		"v17-datepicker-jquery-plugin": 18,
+		"v17-datepicker-options": 1,
 		"v17-enqueue-job-name": 4,
+		"v17-event-delete-communication": 1,
 		"v17-frappe-test-case": 2,
 		"v17-get-pdf-smart-shrinking": 3,
+		"v17-get-route-for-icon": 4,
 		"v17-gravatar-helpers": 1,
+		"v17-mariadb-mysqlclient": 4,
 		"v17-moved-chromium-pdf-generator": 7,
 		"v17-moved-doctype-layout": 1,
+		"v17-postgres-modify-values": 1,
 		"v17-query-limit-page-length": 19,
 		"v17-query-limit-start": 9,
 		"v17-query-page-length": 1,
 		"v17-query-start": 1,
+		"v17-render-exec-config": 1,
 		"v17-sendmail-retry": 2,
 		"v17-show-progress": 1,
 		"v17-sidebar-item-group-doctypes": 2,
@@ -49,10 +70,232 @@
 	"unparsable": [],
 	"findings": [
 		[
+			"v17-build-xlsx-data-ignore-visible-idx",
+			"frappe/email/doctype/auto_email_report/auto_email_report.py",
+			185,
+			"xlsx_data, column_widths, styles = build_xlsx_data("
+		],
+		[
+			"v17-build-xlsx-data-visible-idx",
+			"frappe/email/doctype/auto_email_report/auto_email_report.py",
+			185,
+			"xlsx_data, column_widths, styles = build_xlsx_data("
+		],
+		[
 			"v17-client-get-js",
 			"frappe/deprecation_dumpster.py",
 			262,
 			"\"frappe.client.get_js\","
+		],
+		[
+			"v17-datepicker-css-classes",
+			"frappe/public/js/frappe/form/controls/date.js",
+			76,
+			".find(\".datepicker--button:visible\")"
+		],
+		[
+			"v17-datepicker-css-classes",
+			"frappe/public/js/frappe/form/controls/time.js",
+			37,
+			"$(\".datepicker--button:visible\").text(__(\"Now\"));"
+		],
+		[
+			"v17-datepicker-css-classes",
+			"frappe/public/js/frappe/form/grid_row.js",
+			1055,
+			"let date_time_picker = document.querySelectorAll(\".datepicker.active\")[0];"
+		],
+		[
+			"v17-datepicker-css-classes",
+			"frappe/public/js/frappe/ui/filters/filter_list.js",
+			68,
+			"$(e.target).is(\".datepicker--cell\") ||"
+		],
+		[
+			"v17-datepicker-css-classes",
+			"frappe/public/js/frappe/ui/filters/filter_list.js",
+			69,
+			"$(e.target).closest(\".datepicker--nav-title\").length !== 0 ||"
+		],
+		[
+			"v17-datepicker-css-classes",
+			"frappe/public/js/frappe/ui/filters/filter_list.js",
+			70,
+			"$(e.target).parents(\".datepicker--nav-action\").length !== 0 ||"
+		],
+		[
+			"v17-datepicker-css-classes",
+			"frappe/public/js/frappe/ui/filters/filter_list.js",
+			72,
+			"$(e.target).is(\".datepicker--button\");"
+		],
+		[
+			"v17-datepicker-instance-api",
+			"frappe/public/js/frappe/form/controls/date.js",
+			22,
+			"this.datepicker.date = this.get_now_date();"
+		],
+		[
+			"v17-datepicker-instance-api",
+			"frappe/public/js/frappe/form/controls/date.js",
+			79,
+			"this.update_datepicker_position();"
+		],
+		[
+			"v17-datepicker-instance-api",
+			"frappe/public/js/frappe/form/controls/date.js",
+			106,
+			"this.datepicker.$datepicker.find('[data-action=\"today\"]').click(() => {"
+		],
+		[
+			"v17-datepicker-instance-api",
+			"frappe/public/js/frappe/form/controls/date.js",
+			137,
+			"this.datepicker.update(\"position\", position);"
+		],
+		[
+			"v17-datepicker-instance-api",
+			"frappe/public/js/frappe/form/controls/datetime.js",
+			7,
+			"this.datepicker.date = this.get_now_date();"
+		],
+		[
+			"v17-datepicker-instance-api",
+			"frappe/public/js/frappe/form/controls/datetime.js",
+			45,
+			"this.datepicker.date = date;"
+		],
+		[
+			"v17-datepicker-instance-api",
+			"frappe/public/js/frappe/form/controls/datetime.js",
+			48,
+			"timepicker._setTime(date);"
+		],
+		[
+			"v17-datepicker-instance-api",
+			"frappe/public/js/frappe/form/controls/time.js",
+			39,
+			"this.update_datepicker_position();"
+		],
+		[
+			"v17-datepicker-instance-api",
+			"frappe/public/js/frappe/form/controls/time.js",
+			81,
+			"this.datepicker.$datepicker.find('[data-action=\"today\"]').click(() => {"
+		],
+		[
+			"v17-datepicker-jquery-plugin",
+			"frappe/public/js/frappe/form/controls/date.js",
+			52,
+			"if (!$.fn.datepicker.language[lang]) {"
+		],
+		[
+			"v17-datepicker-jquery-plugin",
+			"frappe/public/js/frappe/form/controls/date.js",
+			101,
+			"this.$input.datepicker(this.datepicker_options);"
+		],
+		[
+			"v17-datepicker-jquery-plugin",
+			"frappe/public/js/frappe/form/controls/date.js",
+			102,
+			"this.datepicker = this.$input.data(\"datepicker\");"
+		],
+		[
+			"v17-datepicker-jquery-plugin",
+			"frappe/public/js/frappe/form/controls/date_range.js",
+			18,
+			"language: $.fn.datepicker.language[lang] ? lang : \"en\","
+		],
+		[
+			"v17-datepicker-jquery-plugin",
+			"frappe/public/js/frappe/form/controls/date_range.js",
+			32,
+			"this.$input.datepicker(this.datepicker_options);"
+		],
+		[
+			"v17-datepicker-jquery-plugin",
+			"frappe/public/js/frappe/form/controls/date_range.js",
+			33,
+			"this.datepicker = this.$input.data(\"datepicker\");"
+		],
+		[
+			"v17-datepicker-jquery-plugin",
+			"frappe/public/js/frappe/form/controls/datepicker_i18n.js",
+			18,
+			"$.fn.datepicker.language[\"ar\"] = {"
+		],
+		[
+			"v17-datepicker-jquery-plugin",
+			"frappe/public/js/frappe/form/controls/datepicker_i18n.js",
+			59,
+			"$.fn.datepicker.language[\"gr\"] = {"
+		],
+		[
+			"v17-datepicker-jquery-plugin",
+			"frappe/public/js/frappe/form/controls/datepicker_i18n.js",
+			100,
+			"$.fn.datepicker.language[\"it\"] = {"
+		],
+		[
+			"v17-datepicker-jquery-plugin",
+			"frappe/public/js/frappe/form/controls/datepicker_i18n.js",
+			141,
+			"$.fn.datepicker.language[\"tr\"] = {"
+		],
+		[
+			"v17-datepicker-jquery-plugin",
+			"frappe/public/js/frappe/form/controls/datepicker_i18n.js",
+			182,
+			"$.fn.datepicker.language[\"sv\"] = {"
+		],
+		[
+			"v17-datepicker-jquery-plugin",
+			"frappe/public/js/frappe/form/controls/datepicker_i18n.js",
+			223,
+			"$.fn.datepicker.language[\"bs\"] = {"
+		],
+		[
+			"v17-datepicker-jquery-plugin",
+			"frappe/public/js/frappe/form/controls/datepicker_i18n.js",
+			264,
+			"$.fn.datepicker.language[\"hr\"] = {"
+		],
+		[
+			"v17-datepicker-jquery-plugin",
+			"frappe/public/js/frappe/form/controls/datepicker_i18n.js",
+			305,
+			"$.fn.datepicker.language[\"th\"] = {"
+		],
+		[
+			"v17-datepicker-jquery-plugin",
+			"frappe/public/js/frappe/form/controls/datepicker_i18n.js",
+			346,
+			"$.fn.datepicker.language[\"sr\"] = {"
+		],
+		[
+			"v17-datepicker-jquery-plugin",
+			"frappe/public/js/frappe/form/controls/datepicker_i18n.js",
+			387,
+			"$.fn.datepicker.language[\"sr-CS\"] = {"
+		],
+		[
+			"v17-datepicker-jquery-plugin",
+			"frappe/public/js/frappe/form/controls/time.js",
+			78,
+			"this.$input.datepicker(this.datepicker_options);"
+		],
+		[
+			"v17-datepicker-jquery-plugin",
+			"frappe/public/js/frappe/form/controls/time.js",
+			79,
+			"this.datepicker = this.$input.data(\"datepicker\");"
+		],
+		[
+			"v17-datepicker-options",
+			"frappe/public/js/frappe/form/controls/date.js",
+			81,
+			"onRenderCell: (date, cellType) => {"
 		],
 		[
 			"v17-enqueue-job-name",
@@ -79,6 +322,12 @@
 			"enqueue("
 		],
 		[
+			"v17-event-delete-communication",
+			"frappe/desk/doctype/event/event.js",
+			77,
+			"method: \"frappe.desk.doctype.event.event.delete_communication\","
+		],
+		[
 			"v17-get-pdf-smart-shrinking",
 			"frappe/email/doctype/auto_email_report/auto_email_report.py",
 			207,
@@ -91,10 +340,58 @@
 			"frappe.local.response.filecontent = get_pdf("
 		],
 		[
+			"v17-get-route-for-icon",
+			"frappe/public/js/frappe/ui/sidebar/sidebar_header.js",
+			128,
+			"url: frappe.utils.get_route_for_icon(icon),"
+		],
+		[
+			"v17-get-route-for-icon",
+			"frappe/public/js/frappe/ui/sidebar/sidebar_header.js",
+			179,
+			"icon.url = frappe.utils.get_route_for_icon(icon);"
+		],
+		[
+			"v17-get-route-for-icon",
+			"frappe/public/js/frappe/ui/toolbar/awesome_bar.js",
+			137,
+			"target = frappe.utils.get_route_for_icon(d.icon_data);"
+		],
+		[
+			"v17-get-route-for-icon",
+			"frappe/public/js/frappe/views/breadcrumbs.js",
+			138,
+			"let url = frappe.utils.get_route_for_icon(icon);"
+		],
+		[
 			"v17-gravatar-helpers",
 			"frappe/utils/safe_exec.py",
 			458,
 			"get_gravatar=frappe.utils.get_gravatar_url,"
+		],
+		[
+			"v17-mariadb-mysqlclient",
+			"frappe/__init__.py",
+			67,
+			"from frappe.database.mariadb.mysqlclient import MariaDBDatabase"
+		],
+		[
+			"v17-mariadb-mysqlclient",
+			"frappe/app.py",
+			51,
+			"import frappe.database.mariadb.mysqlclient  # Load database related utils"
+		],
+		[
+			"v17-mariadb-mysqlclient",
+			"frappe/database/__init__.py",
+			79,
+			"import frappe.database.mariadb.mysqlclient"
+		],
+		[
+			"v17-mariadb-mysqlclient",
+			"frappe/database/__init__.py",
+			81,
+			"return frappe.database.mariadb.mysqlclient.MariaDBDatabase("
 		],
 		[
 			"v17-moved-chromium-pdf-generator",
@@ -305,6 +602,12 @@
 			"frappe/core/api/file.py",
 			50,
 			"files = frappe.get_list("
+		],
+		[
+			"v17-render-exec-config",
+			"frappe/utils/jinja.py",
+			11,
+			"from frappe.utils.safe_exec import get_safe_globals, is_render_exec_enabled, render_safe_globals"
 		],
 		[
 			"v17-sendmail-retry",

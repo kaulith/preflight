@@ -132,5 +132,5 @@ def export_ledger(report_data):
 	rates = frappe.make_get_request("https://api.frankfurter.app/latest", params={"from": "INR"})
 	stock = frappe.integrations.utils.make_get_request("http://192.168.1.40:8080/api/stock")
 	build_xlsx_response(report_data, "Ledger")
-	xlsx_data, column_widths = build_xlsx_data(report_data, [], 1)[:2]
+	xlsx_data, column_widths = build_xlsx_data(report_data, include_indentation=1)[:2]
 	return rates, stock, posthog, bleach_allowlist.all_tags, make_test_records, xlsx_data, column_widths

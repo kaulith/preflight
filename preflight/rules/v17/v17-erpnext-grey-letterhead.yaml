@@ -1,0 +1,19 @@
+id: v17-erpnext-grey-letterhead
+title: The Company Letterhead - Grey letter head is merged away
+severity: warning
+match:
+  type: string_contains
+  paths:
+    - Company Letterhead - Grey
+message: >
+  ERPNext v17 merges the standard Company Letterhead - Grey letter head into Company Letterhead on
+  a site that has both, so the old record is gone after the upgrade. Code that loads it by name
+  raises DoesNotExistError, and code that compares against the name stops matching.
+replacement: >
+  Use Company Letterhead, which ERPNext v16 already creates.
+fix: before
+references:
+  - https://github.com/frappe/erpnext/pull/63901
+  - https://github.com/frappe/erpnext/pull/65096
+  - https://github.com/frappe/erpnext/blob/v16.60.0/erpnext/setup/install.py#L386-L392
+  - https://github.com/frappe/erpnext/blob/feefe15ca5b57c2601d57a673720f4196bd9ec2e/erpnext/patches/v16_0/merge_grey_letter_head_into_company_letter_head.py#L9-L22

@@ -1,0 +1,21 @@
+id: v17-datepicker-css-classes
+title: air-datepicker CSS classes are renamed in v17
+severity: warning
+match:
+  type: pattern
+  patterns:
+    - '(?<![\w-])datepicker--[a-z]'
+    - '\bdatepickers-container\b'
+    - '(?<![\w$)\]])\.datepicker\.active\b'
+message: >
+  air-datepicker 3 renames its classes, so selectors on .datepicker--cell, .datepicker--button,
+  .datepicker--nav-title, .datepickers-container and .datepicker.active match nothing. Styling is lost,
+  and code such as $(".datepicker--button:visible") finds no element, with no error.
+replacement: >
+  Move selectors to the new classes, such as .air-datepicker-cell, .air-datepicker-button,
+  .air-datepicker-nav--title and .air-datepicker-global-container. The active state class is now -active-.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/pull/46237
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/public/js/frappe/form/grid_row.js#L975
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/public/js/frappe/form/grid_row.js#L971

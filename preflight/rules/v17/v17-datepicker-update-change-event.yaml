@@ -1,0 +1,23 @@
+id: v17-datepicker-update-change-event
+title: datepicker.update() on a form field now fires a change event
+severity: warning
+match:
+  type: pattern
+  patterns:
+    - '\b(?:cur_)?frm\.(?:fields_dict\b|get_field\()[^;]{0,120}?\.datepicker\??\.update\('
+message: >
+  air-datepicker 3 ends update() by dispatching a change event on the input, which version 2 did not do.
+  On a blank Date field the control reads "" where the document holds null, so it writes "" to the
+  document, runs the field's triggers and marks the form dirty. A saved form that calls update() in
+  refresh, for example to set minDate, can open as Not Saved.
+replacement: >
+  On v17, wrap the call in the control's update_datepicker_silently, which stops that change event.
+fix: with-upgrade
+shim: |
+  const update_limits = () => field.datepicker?.update({ minDate: date });
+  field.update_datepicker_silently ? field.update_datepicker_silently(update_limits) : update_limits();
+references:
+  - https://github.com/frappe/frappe/pull/46237
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/public/js/frappe/form/controls/date.js#L57-L61
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/public/js/frappe/form/controls/base_control.js#L219-L225
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/public/js/frappe/form/form.js#L354-L359

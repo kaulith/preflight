@@ -2,12 +2,14 @@
 	"tree": "hrms",
 	"commit": "f3bd97d93912080291d286c4f2f4c200ce4a2f4a",
 	"counts": {
+		"v17-erpnext-get-bank-cash-account": 2,
 		"v17-get-number-format-info": 1,
 		"v17-query-limit-page-length": 1,
 		"v17-query-limit-start": 1,
 		"v17-query-start": 1
 	},
 	"counts_with_tests": {
+		"v17-erpnext-get-bank-cash-account": 2,
 		"v17-get-number-format-info": 1,
 		"v17-get-test-records": 2,
 		"v17-query-limit-page-length": 1,
@@ -16,6 +18,18 @@
 	},
 	"unparsable": [],
 	"findings": [
+		[
+			"v17-erpnext-get-bank-cash-account",
+			"hrms/hr/doctype/employee_advance/employee_advance.py",
+			379,
+			"account = get_bank_cash_account(mode_of_payment, company).get(\"account\")"
+		],
+		[
+			"v17-erpnext-get-bank-cash-account",
+			"hrms/hr/doctype/expense_claim/expense_claim.py",
+			339,
+			"payment_account = get_bank_cash_account(self.mode_of_payment, self.company).get(\"account\")"
+		],
 		[
 			"v17-get-number-format-info",
 			"hrms/hr/utils.py",

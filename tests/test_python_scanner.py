@@ -131,6 +131,8 @@ def test_v17_violations_are_reported_on_their_lines():
 	for finding in findings:
 		lines.setdefault(finding.rule.id, []).append(finding.line)
 	assert lines == {
+		"v17-build-xlsx-data-ignore-visible-idx": [148],
+		"v17-build-xlsx-data-visible-idx": [148, 149],
 		"v17-client-get-js": [43],
 		"v17-country-info-get-translated-dict": [6],
 		"v17-email-queue-send-mail": [4],

@@ -1,0 +1,20 @@
+id: v17-get-route-for-icon
+title: frappe.utils.get_route_for_icon no longer exists
+severity: error
+match:
+  type: pattern
+  patterns:
+    - \bfrappe\.utils\.get_route_for_icon\b
+message: >
+  frappe develop, which becomes v17, moved desktop icon routing into a private function of the
+  desktop icons bundle. Calling frappe.utils.get_route_for_icon raises TypeError in the browser
+  after the upgrade.
+replacement: >
+  Build the route with frappe.utils.generate_route, or with frappe.ui.sidebar_item.get_route for a
+  sidebar link. Both exist on v16 and v17.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/47853
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/public/js/frappe/utils/utils.js#L1454
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/public/js/desktop_icons.bundle.js#L76
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/public/js/frappe/ui/sidebar/sidebar_item.js#L63

@@ -1,0 +1,17 @@
+id: v17-erpnext-plaid-link-token-update
+title: ERPNext get_link_token_for_update takes the Bank on v17
+severity: error
+match:
+  type: import_path
+  paths:
+    - erpnext.erpnext_integrations.doctype.plaid_settings.plaid_settings.get_link_token_for_update
+message: >
+  On ERPNext v17 get_link_token_for_update takes the name of a Bank instead of an access token,
+  and reads the token from the password store itself. A call that still passes the token raises.
+replacement: >
+  Pass bank with the Bank's name on v17.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/62734
+  - https://github.com/frappe/erpnext/blob/feefe15ca5b57c2601d57a673720f4196bd9ec2e/erpnext/erpnext_integrations/doctype/plaid_settings/plaid_settings.py#L378
+  - https://github.com/frappe/erpnext/blob/v16.60.0/erpnext/erpnext_integrations/doctype/plaid_settings/plaid_settings.py#L368

@@ -1,0 +1,26 @@
+id: v17-datepicker-instance-api
+title: air-datepicker instance methods and properties change in v17
+severity: error
+match:
+  type: pattern
+  patterns:
+    - 'datepicker\??\.(?:removeDate|today)\('
+    - 'picker\??\.\$datepicker\??\.\w'
+    - '\btimepicker\??\.(?:\$seconds(?:Text)?|_setTime)\b'
+    - '\.update_datepicker_position\('
+    - 'datepicker\.(?:date|view)\s*=(?![=>])'
+    - 'datepicker\??\.update\(\s*["''`]'
+    - 'datepicker\??\.formatDate\(\s*["''`]'
+message: >
+  On air-datepicker 3, removeDate(), today(), timepicker.$seconds, timepicker._setTime() and the control's
+  update_datepicker_position() are gone and raise a TypeError. $datepicker is a plain element, so jQuery
+  methods on it raise too. datepicker.date = d and datepicker.view = "months" no longer move the view,
+  update("minDate", d) no longer applies the value, and formatDate now takes the date first.
+replacement: >
+  Use unselectDate, setViewDate, setCurrentView, update({ minDate: d }) and formatDate(date, format). Wrap
+  $datepicker in $() where it needs jQuery. Use the position option in place of update_datepicker_position.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/pull/46237
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/public/js/frappe/form/controls/date.js#L21-L22
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/public/js/frappe/form/controls/date.js#L21-L22

@@ -1,0 +1,43 @@
+id: v17-sanitize-html-allowlist
+title: Changing the HTML sanitizer's allowlist no longer takes effect
+severity: warning
+match:
+  type: call
+  paths:
+    - frappe.utils.html_utils.acceptable_elements.add
+    - frappe.utils.html_utils.acceptable_elements.update
+    - frappe.utils.html_utils.acceptable_elements.remove
+    - frappe.utils.html_utils.acceptable_elements.discard
+    - frappe.utils.html_utils.acceptable_elements.difference_update
+    - frappe.utils.html_utils.acceptable_attributes.add
+    - frappe.utils.html_utils.acceptable_attributes.update
+    - frappe.utils.html_utils.acceptable_attributes.remove
+    - frappe.utils.html_utils.acceptable_attributes.discard
+    - frappe.utils.html_utils.acceptable_attributes.difference_update
+    - frappe.utils.html_utils.svg_elements.add
+    - frappe.utils.html_utils.svg_elements.update
+    - frappe.utils.html_utils.svg_elements.remove
+    - frappe.utils.html_utils.svg_elements.discard
+    - frappe.utils.html_utils.svg_elements.difference_update
+    - frappe.utils.html_utils.svg_attributes.add
+    - frappe.utils.html_utils.svg_attributes.update
+    - frappe.utils.html_utils.svg_attributes.remove
+    - frappe.utils.html_utils.svg_attributes.discard
+    - frappe.utils.html_utils.svg_attributes.difference_update
+    - frappe.utils.html_utils.mathml_elements.add
+    - frappe.utils.html_utils.mathml_elements.update
+    - frappe.utils.html_utils.mathml_elements.remove
+    - frappe.utils.html_utils.mathml_elements.discard
+    - frappe.utils.html_utils.mathml_elements.difference_update
+message: >
+  frappe v17 builds its HTML sanitizer once, when frappe.utils.html_utils is imported. Changing
+  these sets afterwards no longer changes what a default sanitize_html call keeps, so a tag an app
+  meant to block is allowed again, and one it meant to allow is stripped.
+replacement: >
+  Call nh3.clean with the app's own tags and attributes where it needs a different allowlist.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/45750
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/utils/html_utils.py#L174-L178
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/utils/html_utils.py#L171-L178
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/utils/html_utils.py#L858-L861

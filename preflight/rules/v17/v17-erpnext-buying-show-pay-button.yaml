@@ -1,0 +1,20 @@
+id: v17-erpnext-buying-show-pay-button
+title: ERPNext Buying Settings has no show_pay_button on v17
+severity: error
+match:
+  type: doctype_field
+  fields:
+    - Buying Settings.show_pay_button
+message: >
+  ERPNext v17 drops Show Pay Button from Buying Settings. In Python, frappe.db.get_single_value on
+  it raises "Field show_pay_button does not exist on Buying Settings". In the browser the same call
+  no longer raises and returns the old value or null. ERPNext v16.60.0 already ignores the setting:
+  the portal order page decides from the Payments app and the order.
+replacement: >
+  Drop the read. The setting has no effect on v16.60.0 either.
+fix: before
+references:
+  - https://github.com/frappe/erpnext/pull/62535
+  - https://github.com/frappe/erpnext/blob/v16.60.0/erpnext/buying/doctype/buying_settings/buying_settings.json#L171
+  - https://github.com/frappe/erpnext/blob/v16.60.0/erpnext/templates/pages/order.py#L54
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/database/database.py#L990

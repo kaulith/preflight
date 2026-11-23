@@ -1,0 +1,25 @@
+id: v17-datepicker-jquery-plugin
+title: The air-datepicker jQuery plugin is gone in v17
+severity: error
+match:
+  type: pattern
+  patterns:
+    - '\$\.fn\.datepicker\b'
+    - '\.data\(\s*["'']datepicker["'']\s*\)'
+    - '(?:\$\([^()]{0,120}\)|\$(?!refs\b)\w+)\s*\.datepicker\('
+    - '^\s*\.datepicker\('
+message: >
+  frappe v17 replaces its air-datepicker 2 fork with air-datepicker 3, which has no jQuery plugin.
+  $(el).datepicker(...), $(el).data("datepicker") and $.fn.datepicker raise a TypeError, and a locale
+  registered on $.fn.datepicker.language at file load stops the rest of that script. An app that loads
+  its own jQuery datepicker plugin is not affected.
+replacement: >
+  Create the picker with new AirDatepicker(element, options), keep the returned instance, and pass
+  locale: frappe.ui.form.get_datepicker_locale(). Both exist on v17 only, so code that also runs on v16
+  needs a version check.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/frappe/pull/46237
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/public/js/frappe/form/controls/date.js#L108-L109
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/public/js/frappe/form/controls/date.js#L105-L106
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/public/js/controls.bundle.js#L1-L2
