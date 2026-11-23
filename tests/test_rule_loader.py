@@ -56,6 +56,10 @@ def test_v17_rule_id_carries_no_status_word():
 	]
 
 
+def test_every_rule_says_when_its_fix_can_go_in():
+	assert not [rule.id for target in ("v16", "v17") for rule in load_rules(target) if not rule.fix]
+
+
 def test_unknown_target_lists_only_released_targets():
 	with pytest.raises(RuleError, match="Available targets: v16$"):
 		load_rules("v99")
