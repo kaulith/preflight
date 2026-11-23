@@ -129,6 +129,21 @@ def test_terminal_escapes_in_a_snippet_are_printed_escaped():
 	assert "\x07" not in output and "\r" not in output
 
 
+def test_a_file_name_cannot_forge_a_line_of_the_report():
+	finding = replace(NEWSLETTER_IMPORT, file="digest/api.py\nNo known incompatibilities found.\u202e\udcff")
+	report = Report(site="test.localhost", target="v16", apps=["digest\x1b]0;x\x07"], findings=[finding])
+	output = format_report(report)
+	assert "\nNo known" not in output and "\x1b]0" not in output and "\u202e" not in output
+	assert output.encode("utf-8")
+
+
+def test_sarif_percent_encodes_a_file_name():
+	finding = replace(NEWSLETTER_IMPORT, file="https:/example.com/api #1.py")
+	report = Report(site=None, target="v16", apps=["digest"], findings=[finding])
+	location = json.loads(format_sarif(report))["runs"][0]["results"][0]["locations"][0]
+	assert location["physicalLocation"]["artifactLocation"]["uri"] == "https%3A/example.com/api%20%231.py"
+
+
 def test_findings_with_no_line_in_one_file_are_listed_without_one():
 	settings = replace(
 		NEWSLETTER_IMPORT, file="digest/doctype/digest_settings/digest_settings.json", line=None
