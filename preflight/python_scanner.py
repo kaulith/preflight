@@ -4,7 +4,7 @@ import re
 from collections.abc import Collection, Iterable, Iterator, Mapping
 from urllib.parse import urlsplit
 
-from preflight.models import Finding, Match, Rule, rules_by_doctype, rules_by_doctype_field
+from preflight.models import Finding, Match, Rule, child_doctypes, rules_by_doctype, rules_by_doctype_field
 
 # Framework APIs whose first argument, or `doctype` keyword, is a doctype name.
 DOCTYPE_APIS = frozenset(
@@ -111,6 +111,21 @@ VERSION_HELPERS = frozenset({"is_frappe_version", "get_frappe_version"})
 
 # A doctype's table named in SQL.
 TABLE_NAME = re.compile(r"`tab([^`]+)`")
+
+# Framework APIs that run the SQL text they are given, with the keyword of that argument.
+SQL_APIS = {"frappe.db.sql": "query", "frappe.db.multisql": "sql_dict"}
+
+# A server method named in a URL.
+API_METHOD = re.compile(r"/api/(?:v\d+/)?method/([\w.]+)")
+
+# Request APIs, with the HTTP method each sends, or None for one that takes it as its first argument.
+REQUEST_APIS = {
+	"requests.get": "GET",
+	"frappe.make_get_request": "GET",
+	"frappe.integrations.utils.make_get_request": "GET",
+	"requests.request": None,
+	"frappe.integrations.utils.make_request": None,
+}
 
 IMPORT_ERRORS = frozenset({"ImportError", "ModuleNotFoundError"})
 
@@ -272,11 +287,15 @@ class PythonScanner:
 		self.call_rules: dict[tuple[str, ...], list[Rule]] = {}
 		self.string_rules: list[tuple[str, Rule]] = []
 		self.select_field_rules: list[tuple[list[re.Pattern], Rule]] = []
+		self.sql_rules: list[tuple[list[re.Pattern], Rule]] = []
+		self.http_rules: dict[str, list[Rule]] = {}
 		self.doctype_rules = rules_by_doctype(rules)
 		self.scrubbed_doctype_rules = {scrub(doctype): rule for doctype, rule in self.doctype_rules.items()}
 		self.field_rules = rules_by_doctype_field(rules)
+		self.child_doctypes = child_doctypes(rules)
 		self.controllers = {
-			(scrub(doctype), controller_name(doctype)): doctype for doctype, _ in self.field_rules
+			(scrub(doctype), controller_name(doctype)): doctype
+			for doctype, _ in (*self.field_rules, *self.child_doctypes)
 		}
 		for rule in rules:
 			if rule.match.type == "string_contains":
@@ -285,10 +304,28 @@ class PythonScanner:
 				self.select_field_rules.append(
 					([re.compile(pattern) for pattern in rule.match.patterns], rule)
 				)
+			elif rule.match.type == "sql_text":
+				self.sql_rules.append(([re.compile(pattern) for pattern in rule.match.patterns], rule))
+			elif rule.match.type == "http_method":
+				for path in rule.match.paths:
+					self.http_rules.setdefault(path, []).append(rule)
 			elif rule.match.type in ("import_path", "undeclared_import", "call"):
 				table = self.call_rules if rule.match.type == "call" else self.import_rules
 				for path in rule.match.paths:
 					table.setdefault(tuple(path.split(".")), []).append(rule)
+
+	def scan_sql(self, query: str, file: str) -> list[Finding]:
+		"""The sql_text rules a stored query matches, each on the line its first match starts."""
+		lines = query.split("\n")
+		findings: dict[str, Finding] = {}
+		for patterns, rule in self.sql_rules:
+			for pattern in patterns:
+				if found := pattern.search(query):
+					line = query.count("\n", 0, found.start()) + 1
+					findings.setdefault(
+						rule.id, Finding(rule=rule, file=file, line=line, snippet=lines[line - 1].strip())
+					)
+		return list(findings.values())
 
 	def scan(
 		self,
@@ -452,11 +489,16 @@ class FileVisitor(ast.NodeVisitor):
 		self.visit_scope(node, {}, doctypes)
 
 	def doc_doctypes(self, node: ast.expr | None) -> Collection[str]:
-		"""The doctypes of the doc `node` is: a name bound to one, or a call that loads or makes one of a
-		doctype it names as a literal, `frappe.get_doc("Payment Entry", name)`, or as the doctype key of a
-		dict, `frappe.get_doc({"doctype": "Payment Entry"})`."""
+		"""The doctypes of the doc `node` is: a name bound to one, a row of a doc's table, `doc.items[0]` or
+		`doc.append("items")`, or a call that loads or makes one of a doctype it names as a literal,
+		`frappe.get_doc("Payment Entry", name)`, or as the doctype key of a dict,
+		`frappe.get_doc({"doctype": "Payment Entry"})`."""
 		if isinstance(node, ast.Name):
 			return self.docs.get(node.id, ())
+		if isinstance(node, ast.Subscript) and not isinstance(node.slice, ast.Slice):
+			return self.row_doctypes(node.value)
+		if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr == "append":
+			return self.table_doctypes(node.func.value, string_value(argument(node, 0, "key")))
 		if not (isinstance(node, ast.Call) and ".".join(self.resolve(node.func) or ()) in DOC_APIS):
 			return ()
 		doctype = argument(node, 0, "doctype")
@@ -466,6 +508,72 @@ class FileVisitor(ast.NodeVisitor):
 				None,
 			)
 		return (doctype.value,) if string_value(doctype) else ()
+
+	def table_doctypes(self, doc: ast.expr, table: str | None) -> set[str]:
+		"""The child doctype of the `table` field of the doc `doc` is."""
+		return {
+			child
+			for doctype in self.doc_doctypes(doc)
+			if (child := self.rules.child_doctypes.get((doctype, table)))
+		}
+
+	def row_doctypes(self, rows: ast.expr) -> set[str]:
+		"""The child doctype of the rows `rows` reads off a doc: `doc.items` or `doc.get("items")`."""
+		if isinstance(rows, ast.Attribute):
+			return self.table_doctypes(rows.value, rows.attr)
+		if isinstance(rows, ast.Call) and isinstance(rows.func, ast.Attribute) and rows.func.attr == "get":
+			return self.table_doctypes(rows.func.value, string_value(argument(rows, 0, "key")))
+		return set()
+
+	def loop_rows(self, target: ast.expr, rows: ast.expr) -> dict[str, set[str]]:
+		"""The name a loop over a doc's table gives each row, with its child doctype, in
+		`for row in doc.items` and `for index, row in enumerate(doc.items)`."""
+		if (
+			isinstance(rows, ast.Call)
+			and isinstance(rows.func, ast.Name)
+			and rows.func.id == "enumerate"
+			and rows.args
+			and isinstance(target, ast.Tuple)
+			and len(target.elts) == 2
+		):
+			target, rows = target.elts[1], rows.args[0]
+		doctypes = self.row_doctypes(rows)
+		return {target.id: doctypes} if doctypes and isinstance(target, ast.Name) else {}
+
+	def visit_loop_header(self, target: ast.expr, rows: ast.expr):
+		"""What a loop reads comes first, so `for doc in doc.items` reads the table of the doc before it."""
+		self.visit(rows)
+		bound = self.loop_rows(target, rows)
+		self.visit(target)
+		self.docs.update(bound)
+
+	def visit_For(self, node: ast.For | ast.AsyncFor):
+		self.visit_loop_header(node.target, node.iter)
+		for statement in node.body + node.orelse:
+			self.visit(statement)
+
+	visit_AsyncFor = visit_For
+
+	def visit_ListComp(self, node: ast.ListComp | ast.SetComp | ast.GeneratorExp | ast.DictComp):
+		"""A comprehension's names end with it, and its loops run before what it builds."""
+		outer = dict(self.docs)
+		for generator in node.generators:
+			self.visit_loop_header(generator.target, generator.iter)
+			for condition in generator.ifs:
+				self.visit(condition)
+		for part in (node.key, node.value) if isinstance(node, ast.DictComp) else (node.elt,):
+			self.visit(part)
+		self.docs = outer
+
+	visit_SetComp = visit_GeneratorExp = visit_DictComp = visit_ListComp
+
+	def report_appended_fields(self, node: ast.Call):
+		"""The keys of the row `doc.append("items", {"qty": 1})` adds."""
+		row = argument(node, 1, "value")
+		if isinstance(row, ast.Dict):
+			for doctype in self.doc_doctypes(node):
+				for key in filter(None, row.keys):
+					self.report(self.rules.field_rules.get((doctype, string_value(key)), ()), key.lineno)
 
 	def report_doc_field(self, doc: ast.expr, fieldname: str | None, line: int):
 		"""A field read or written on a doc: `doc.party_balance`, or `doc.get("party_balance")`."""
@@ -597,6 +705,36 @@ class FileVisitor(ast.NodeVisitor):
 					if reference := FIELD_REFERENCE.fullmatch(field.strip()):
 						yield reference.group(1) or doctype, reference.group(2), string
 
+	def report_sql_text(self, api: str, node: ast.Call):
+		"""The sql_text rules the query of a SQL call matches: a string or f-string, one a local name
+		holds, or the query for each database in `frappe.db.multisql`."""
+		query = argument(node, 0, SQL_APIS[api])
+		queries = (
+			[value for value in query.values if field_text(value) is not None]
+			if isinstance(query, ast.Dict)
+			else self.field_strings(query)
+		)
+		for text in queries:
+			matching = (
+				rule
+				for patterns, rule in self.rules.sql_rules
+				if any(pattern.search(field_text(text)) for pattern in patterns)
+			)
+			self.report(matching, text.lineno)
+
+	def report_rejected_request(self, api: str, node: ast.Call):
+		"""The http_method rules a request matches: a URL naming a server method, sent by an HTTP method
+		the server method no longer accepts."""
+		sent = REQUEST_APIS[api] or string_value(argument(node, 0, "method"))
+		url = field_text(argument(node, 0 if REQUEST_APIS[api] else 1, "url"))
+		if sent and url and (called := API_METHOD.search(url)):
+			rejecting = (
+				rule
+				for rule in self.rules.http_rules.get(called.group(1), ())
+				if sent.upper() in rule.match.rejected_methods
+			)
+			self.report(rejecting, node.lineno)
+
 	def attr_path(self, parts: tuple[str, ...], node: ast.Call) -> tuple[str, ...] | None:
 		"""The dotted path this call resolves, when it names one as a literal."""
 		if ".".join(parts) not in ATTR_APIS:
@@ -621,6 +759,8 @@ class FileVisitor(ast.NodeVisitor):
 		if isinstance(method, ast.Attribute) and method.attr in DOC_FIELD_METHODS:
 			fieldname = string_value(argument(node, 0, DOC_FIELD_METHODS[method.attr]))
 			self.report_doc_field(method.value, fieldname, method.end_lineno)
+		if isinstance(method, ast.Attribute) and method.attr == "append":
+			self.report_appended_fields(node)
 		if parts := self.resolve(node.func):
 			api = ".".join(parts)
 			rules = self.rules.call_rules.get(parts, ())
@@ -634,6 +774,10 @@ class FileVisitor(ast.NodeVisitor):
 			self.report(matching, node.lineno)
 			if rule := self.doctype_argument(parts, node) or self.reloaded_doctype(parts, node):
 				self.report((rule,), node.lineno)
+			if api in SQL_APIS:
+				self.report_sql_text(api, node)
+			if api in REQUEST_APIS:
+				self.report_rejected_request(api, node)
 			arguments = field_arguments(api, node)
 			for fields in self.select_fields(api, arguments):
 				rejecting = (

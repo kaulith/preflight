@@ -1,0 +1,25 @@
+id: v16-erpnext-payment-balance-settings
+title: ERPNext Show Account Balance and Show Party Balance settings removed
+severity: error
+match:
+  type: doctype_field
+  fields:
+    - Accounts Settings.show_account_balance
+    - Accounts Settings.show_party_balance
+message: >
+  Accounts Settings on ERPNext v15 has Show Account Balance and Show Party Balance checkboxes, which
+  switch on the balance fields of the Payment Entry. ERPNext v16 has neither the checkboxes nor
+  those fields. frappe.db.get_single_value on either raises "Field does not exist" after the
+  upgrade. On an upgraded site frappe.db.get_value and the Accounts Settings document give what the
+  setting held at the upgrade. On a site installed on v16 frappe.db.get_value returns None and
+  reading it off the document raises AttributeError.
+replacement: >
+  Remove the check. For the balance itself call
+  erpnext.accounts.utils.get_balance_on(party_type=..., party=...) or
+  get_balance_on(account=..., date=...), which work on v15 as well.
+fix: before
+references:
+  - https://github.com/frappe/erpnext/pull/50396
+  - https://github.com/frappe/erpnext/blob/6ad0ff6362db0c672e3706aa0a0d65119b1a34e2/erpnext/accounts/doctype/payment_entry/payment_entry.py#L2902-L2909
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/accounts/doctype/accounts_settings/accounts_settings.json
+  - https://github.com/frappe/frappe/blob/2df0425571ebbaed878eabc3edc5b7e7c3327ae0/frappe/database/database.py#L933-L940

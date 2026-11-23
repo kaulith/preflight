@@ -1,0 +1,30 @@
+id: v16-notification-title-message
+title: Notification lost its separate in-app title and message
+severity: warning
+match:
+  type: doctype_field
+  fields:
+    - Notification.notification_message
+    - Notification.notification_title
+message: >
+  On frappe v15 a Notification can give its in-app alert a Notification Title and Notification
+  Message of their own. frappe v16 removed both: the alert takes its title from the Subject and gets
+  no description. The migration copies the title into Subject only on a System Notification rule
+  whose Subject is empty, so any other rule now shows its Subject, and it carries the Notification
+  Message nowhere, so that text stops appearing. A new System Notification given only notification_title has no name on v16, and
+  saving it raises "Please set the document name". On an upgraded site frappe.get_all and
+  frappe.db.get_value return what the old columns held at the upgrade; frappe.get_list and the
+  browser's frappe.db.get_value leave the field out of the result, and raise a PermissionError when
+  it filters or sorts the query. On a site installed on v16 the columns do not exist, and
+  frappe.get_all and frappe.db.get_value on them raise.
+  A Custom Field placed after one of them moves to the end of the form.
+replacement: >
+  Set subject to the headline, which v15 already falls back to when the title is empty. v16 has no
+  separate in-app body: move that text into subject, or into message, which goes into the
+  notification's email content.
+fix: before
+references:
+  - https://github.com/frappe/frappe/commit/49e60fc23a3a8deeb852d022b794444adfb47801
+  - https://github.com/frappe/frappe/blob/0f31ab048faa89330ab4f30c1a113c7606ca4dec/frappe/email/doctype/notification/notification.py#L258-L264
+  - https://github.com/frappe/frappe/blob/2df0425571ebbaed878eabc3edc5b7e7c3327ae0/frappe/email/doctype/notification/notification.py#L472-L514
+  - https://github.com/frappe/frappe/blob/2df0425571ebbaed878eabc3edc5b7e7c3327ae0/frappe/patches/v16_0/backfill_system_notification_rule_fields.py

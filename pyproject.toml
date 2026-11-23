@@ -10,6 +10,7 @@ license = { file = "license.txt" }
 dynamic = ["version"]
 dependencies = [
     "click",
+    "jinja2",
     "packaging",
     "pyyaml",
     "semantic-version",

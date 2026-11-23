@@ -122,7 +122,7 @@ with tests and with `--skip-tests`. The table on stdout prints them as `skipped/
 rule that lives only in test files is visible as `0/263`. `--check` rescans and exits 1 on
 drift, naming each finding that appeared or disappeared, and flagging a tree whose commit has
 moved under the frozen file. It loads the v16 rules only; freezing v17 waits for the v17 backlog.
-Last refrozen on 22 November 2026, with the 142 v16 rules; `--check` exits 0.
+Last refrozen on 23 November 2026, with the 152 v16 rules; `--check` exits 0.
 
 Two uses:
 

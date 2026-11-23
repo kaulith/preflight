@@ -14,6 +14,8 @@ MATCH_TYPES = (
 	"doctype",
 	"doctype_field",
 	"select_field",
+	"sql_text",
+	"http_method",
 	"undeclared_import",
 	"site_record",
 	"bench_python",
@@ -57,6 +59,8 @@ class Match:
 	node: str = ""
 	branch: str = ""
 	dependencies: tuple[str, ...] = ()
+	child_tables: tuple[tuple[str, str], ...] = ()
+	rejected_methods: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -143,3 +147,13 @@ def rules_by_doctype_field(rules: list[Rule]) -> dict[tuple[str, str], list[Rule
 				doctype, _, fieldname = entry.partition(".")
 				table.setdefault((doctype, fieldname), []).append(rule)
 	return table
+
+
+def child_doctypes(rules: list[Rule]) -> dict[tuple[str, str], str]:
+	"""The child doctype of each (parent doctype, table field) the doctype_field rules list."""
+	return {
+		tuple(table.split(".", 1)): child
+		for rule in rules
+		if rule.match.type == "doctype_field"
+		for table, child in rule.match.child_tables
+	}

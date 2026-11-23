@@ -16,6 +16,7 @@ DOCTYPE_FIELD = re.compile(r"[^.]+\.\w+")
 FIELDNAME = re.compile(r"\w+")
 FILTER_FIELDNAME = re.compile(r"\w+(?:\.\w+)?")
 URL_HOSTS = ("private",)
+HTTP_METHODS = ("GET", "POST", "PUT", "DELETE")
 
 
 class RuleError(Exception):
@@ -102,6 +103,17 @@ def invalid_doctype_fields(key: str, value) -> str | None:
 	return None
 
 
+def invalid_child_tables(key: str, value) -> str | None:
+	if not isinstance(value, dict) or not value:
+		return f"{key} must be a non-empty mapping of table fields to child doctypes"
+	for table, child in value.items():
+		if not (isinstance(table, str) and DOCTYPE_FIELD.fullmatch(table)):
+			return f"{key}: {table!r} must name a doctype and a table field, such as 'Sales Invoice.taxes'"
+		if problem := invalid_text(f"{key}.{table}", child):
+			return problem
+	return None
+
+
 def invalid_fieldname(key: str, value) -> str | None:
 	if isinstance(value, str) and FIELDNAME.fullmatch(value):
 		return None
@@ -126,6 +138,14 @@ def invalid_url_host(key: str, value) -> str | None:
 	return None if value in URL_HOSTS else f"{key} must be one of {URL_HOSTS}, got {value!r}"
 
 
+def invalid_http_methods(key: str, value) -> str | None:
+	if problem := invalid_string_list(key, value):
+		return problem
+	if unknown := [method for method in value if method not in HTTP_METHODS]:
+		return f"{key} must name methods of {HTTP_METHODS}, got {unknown[0]!r}"
+	return None
+
+
 def invalid_fix(key: str, value) -> str | None:
 	return None if value in FIX_TIMINGS else f"{key} must be one of {FIX_TIMINGS}, got {value!r}"
 
@@ -144,12 +164,14 @@ MATCH_KEY_CHECKS = {
 	"keys": invalid_string_list,
 	"doctypes": invalid_string_list,
 	"fields": invalid_doctype_fields,
+	"child_tables": invalid_child_tables,
 	"filters": invalid_filters,
 	"title_field": invalid_fieldname,
 	"with_kwargs": invalid_string_list,
 	"with_positional_args": invalid_positive_number,
 	"returns": invalid_positive_number,
 	"url_host": invalid_url_host,
+	"rejected_methods": invalid_http_methods,
 	"python": invalid_python_specifier,
 	"frappe": invalid_frappe_version,
 	"node": invalid_node_specifier,
@@ -168,8 +190,10 @@ MATCH_TYPE_KEYS = {
 	"unreadable_function": MatchKeys(("keys",)),
 	"missing_hook": MatchKeys(("keys", "paths")),
 	"doctype": MatchKeys(("doctypes",)),
-	"doctype_field": MatchKeys(("fields",)),
+	"doctype_field": MatchKeys(("fields",), ("child_tables",)),
 	"select_field": MatchKeys(("patterns",)),
+	"sql_text": MatchKeys(("patterns",)),
+	"http_method": MatchKeys(("paths", "rejected_methods")),
 	"undeclared_import": MatchKeys(("paths", "dependencies")),
 	"site_record": MatchKeys(("doctypes",), ("filters", "title_field")),
 	"bench_python": MatchKeys(("python",)),
@@ -304,6 +328,8 @@ def load_rule(path: Path) -> Rule:
 	match = {key: tuple(value) if isinstance(value, list) else value for key, value in data["match"].items()}
 	if filters := match.get("filters"):
 		match["filters"] = tuple(filters.items())
+	if child_tables := match.get("child_tables"):
+		match["child_tables"] = tuple(child_tables.items())
 	return Rule(
 		id=data["id"],
 		title=data["title"],

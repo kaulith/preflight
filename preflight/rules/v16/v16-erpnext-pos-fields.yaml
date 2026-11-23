@@ -7,6 +7,8 @@ match:
     - POS Profile.disable_grand_total_to_default_mop
     - POS Closing Entry Taxes.rate
     - POS Closing Entry.pos_transactions
+  child_tables:
+    POS Closing Entry.taxes: POS Closing Entry Taxes
 message: >
   ERPNext v16 reworked the POS so it can bill through Sales Invoice as well as POS Invoice. POS
   Profile's disable_grand_total_to_default_mop became set_grand_total_to_default_mop with the

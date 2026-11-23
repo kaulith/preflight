@@ -1,0 +1,25 @@
+id: v16-erpnext-scrap-items-tables
+title: ERPNext BOM and Job Card scrap_items tables removed
+severity: error
+match:
+  type: doctype_field
+  fields:
+    - BOM.scrap_items
+    - Job Card.scrap_items
+message: >
+  ERPNext v16 replaced the Scrap Items table of the BOM and the Job Card with a Secondary Items
+  table that holds scrap, co-products and by-products. The migration copies the scrap rows of draft
+  and submitted documents there, with secondary_item_type set to Scrap. Neither doctype has
+  scrap_items any more: doc.scrap_items and doc.append("scrap_items", {...}) raise AttributeError,
+  and doc.get("scrap_items") returns None, so a loop over it raises TypeError. In a form script
+  frm.doc.scrap_items is undefined, and frm.set_query and frm.add_child on the table raise
+  TypeError.
+replacement: >
+  Read doc.secondary_items and keep the rows whose secondary_item_type is Scrap. On a BOM row, cost
+  and base_cost hold what amount and base_amount held, and there is no rate.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/52979
+  - https://github.com/frappe/erpnext/pull/53975
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/patches/v16_0/co_by_product_patch.py#L24-L63
+  - https://github.com/frappe/frappe/blob/2df0425571ebbaed878eabc3edc5b7e7c3327ae0/frappe/model/document.py#L2477-L2483

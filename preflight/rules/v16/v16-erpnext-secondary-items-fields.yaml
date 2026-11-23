@@ -9,6 +9,9 @@ match:
     - Stock Entry Detail.is_scrap_item
     - Subcontracting Receipt Item.is_scrap_item
     - Subcontracting Receipt Item.scrap_cost_per_qty
+  child_tables:
+    Stock Entry.items: Stock Entry Detail
+    Subcontracting Receipt.items: Subcontracting Receipt Item
 message: >
   ERPNext v16 turned scrap into one kind of secondary item, next to co-products and by-products,
   and renamed the fields: BOM.scrap_material_cost is secondary_items_cost (base_ likewise), and

@@ -1,0 +1,30 @@
+id: v16-erpnext-inventory-dimension-mandatory
+title: ERPNext Inventory Dimension mandatory condition replaced
+severity: warning
+match:
+  type: doctype_field
+  fields:
+    - Inventory Dimension.mandatory_depends_on
+message: >
+  ERPNext v16 checks mandatory inventory dimensions on the server and replaced Mandatory Depends On,
+  a form expression, with Mandatory Depends On (Backend), a Python expression. The migration does
+  not copy the condition across and clears it from the dimension's custom fields. A dimension that
+  was mandatory only under a condition stops being mandatory. One with Reqd checked as well, which
+  v15 enforced only under the condition, is now enforced without it, so a stock document that used
+  to save with the dimension empty can raise a mandatory error. On an upgraded site frappe.get_all
+  and frappe.db.get_value return what the old column held at the upgrade; frappe.get_list and the
+  browser's frappe.db.get_value leave the field out of the result, and raise a PermissionError when
+  it filters or sorts the query. On a site installed on v16 the column does not exist, and
+  frappe.get_all and frappe.db.get_value on it raise.
+  A Custom Field placed after it moves to the end of the form.
+replacement: >
+  Before upgrading, list the conditions with frappe.get_all("Inventory Dimension",
+  filters={"mandatory_depends_on": ["is", "set"]}, fields=["name", "reqd", "mandatory_depends_on"]).
+  After it, set mandatory_depends_on_backend to each one as a Python expression without the eval:
+  prefix, where doc is the row and parent the document, and clear Reqd on a dimension that should
+  stay conditional.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/blob/6ad0ff6362db0c672e3706aa0a0d65119b1a34e2/erpnext/stock/doctype/inventory_dimension/inventory_dimension.py#L201-L206
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/stock/doctype/inventory_dimension/inventory_dimension.py#L412-L460
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/patches/v16_0/remove_mandatory_from_inv_dimension_fields.py

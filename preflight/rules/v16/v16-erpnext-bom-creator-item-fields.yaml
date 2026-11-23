@@ -7,6 +7,8 @@ match:
     - BOM Creator Item.fg_item
     - BOM Creator Item.fg_reference_id
     - BOM Creator Item.parent_row_no
+  child_tables:
+    BOM Creator.items: BOM Creator Item
 message: >
   ERPNext v16 rebuilt BOM Creator around a part tree, with new BOM Creator Material and BOM Creator
   Operation tables, and the migration moves the rows there. BOM Creator Item no longer has fg_item,

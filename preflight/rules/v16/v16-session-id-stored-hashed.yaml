@@ -1,0 +1,24 @@
+id: v16-session-id-stored-hashed
+title: tabSessions.sid now holds a hash of the session id
+severity: warning
+match:
+  type: sql_text
+  patterns:
+    - (?is)\btabSessions\b.*\bsid\b|\bsid\b.*\btabSessions\b
+message: >
+  frappe v16 stores the sha256 of each session id in tabSessions.sid, and a patch rewrites the
+  rows already there. frappe.session.sid and the browser's cookie stay the raw id, so a query
+  comparing sid with either matches no row and raises nothing, and a sid read from the table no
+  longer works as a cookie.
+replacement: >
+  Compare the column with frappe.sessions.hash_sid(frappe.session.sid), and do not use a stored
+  sid as a credential.
+fix: with-upgrade
+shim: |
+  from frappe import sessions
+
+  stored_sid = sessions.hash_sid(frappe.session.sid) if hasattr(sessions, "hash_sid") else frappe.session.sid
+references:
+  - https://github.com/frappe/frappe/pull/43201
+  - https://github.com/frappe/frappe/pull/47590
+  - https://github.com/frappe/frappe/blob/f9859d939b7555880fdf472e26cc5ef9964b6f5e/frappe/patches/v16_0/hash_session_ids.py

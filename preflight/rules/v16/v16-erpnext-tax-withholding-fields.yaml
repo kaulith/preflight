@@ -18,6 +18,10 @@ match:
     - Payment Entry.apply_tax_withholding_amount
     - Advance Taxes and Charges.allocated_amount
     - Tax Withholding Category.consider_party_ledger_amount
+  child_tables:
+    Payment Entry.taxes: Advance Taxes and Charges
+    Purchase Order.items: Purchase Order Item
+    Purchase Receipt.items: Purchase Receipt Item
 message: >
   ERPNext v16 rebuilt TDS and TCS around the Tax Withholding Entry table. Withholding now applies
   only to invoices, payments and journal entries, so Purchase Order and Purchase Receipt lost

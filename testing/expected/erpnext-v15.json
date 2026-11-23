@@ -5,27 +5,31 @@
 		"v16-deprecated-country-info-get-translated-dict": 1,
 		"v16-deprecated-get-number-format-info": 2,
 		"v16-deprecated-read-multi-pdf": 1,
+		"v16-desktop-icon-fields": 3,
 		"v16-erpnext-advance-payment-doctypes-hook": 1,
-		"v16-erpnext-asset-fields": 14,
+		"v16-erpnext-asset-fields": 41,
 		"v16-erpnext-asset-repair-cost": 1,
 		"v16-erpnext-bom-configurator-js": 2,
 		"v16-erpnext-bom-creator-methods": 1,
-		"v16-erpnext-budget-fields": 1,
+		"v16-erpnext-budget-accounts-table": 1,
+		"v16-erpnext-budget-fields": 3,
 		"v16-erpnext-closing-stock-balance-doctype": 7,
 		"v16-erpnext-default-supplier-purchase-orders": 1,
 		"v16-erpnext-demo-transaction-doctypes-hook": 1,
 		"v16-erpnext-depreciation-helpers": 2,
 		"v16-erpnext-homepage": 1,
 		"v16-erpnext-homepage-doctypes": 10,
+		"v16-erpnext-inventory-dimension-mandatory": 1,
 		"v16-erpnext-lead-source": 1,
 		"v16-erpnext-lead-source-doctype": 8,
 		"v16-erpnext-make-pricing-rule-js": 2,
-		"v16-erpnext-moved-settings": 38,
+		"v16-erpnext-moved-settings": 42,
+		"v16-erpnext-payment-balance-settings": 8,
 		"v16-erpnext-pos-closing-invoices": 2,
 		"v16-erpnext-pos-fields": 3,
 		"v16-erpnext-removed-argument-demo": 1,
 		"v16-erpnext-removed-demo-setup": 2,
-		"v16-erpnext-removed-fields": 3,
+		"v16-erpnext-removed-fields": 23,
 		"v16-erpnext-removed-helpers": 1,
 		"v16-erpnext-removed-lead-phone-lookup": 1,
 		"v16-erpnext-removed-leaderboard": 1,
@@ -34,11 +38,13 @@
 		"v16-erpnext-repost-settings-doctype": 1,
 		"v16-erpnext-scrap-item-doctypes": 4,
 		"v16-erpnext-scrap-items": 3,
+		"v16-erpnext-scrap-items-tables": 4,
 		"v16-erpnext-secondary-items-fields": 1,
 		"v16-erpnext-subcontracted-quantity": 3,
 		"v16-erpnext-tax-withholding": 7,
 		"v16-erpnext-tax-withholding-doctypes": 2,
-		"v16-erpnext-tax-withholding-fields": 2,
+		"v16-erpnext-tax-withholding-fields": 12,
+		"v16-erpnext-tax-withholding-tables": 1,
 		"v16-erpnext-utm-fields": 1,
 		"v16-erpnext-workstation-cost-fields": 4,
 		"v16-has-permission-raise-exception": 1,
@@ -59,12 +65,14 @@
 		"v16-deprecated-read-multi-pdf": 1,
 		"v16-deprecated-test-runner": 13,
 		"v16-deprecated-tests-utils-helpers": 48,
+		"v16-desktop-icon-fields": 3,
 		"v16-erpnext-advance-payment-doctypes-hook": 1,
-		"v16-erpnext-asset-fields": 28,
+		"v16-erpnext-asset-fields": 55,
 		"v16-erpnext-asset-repair-cost": 2,
 		"v16-erpnext-bom-configurator-js": 2,
 		"v16-erpnext-bom-creator-methods": 1,
-		"v16-erpnext-budget-fields": 6,
+		"v16-erpnext-budget-accounts-table": 1,
+		"v16-erpnext-budget-fields": 8,
 		"v16-erpnext-closing-stock-balance": 1,
 		"v16-erpnext-closing-stock-balance-doctype": 8,
 		"v16-erpnext-default-supplier-purchase-orders": 5,
@@ -72,15 +80,18 @@
 		"v16-erpnext-depreciation-helpers": 2,
 		"v16-erpnext-homepage": 1,
 		"v16-erpnext-homepage-doctypes": 11,
+		"v16-erpnext-inventory-dimension-mandatory": 1,
+		"v16-erpnext-item-wise-tax-detail": 1,
 		"v16-erpnext-lead-source": 1,
 		"v16-erpnext-lead-source-doctype": 9,
 		"v16-erpnext-make-pricing-rule-js": 2,
-		"v16-erpnext-moved-settings": 58,
+		"v16-erpnext-moved-settings": 62,
+		"v16-erpnext-payment-balance-settings": 8,
 		"v16-erpnext-pos-closing-invoices": 2,
 		"v16-erpnext-pos-fields": 3,
 		"v16-erpnext-removed-argument-demo": 1,
 		"v16-erpnext-removed-demo-setup": 3,
-		"v16-erpnext-removed-fields": 7,
+		"v16-erpnext-removed-fields": 27,
 		"v16-erpnext-removed-helpers": 2,
 		"v16-erpnext-removed-lead-phone-lookup": 1,
 		"v16-erpnext-removed-leaderboard": 1,
@@ -89,12 +100,14 @@
 		"v16-erpnext-repost-settings-doctype": 4,
 		"v16-erpnext-scrap-item-doctypes": 6,
 		"v16-erpnext-scrap-items": 4,
+		"v16-erpnext-scrap-items-tables": 5,
 		"v16-erpnext-secondary-items-fields": 1,
 		"v16-erpnext-serial-no-creation-document": 3,
 		"v16-erpnext-subcontracted-quantity": 3,
 		"v16-erpnext-tax-withholding": 7,
 		"v16-erpnext-tax-withholding-doctypes": 2,
-		"v16-erpnext-tax-withholding-fields": 2,
+		"v16-erpnext-tax-withholding-fields": 12,
+		"v16-erpnext-tax-withholding-tables": 1,
 		"v16-erpnext-utm-fields": 2,
 		"v16-erpnext-workstation-cost-fields": 9,
 		"v16-has-permission-raise-exception": 1,
@@ -135,6 +148,24 @@
 			"from frappe.utils.print_format import read_multi_pdf"
 		],
 		[
+			"v16-desktop-icon-fields",
+			"erpnext/accounts/utils.py",
+			1753,
+			"icons = frappe.get_all(\"Desktop Icon\", fields=[\"name\"], filters={\"_report\": report})"
+		],
+		[
+			"v16-desktop-icon-fields",
+			"erpnext/patches/v13_0/delete_old_purchase_reports.py",
+			36,
+			"desktop_icons = frappe.db.get_values(\"Desktop Icon\", {\"_report\": report}, [\"name\"])"
+		],
+		[
+			"v16-desktop-icon-fields",
+			"erpnext/patches/v13_0/delete_old_sales_reports.py",
+			31,
+			"desktop_icons = frappe.db.get_values(\"Desktop Icon\", {\"_report\": report}, [\"name\"])"
+		],
+		[
 			"v16-erpnext-advance-payment-doctypes-hook",
 			"erpnext/hooks.py",
 			507,
@@ -151,6 +182,132 @@
 			"erpnext/accounts/report/asset_depreciation_ledger/asset_depreciation_ledger.py",
 			123,
 			"\"gross_purchase_amount\","
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/asset.js",
+			85,
+			"if (frm.doc.is_composite_asset && !frm.has_active_capitalization) {"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/asset.js",
+			176,
+			"if (frm.doc.purchase_receipt || !frm.doc.is_existing_asset) {"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/asset.js",
+			204,
+			"if (frm.doc.is_composite_asset) {"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/asset.js",
+			227,
+			"frm.set_currency_labels([\"gross_purchase_amount\"], erpnext.get_currency(frm.doc.company));"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/asset.js",
+			245,
+			"const is_special_asset = frm.doc.is_existing_asset || frm.doc.is_composite_asset;"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/asset.js",
+			404,
+			"var asset_values = [frm.doc.gross_purchase_amount];"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/asset.js",
+			415,
+			"frm.doc.gross_purchase_amount - frm.doc.opening_accumulated_depreciation,"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/asset.js",
+			435,
+			"frm.doc.gross_purchase_amount - v.accumulated_depreciation_amount,"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/asset.js",
+			456,
+			"frm.doc.gross_purchase_amount - frm.doc.opening_accumulated_depreciation,"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/asset.js",
+			498,
+			"if (frm.doc.item_code && frm.doc.calculate_depreciation && frm.doc.gross_purchase_amount) {"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/asset.js",
+			511,
+			"gross_purchase_amount: frm.doc.gross_purchase_amount,"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/asset.js",
+			521,
+			"is_existing_asset: function (frm) {"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/asset.js",
+			525,
+			"is_composite_asset: function (frm) {"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/asset.js",
+			526,
+			"if (frm.doc.is_composite_asset) {"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/asset.js",
+			527,
+			"frm.set_value(\"gross_purchase_amount\", 0);"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/asset.js",
+			529,
+			"frm.set_df_property(\"gross_purchase_amount\", \"read_only\", 0);"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/asset.js",
+			653,
+			"if (frm.doc.item_code && frm.doc.calculate_depreciation && frm.doc.gross_purchase_amount) {"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/asset.js",
+			660,
+			"gross_purchase_amount: function (frm) {"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/asset.js",
+			711,
+			"frm.set_value(\"gross_purchase_amount\", data.gross_purchase_amount);"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/asset.js",
+			760,
+			"(row.expected_value_after_useful_life * 100) / frm.doc.gross_purchase_amount,"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset/asset.js",
+			773,
+			"frm.doc.gross_purchase_amount * (row.salvage_value_percentage / 100),"
 		],
 		[
 			"v16-erpnext-asset-fields",
@@ -202,6 +359,42 @@
 		],
 		[
 			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset_repair/asset_repair.js",
+			34,
+			"frm.set_query(\"purchase_invoice\", function () {"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset_repair/asset_repair.js",
+			128,
+			"stock_consumption: function (frm) {"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset_repair/asset_repair.js",
+			129,
+			"if (!frm.doc.stock_consumption) {"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset_repair/asset_repair.js",
+			135,
+			"purchase_invoice: function (frm) {"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset_repair/asset_repair.js",
+			136,
+			"if (frm.doc.purchase_invoice) {"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset_repair/asset_repair.js",
+			140,
+			"purchase_invoice: frm.doc.purchase_invoice,"
+		],
+		[
+			"v16-erpnext-asset-fields",
 			"erpnext/assets/report/fixed_asset_register/fixed_asset_register.py",
 			75,
 			"\"gross_purchase_amount\","
@@ -247,6 +440,24 @@
 			"erpnext/public/js/bom_configurator/bom_configurator.bundle.js",
 			57,
 			"get_tree_nodes: \"erpnext.manufacturing.doctype.bom_creator.bom_creator.get_children\","
+		],
+		[
+			"v16-erpnext-budget-accounts-table",
+			"erpnext/accounts/doctype/budget/budget.js",
+			7,
+			"frm.set_query(\"account\", \"accounts\", function () {"
+		],
+		[
+			"v16-erpnext-budget-fields",
+			"erpnext/accounts/doctype/budget/budget.js",
+			17,
+			"frm.set_query(\"monthly_distribution\", function () {"
+		],
+		[
+			"v16-erpnext-budget-fields",
+			"erpnext/accounts/doctype/budget/budget.js",
+			20,
+			"fiscal_year: frm.doc.fiscal_year,"
 		],
 		[
 			"v16-erpnext-budget-fields",
@@ -387,6 +598,12 @@
 			"frappe.get_cached_doc(\"Homepage Section\", name) for name in homepage_sections"
 		],
 		[
+			"v16-erpnext-inventory-dimension-mandatory",
+			"erpnext/patches/v16_0/depends_on_inv_dimensions.py",
+			12,
+			"\"mandatory_depends_on\","
+		],
+		[
 			"v16-erpnext-lead-source",
 			"erpnext/selling/page/sales_funnel/sales_funnel.js",
 			114,
@@ -469,6 +686,18 @@
 			"erpnext/accounts/doctype/account/account.py",
 			339,
 			"\"Accounts Settings\", \"Accounts Settings\", \"frozen_accounts_modifier\""
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/accounts/doctype/accounts_settings/regional/united_states.js",
+			3,
+			"frm.set_df_property(\"acc_frozen_upto\", \"label\", \"Books Closed Through\");"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/accounts/doctype/accounts_settings/regional/united_states.js",
+			5,
+			"\"frozen_accounts_modifier\","
 		],
 		[
 			"v16-erpnext-moved-settings",
@@ -676,9 +905,69 @@
 		],
 		[
 			"v16-erpnext-moved-settings",
+			"erpnext/stock/doctype/stock_settings/stock_settings.js",
+			14,
+			"frm.set_query(\"default_warehouse\", filters);"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/stock/doctype/stock_settings/stock_settings.js",
+			15,
+			"frm.set_query(\"sample_retention_warehouse\", filters);"
+		],
+		[
+			"v16-erpnext-moved-settings",
 			"erpnext/stock/get_item_details.py",
 			689,
 			"default_warehouse = frappe.get_single_value(\"Stock Settings\", \"default_warehouse\")"
+		],
+		[
+			"v16-erpnext-payment-balance-settings",
+			"erpnext/accounts/doctype/payment_entry/payment_entry.py",
+			452,
+			"if not self.party_balance and frappe.get_single_value(\"Accounts Settings\", \"show_party_balance\"):"
+		],
+		[
+			"v16-erpnext-payment-balance-settings",
+			"erpnext/accounts/doctype/payment_entry/payment_entry.py",
+			2707,
+			"if frappe.get_single_value(\"Accounts Settings\", \"show_account_balance\")"
+		],
+		[
+			"v16-erpnext-payment-balance-settings",
+			"erpnext/accounts/doctype/payment_entry/payment_entry.py",
+			2714,
+			"if frappe.get_single_value(\"Accounts Settings\", \"show_party_balance\")"
+		],
+		[
+			"v16-erpnext-payment-balance-settings",
+			"erpnext/accounts/doctype/payment_entry/payment_entry.py",
+			2746,
+			"if frappe.get_single_value(\"Accounts Settings\", \"show_account_balance\")"
+		],
+		[
+			"v16-erpnext-payment-balance-settings",
+			"erpnext/accounts/doctype/payment_entry/payment_entry.py",
+			3560,
+			"show_account_balance = frappe.get_single_value(\"Accounts Settings\", \"show_account_balance\")"
+		],
+		[
+			"v16-erpnext-payment-balance-settings",
+			"erpnext/accounts/doctype/payment_entry/payment_entry.py",
+			3564,
+			"if frappe.get_single_value(\"Accounts Settings\", \"show_party_balance\")"
+		],
+		[
+			"v16-erpnext-payment-balance-settings",
+			"erpnext/patches.txt",
+			427,
+			"frappe.db.set_single_value(\"Accounts Settings\", \"show_party_balance\", 1)"
+		],
+		[
+			"v16-erpnext-payment-balance-settings",
+			"erpnext/patches.txt",
+			428,
+			"frappe.db.set_single_value(\"Accounts Settings\", \"show_account_balance\", 1)"
 		],
 		[
 			"v16-erpnext-pos-closing-invoices",
@@ -730,9 +1019,117 @@
 		],
 		[
 			"v16-erpnext-removed-fields",
+			"erpnext/accounts/doctype/payment_entry/payment_entry.js",
+			382,
+			"frm.set_df_property(\"party_balance\", \"options\", currency_field);"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/accounts/doctype/payment_entry/payment_entry.js",
+			552,
+			"frm.set_value(\"paid_from_account_balance\", r.message.account_balance);"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/accounts/doctype/payment_entry/payment_entry.js",
+			559,
+			"frm.set_value(\"paid_to_account_balance\", r.message.account_balance);"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/accounts/doctype/payment_entry/payment_entry.js",
+			562,
+			"() => frm.set_value(\"party_balance\", r.message.party_balance),"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/accounts/doctype/payment_entry/payment_entry.js",
+			1748,
+			"\"paid_from_account_balance\","
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/accounts/doctype/payment_entry/payment_entry.js",
+			1751,
+			"frm.set_value(\"paid_to_account_balance\", r.message.paid_to_account_balance);"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/accounts/doctype/payment_entry/payment_entry.js",
+			1752,
+			"frm.set_value(\"party_balance\", r.message.party_balance);"
+		],
+		[
+			"v16-erpnext-removed-fields",
 			"erpnext/manufacturing/doctype/bom/bom.py",
 			1325,
 			"[\"expenses_included_in_valuation\", \"default_operating_cost_account\"],"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.js",
+			274,
+			"frm.set_df_property(\"operation_row_number\", \"options\", args);"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.js",
+			275,
+			"frm.set_df_property(\"operation_row_number\", \"description\", description);"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.js",
+			285,
+			"operation_row_number(frm) {"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.js",
+			286,
+			"if (frm.doc.operation_row_number) {"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.js",
+			287,
+			"frm.set_value(\"operation_id\", frm.doc.operation_row_number);"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.js",
+			292,
+			"frm.toggle_display(\"operation_row_number\", !frm.doc.operation_id && frm.doc.operation);"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.js",
+			293,
+			"frm.toggle_reqd(\"operation_row_number\", !frm.doc.operation_id && frm.doc.operation);"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.js",
+			304,
+			"if (!frm.doc.started_time && !frm.doc.current_time) {"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.js",
+			415,
+			"if ((!frm.doc.time_logs || !frm.doc.time_logs.length) && frm.doc.started_time) {"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.js",
+			421,
+			"frm.set_value(\"started_time\", \"\");"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.js",
+			469,
+			"if (frm.doc.started_time || frm.doc.current_time) {"
 		],
 		[
 			"v16-erpnext-removed-fields",
@@ -745,6 +1142,18 @@
 			"erpnext/manufacturing/doctype/production_plan/production_plan.py",
 			908,
 			"\"customer\": item_doc.customer or \"\","
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/stock/doctype/item/item.js",
+			231,
+			"frm.toggle_reqd(\"customer\", frm.doc.is_customer_provided_item ? 1 : 0);"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/stock/doctype/item/item.js",
+			243,
+			"frm.toggle_reqd(\"customer\", frm.doc.is_customer_provided_item ? 1 : 0);"
 		],
 		[
 			"v16-erpnext-removed-helpers",
@@ -837,6 +1246,30 @@
 			"get_scrap_items_from_sub_assemblies,"
 		],
 		[
+			"v16-erpnext-scrap-items-tables",
+			"erpnext/manufacturing/doctype/bom/bom.py",
+			1265,
+			"for d in bom.scrap_items:"
+		],
+		[
+			"v16-erpnext-scrap-items-tables",
+			"erpnext/manufacturing/doctype/job_card/job_card.js",
+			26,
+			"frm.set_query(\"item_code\", \"scrap_items\", () => {"
+		],
+		[
+			"v16-erpnext-scrap-items-tables",
+			"erpnext/manufacturing/doctype/work_order/work_order.py",
+			1588,
+			"if len(bom.scrap_items) > 0:"
+		],
+		[
+			"v16-erpnext-scrap-items-tables",
+			"erpnext/subcontracting/doctype/subcontracting_receipt/subcontracting_receipt.py",
+			328,
+			"for scrap_item in bom.scrap_items:"
+		],
+		[
 			"v16-erpnext-secondary-items-fields",
 			"erpnext/stock/doctype/stock_entry/stock_entry.py",
 			3119,
@@ -916,6 +1349,18 @@
 		],
 		[
 			"v16-erpnext-tax-withholding-fields",
+			"erpnext/accounts/doctype/payment_entry/payment_entry.js",
+			597,
+			"apply_tax_withholding_amount: function (frm) {"
+		],
+		[
+			"v16-erpnext-tax-withholding-fields",
+			"erpnext/accounts/doctype/payment_entry/payment_entry.js",
+			598,
+			"if (!frm.doc.apply_tax_withholding_amount) {"
+		],
+		[
+			"v16-erpnext-tax-withholding-fields",
 			"erpnext/accounts/doctype/tax_withholding_category/tax_withholding_category.py",
 			211,
 			"\"consider_party_ledger_amount\": tax_withholding.consider_party_ledger_amount,"
@@ -925,6 +1370,60 @@
 			"erpnext/accounts/doctype/tax_withholding_category/tax_withholding_category.py",
 			740,
 			"\"tax_withholding_category\": ldc.tax_withholding_category,"
+		],
+		[
+			"v16-erpnext-tax-withholding-fields",
+			"erpnext/buying/doctype/purchase_order/purchase_order.js",
+			98,
+			"frm.set_df_property(\"apply_tds\", \"read_only\", frm.supplier_tds ? 0 : 1);"
+		],
+		[
+			"v16-erpnext-tax-withholding-fields",
+			"erpnext/buying/doctype/purchase_order/purchase_order.js",
+			99,
+			"frm.set_df_property(\"tax_withholding_category\", \"hidden\", frm.supplier_tds ? 0 : 1);"
+		],
+		[
+			"v16-erpnext-tax-withholding-fields",
+			"erpnext/buying/doctype/purchase_order/purchase_order.js",
+			153,
+			"frm.doc.apply_tds = frm.doc.__onload.supplier_tds ? 1 : 0;"
+		],
+		[
+			"v16-erpnext-tax-withholding-fields",
+			"erpnext/buying/doctype/purchase_order/purchase_order.js",
+			156,
+			"frm.set_df_property(\"apply_tds\", \"read_only\", 1);"
+		],
+		[
+			"v16-erpnext-tax-withholding-fields",
+			"erpnext/buying/doctype/purchase_order/purchase_order.js",
+			170,
+			"apply_tds: function (frm) {"
+		],
+		[
+			"v16-erpnext-tax-withholding-fields",
+			"erpnext/buying/doctype/purchase_order/purchase_order.js",
+			171,
+			"if (!frm.doc.apply_tds) {"
+		],
+		[
+			"v16-erpnext-tax-withholding-fields",
+			"erpnext/buying/doctype/purchase_order/purchase_order.js",
+			172,
+			"frm.set_value(\"tax_withholding_category\", \"\");"
+		],
+		[
+			"v16-erpnext-tax-withholding-fields",
+			"erpnext/buying/doctype/purchase_order/purchase_order.js",
+			174,
+			"frm.set_value(\"tax_withholding_category\", frm.supplier_tds);"
+		],
+		[
+			"v16-erpnext-tax-withholding-tables",
+			"erpnext/accounts/doctype/purchase_invoice/purchase_invoice.js",
+			726,
+			"frm.clear_table(\"tax_withheld_vouchers\");"
 		],
 		[
 			"v16-erpnext-utm-fields",

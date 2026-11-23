@@ -1,0 +1,24 @@
+id: v16-erpnext-tax-withholding-tables
+title: ERPNext Purchase Invoice advance_tax and tax_withheld_vouchers tables removed
+severity: error
+match:
+  type: doctype_field
+  fields:
+    - Purchase Invoice.advance_tax
+    - Purchase Invoice.tax_withheld_vouchers
+message: >
+  ERPNext v16 rebuilt TDS and TCS around the Tax Withholding Entry table, and the Purchase Invoice
+  lost its Advance Tax and Tax Withheld Vouchers tables. The migration moves the history of
+  submitted invoices into tax_withholding_entries. A Purchase Invoice no longer has either table:
+  doc.advance_tax, doc.tax_withheld_vouchers and doc.append on them raise AttributeError, and
+  doc.get on them returns None, so a loop over it raises TypeError. In a form script
+  frm.doc.advance_tax and frm.doc.tax_withheld_vouchers are undefined, and frm.set_query and
+  frm.add_child on either table raise TypeError.
+replacement: >
+  Read doc.tax_withholding_entries (Tax Withholding Entry: tax_withholding_category, taxable_name,
+  taxable_amount, tax_rate, withholding_name, withholding_amount).
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/51099
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/patches/v16_0/migrate_tax_withholding_data.py#L5-L17
+  - https://github.com/frappe/frappe/blob/2df0425571ebbaed878eabc3edc5b7e7c3327ae0/frappe/model/document.py#L2477-L2483

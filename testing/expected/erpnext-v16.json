@@ -5,15 +5,18 @@
 		"v16-deprecated-country-info-get-translated-dict": 1,
 		"v16-deprecated-get-number-format-info": 1,
 		"v16-deprecated-read-multi-pdf": 1,
+		"v16-desktop-icon-fields": 3,
+		"v16-erpnext-asset-fields": 2,
 		"v16-erpnext-bom-configurator-js": 2,
 		"v16-erpnext-bom-creator-methods": 1,
-		"v16-erpnext-budget-fields": 1,
+		"v16-erpnext-budget-fields": 3,
 		"v16-erpnext-closing-stock-balance-doctype": 1,
 		"v16-erpnext-demo-transaction-doctypes-hook": 1,
 		"v16-erpnext-lead-source-doctype": 1,
-		"v16-erpnext-moved-settings": 18,
+		"v16-erpnext-moved-settings": 20,
 		"v16-erpnext-removed-argument-demo": 1,
 		"v16-erpnext-removed-demo-setup": 1,
+		"v16-erpnext-removed-fields": 7,
 		"v16-erpnext-removed-helpers": 1,
 		"v16-erpnext-removed-lead-phone-lookup": 1,
 		"v16-erpnext-removed-leaderboard": 1,
@@ -31,17 +34,18 @@
 		"v16-deprecated-get-test-records": 1,
 		"v16-deprecated-read-multi-pdf": 1,
 		"v16-deprecated-test-runner": 1,
-		"v16-erpnext-asset-fields": 1,
+		"v16-desktop-icon-fields": 3,
+		"v16-erpnext-asset-fields": 3,
 		"v16-erpnext-bom-configurator-js": 2,
 		"v16-erpnext-bom-creator-methods": 2,
-		"v16-erpnext-budget-fields": 1,
+		"v16-erpnext-budget-fields": 3,
 		"v16-erpnext-closing-stock-balance-doctype": 1,
 		"v16-erpnext-demo-transaction-doctypes-hook": 1,
 		"v16-erpnext-lead-source-doctype": 1,
-		"v16-erpnext-moved-settings": 26,
+		"v16-erpnext-moved-settings": 28,
 		"v16-erpnext-removed-argument-demo": 1,
 		"v16-erpnext-removed-demo-setup": 2,
-		"v16-erpnext-removed-fields": 2,
+		"v16-erpnext-removed-fields": 9,
 		"v16-erpnext-removed-helpers": 2,
 		"v16-erpnext-removed-lead-phone-lookup": 1,
 		"v16-erpnext-removed-leaderboard": 1,
@@ -75,6 +79,36 @@
 			"from frappe.utils.print_format import read_multi_pdf"
 		],
 		[
+			"v16-desktop-icon-fields",
+			"erpnext/accounts/utils.py",
+			1926,
+			"icons = frappe.get_all(\"Desktop Icon\", fields=[\"name\"], filters={\"_report\": report})"
+		],
+		[
+			"v16-desktop-icon-fields",
+			"erpnext/patches/v13_0/delete_old_purchase_reports.py",
+			36,
+			"desktop_icons = frappe.db.get_values(\"Desktop Icon\", {\"_report\": report}, [\"name\"])"
+		],
+		[
+			"v16-desktop-icon-fields",
+			"erpnext/patches/v13_0/delete_old_sales_reports.py",
+			31,
+			"desktop_icons = frappe.db.get_values(\"Desktop Icon\", {\"_report\": report}, [\"name\"])"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset_repair/asset_repair.js",
+			158,
+			"stock_consumption: function (frm) {"
+		],
+		[
+			"v16-erpnext-asset-fields",
+			"erpnext/assets/doctype/asset_repair/asset_repair.js",
+			159,
+			"if (!frm.doc.stock_consumption) {"
+		],
+		[
 			"v16-erpnext-bom-configurator-js",
 			"erpnext/manufacturing/doctype/bom_creator/bom_creator.js",
 			31,
@@ -91,6 +125,18 @@
 			"erpnext/public/js/bom_configurator/bom_configurator.bundle.js",
 			47,
 			"get_tree_nodes: \"erpnext.manufacturing.doctype.bom_creator.bom_creator.get_children\","
+		],
+		[
+			"v16-erpnext-budget-fields",
+			"erpnext/accounts/doctype/budget/budget.js",
+			7,
+			"frm.set_query(\"monthly_distribution\", function () {"
+		],
+		[
+			"v16-erpnext-budget-fields",
+			"erpnext/accounts/doctype/budget/budget.js",
+			10,
+			"fiscal_year: frm.doc.fiscal_year,"
 		],
 		[
 			"v16-erpnext-budget-fields",
@@ -220,6 +266,18 @@
 		],
 		[
 			"v16-erpnext-moved-settings",
+			"erpnext/stock/doctype/stock_settings/stock_settings.js",
+			14,
+			"frm.set_query(\"default_warehouse\", filters);"
+		],
+		[
+			"v16-erpnext-moved-settings",
+			"erpnext/stock/doctype/stock_settings/stock_settings.js",
+			15,
+			"frm.set_query(\"sample_retention_warehouse\", filters);"
+		],
+		[
+			"v16-erpnext-moved-settings",
 			"erpnext/stock/get_item_details.py",
 			712,
 			"default_warehouse = frappe.get_single_value(\"Stock Settings\", \"default_warehouse\")"
@@ -235,6 +293,48 @@
 			"erpnext/setup/setup_wizard/setup_wizard.py",
 			9,
 			"from erpnext.setup.demo import setup_demo_data"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.js",
+			532,
+			"frm.set_df_property(\"operation_row_number\", \"options\", args);"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.js",
+			533,
+			"frm.set_df_property(\"operation_row_number\", \"description\", description);"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.js",
+			542,
+			"operation_row_number(frm) {"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.js",
+			543,
+			"if (frm.doc.operation_row_number) {"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.js",
+			544,
+			"frm.set_value(\"operation_id\", frm.doc.operation_row_number);"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.js",
+			549,
+			"frm.toggle_display(\"operation_row_number\", !frm.doc.operation_id && frm.doc.operation);"
+		],
+		[
+			"v16-erpnext-removed-fields",
+			"erpnext/manufacturing/doctype/job_card/job_card.js",
+			550,
+			"frm.toggle_reqd(\"operation_row_number\", !frm.doc.operation_id && frm.doc.operation);"
 		],
 		[
 			"v16-erpnext-removed-helpers",

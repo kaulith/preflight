@@ -5,9 +5,20 @@ from pathlib import Path
 
 import frappe
 
-from preflight.app_scan import Scanners, add_findings, patch_places, scan_app, scan_pyproject, scan_python
+from preflight.app_scan import (
+	Scanners,
+	add_findings,
+	note_unparsed_templates,
+	patch_places,
+	scan_app,
+	scan_pyproject,
+	scan_python,
+	scan_template,
+)
 from preflight.compatibility_scanner import CompatibilityScanner, checked_out_branch, is_frappe_branch
+from preflight.jinja_scanner import JinjaScanner, renders_html, renders_layout, renders_subject
 from preflight.models import Finding, Report, Rule
+from preflight.python_scanner import PythonScanner
 from preflight.schema_scanner import LINK_FIELDTYPES, SchemaRecord
 
 # Where a site stores code, as (doctype, field, language, filters). A disabled script never runs, and a
@@ -85,6 +96,8 @@ def build_report(
 		app_paths[app] = app_path
 		scan_app(report, scanners, app, app_path, skip_tests)
 	scan_site_scripts(report, scanners)
+	scan_site_templates(report, scanners.jinja)
+	scan_site_queries(report, scanners.python)
 	report.findings += [replace(finding, source="site") for finding in scanners.schema.scan(site_schema())]
 	report.findings += site_records(rules)
 
@@ -213,6 +226,67 @@ def scan_site_scripts(report: Report, scanners: Scanners):
 		else:
 			findings = scanners.js.scan(script, label)
 		add_findings(report, findings, script, source="site")
+
+
+def scan_site_templates(report: Report, scanner: JinjaScanner):
+	"""The Jinja stored on the site that can render. A standard print format or notification renders from
+	its app's files, which the app's scan reads. Print Format is read whole, as v15.0.0 has no
+	print_format_for column to name."""
+	unparsed = 0
+	for row in frappe.get_all(
+		"Print Format", fields=["*"], filters={"disabled": 0, "standard": "No"}, order_by="name"
+	):
+		doc_doctypes = (row.doc_type,) if row.doc_type else ()
+		if row.html and renders_html(row):
+			unparsed += not scan_template(
+				report, scanner, row.html, f"Print Format: {row.name} (html)", doc_doctypes, source="site"
+			)
+		if row.doc_type and renders_layout(row):
+			label = f"Print Format: {row.name} (format_data)"
+			findings, failed = scanner.scan_layout(row.format_data, label, row.doc_type)
+			add_findings(report, findings, "", source="site")
+			unparsed += failed
+	for row in frappe.get_all(
+		"Notification",
+		fields=["name", "document_type", "channel", "subject", "message"],
+		filters={"enabled": 1, "is_standard": 0},
+		order_by="name",
+	):
+		doc_doctypes = (row.document_type,) if row.document_type else ()
+		for field in ("subject", "message"):
+			if row[field] and (field == "message" or renders_subject(row)):
+				unparsed += not scan_template(
+					report,
+					scanner,
+					row[field],
+					f"Notification: {row.name} ({field})",
+					doc_doctypes,
+					source="site",
+				)
+	for row in frappe.get_all(
+		"Email Template",
+		fields=["name", "subject", "use_html", "response", "response_html"],
+		order_by="name",
+	):
+		for field in ("subject", "response_html" if row.use_html else "response"):
+			if row[field]:
+				unparsed += not scan_template(
+					report, scanner, row[field], f"Email Template: {row.name} ({field})", source="site"
+				)
+	note_unparsed_templates(report, "site", unparsed)
+
+
+def scan_site_queries(report: Report, scanner: PythonScanner):
+	"""The SQL of each Query Report on the site that can run. A standard report's is in its app's files."""
+	for row in frappe.get_all(
+		"Report",
+		fields=["name", "query"],
+		filters={"report_type": "Query Report", "is_standard": "No", "disabled": 0},
+		order_by="name",
+	):
+		if row.query:
+			findings = scanner.scan_sql(row.query, f"Report: {row.name} (query)")
+			add_findings(report, findings, row.query, source="site")
 
 
 def site_schema() -> list[SchemaRecord]:

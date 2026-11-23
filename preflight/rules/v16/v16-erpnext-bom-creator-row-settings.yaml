@@ -1,0 +1,28 @@
+id: v16-erpnext-bom-creator-row-settings
+title: BOM Creator Item lost its source warehouse and alternative item settings
+severity: warning
+match:
+  type: doctype_field
+  fields:
+    - BOM Creator Item.allow_alternative_item
+    - BOM Creator Item.source_warehouse
+  child_tables:
+    BOM Creator.items: BOM Creator Item
+message: >
+  ERPNext v16 rebuilt BOM Creator around a part tree and no longer keeps a source warehouse or an
+  allow alternative item setting on each row. The BOMs it makes take the BOM Creator's
+  default_warehouse as their default source warehouse and allow alternative items on every row, and
+  the migration does not carry the row values across, so a value set on a row no longer reaches the
+  BOM. On an upgraded site frappe.get_all and frappe.db.get_value return what the old columns held
+  at the upgrade. On a site installed on v16 the columns do not exist: frappe.get_all,
+  frappe.db.get_value and a frappe.get_list filter on them raise, and so does reading one off a row.
+  A Custom Field placed after one of them moves to the end of the form.
+replacement: >
+  Set default_warehouse on the BOM Creator. BOM Creator submits the BOMs it makes, so a different
+  warehouse on one row, or a row that must not take alternatives, is set by amending that BOM.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/blob/6ad0ff6362db0c672e3706aa0a0d65119b1a34e2/erpnext/manufacturing/doctype/bom_creator/bom_creator.py#L24-L35
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/manufacturing/doctype/bom_creator/bom_plan.py#L70-L104
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/manufacturing/doctype/bom_creator_item/bom_creator_item.json
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/patches/v16_0/move_bom_creator_items_to_part_tree.py

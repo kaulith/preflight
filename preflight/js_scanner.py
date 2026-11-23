@@ -3,8 +3,15 @@ from bisect import bisect_right
 from collections.abc import Iterator
 from typing import NamedTuple
 
-from preflight.models import Finding, Rule, rules_by_doctype, rules_by_doctype_field, script_registration_rule
-from preflight.python_scanner import FIELD_REFERENCE, FIELD_SEPARATOR, rejects_select_field
+from preflight.models import (
+	Finding,
+	Rule,
+	child_doctypes,
+	rules_by_doctype,
+	rules_by_doctype_field,
+	script_registration_rule,
+)
+from preflight.python_scanner import API_METHOD, FIELD_REFERENCE, FIELD_SEPARATOR, rejects_select_field
 
 QUOTE = "[\"'`]"
 NOT_QUOTE_OR_LINE_BREAK = "[^\"'`\\n]*"
@@ -74,6 +81,10 @@ CLIENT_CALL = re.compile(
 	r"|frappe\s*\.\s*x?call)\s*\("
 )
 
+HTTP_CALL = re.compile(
+	r"(?<![\w$.])(frappe\s*\.\s*call|createResource|fetch|(?:\$|jQuery)\s*\.\s*(?:get|ajax)|axios\s*\.\s*get)\s*\("
+)
+
 # Client APIs that call a server method with their arguments in order, as the method and the name each
 # argument has there. frappe.db.get_list passes the object after the doctype as the rest.
 CLIENT_QUERIES = {
@@ -90,6 +101,59 @@ QUERY_METHODS = SELECTING_METHODS | {"frappe.client.set_value", "frappe.client.g
 # The arguments of those methods that name fields, and those of them that are filters.
 FIELD_ARGUMENTS = ("fields", "fieldname", "field", "filters", "or_filters", "order_by", "group_by")
 FILTER_ARGUMENTS = frozenset({"filters", "or_filters"})
+
+FORM_SCRIPT = re.compile(r"(?<![\w$.])frappe\s*\.\s*ui\s*\.\s*form\s*\.\s*on\s*\(")
+HANDLER = re.compile(
+	r"\s*(?:async\s+)?(?P<key>[A-Za-z_$][\w$]*|\"[^\"\n]*\"|'[^'\n]*')\s*"
+	r"(?:\(|:\s*(?:async\s+)?(?:function\b[^(]*\(|\(|(?P<parameter>[A-Za-z_$][\w$]*)\s*(?==>)))"
+)
+MEMBER = re.compile(r"\s*(?:\??\.\s*([A-Za-z_$][\w$]*)|(?:\?\.\s*)?(\[))")
+CALL_OPENING = re.compile(r"\s*\(")
+OBJECT_OPENING = re.compile(r"\s*\{")
+SINGLE_PARAMETER = re.compile(r"(?<![\w$.])([A-Za-z_$][\w$]*)\s*(?==>)")
+CONTROL_STATEMENT = re.compile(r"(?<![\w$.])(?:if|for|while|switch|with)\s*\(")
+FUNCTION_BODY = re.compile(r"\s*(?:=>\s*)?(\{)|\s*=>")
+EXPRESSION_END = re.compile(r"[,;)\]}(\[{]")
+EXPRESSION_CONTINUES = re.compile(r"\s*[?|&+\-*/%<>=(]")
+
+# The methods of frappe's Form that take a fieldname first. add_fetch is not one: with no target doctype
+# its link field can be a child table's.
+FORM_FIELD_METHODS = frozenset(
+	{
+		"add_child",
+		"clear_table",
+		"field_map",
+		"get_docfield",
+		"get_field",
+		"get_formatted",
+		"get_sum",
+		"refresh_field",
+		"reset_currency_labels",
+		"scroll_to_field",
+		"set_currency_labels",
+		"set_df_property",
+		"set_indicator_formatter",
+		"set_query",
+		"set_value",
+		"toggle_display",
+		"toggle_enable",
+		"toggle_reqd",
+		"update_in_all_rows",
+	}
+)
+FORM_FIELD_LIST_METHODS = frozenset(
+	{
+		"field_map",
+		"reset_currency_labels",
+		"set_currency_labels",
+		"toggle_display",
+		"toggle_enable",
+		"toggle_reqd",
+	}
+)
+# Those whose fieldnames are a child table's once the table is passed, as the argument count that passes
+# it and its position.
+FORM_TABLE_ARGUMENTS = {"reset_currency_labels": (2, 1), "set_currency_labels": (3, 2), "set_query": (3, 1)}
 
 
 class Literal(NamedTuple):
@@ -175,6 +239,144 @@ class LiteralReader:
 		return [self.value(*part) for part in self.parts(opening + 1, closing)]
 
 
+class FormScriptReader(LiteralReader):
+	"""Reads the handlers of frappe.ui.form.on calls and the fields they reach through the names frappe
+	passes them: the form, and for a child doctype the row's doctype and name."""
+
+	def __init__(self, strings: list[tuple[int, str]], syntax: str):
+		super().__init__(strings, syntax)
+		statements = {statement.end() - 1 for statement in CONTROL_STATEMENT.finditer(syntax)}
+		heads = [(arrow.start(), [arrow[1]], arrow.end()) for arrow in SINGLE_PARAMETER.finditer(syntax)]
+		heads += [
+			(opening, PLAIN_KEY.findall(syntax, opening, closing), closing + 1)
+			for opening, closing in self.pairs.items()
+			if syntax[opening] == "(" and opening not in statements
+		]
+		self.functions = [
+			(start, names, end)
+			for start, names, parameters_end in heads
+			if (end := self.function_end(parameters_end)) is not None
+		]
+
+	def function_end(self, parameters_end: int) -> int | None:
+		"""Where the function whose parameters end at `parameters_end` ends, or None if no body follows."""
+		if not (body := FUNCTION_BODY.match(self.syntax, parameters_end)):
+			return None
+		if body[1]:
+			return self.pairs.get(body.start(1))
+		end = self.skip_brackets(EXPRESSION_END, body.end(), len(self.syntax))
+		return end.start() if end else len(self.syntax)
+
+	def passed(self, opening: int) -> list[tuple[int, int]]:
+		"""The spans of the arguments of the call whose parenthesis opens at `opening`, without the empty
+		one a trailing comma leaves."""
+		if (closing := self.pairs.get(opening)) is None:
+			return []
+		return [
+			(start, end) for start, end in self.parts(opening + 1, closing) if self.syntax[start:end].strip()
+		]
+
+	def handlers(self, start: int, end: int) -> Iterator[tuple[Literal, list[str], int, int]]:
+		"""Each function of the object in syntax[start:end], as its key, its parameters and its body's span."""
+		if not (opening := OBJECT_OPENING.match(self.syntax, start, end)):
+			return
+		if (closing := self.pairs.get(opening.end() - 1)) is None:
+			return
+		for part_start, part_end in self.parts(opening.end(), closing):
+			if not (head := HANDLER.match(self.syntax, part_start, part_end)):
+				continue
+			if head["parameter"]:
+				parameters, body = [head["parameter"]], head.end("parameter")
+			elif (parameters_end := self.pairs.get(head.end() - 1)) is None:
+				continue
+			else:
+				parameters = [
+					self.syntax[name_start:name_end].strip()
+					for name_start, name_end in self.parts(head.end(), parameters_end)
+				]
+				body = parameters_end + 1
+			if (body_end := self.function_end(body)) is not None:
+				key = self.value(*head.span("key")) or Literal(head.start("key"), head["key"])
+				yield key, parameters, body, body_end
+
+	def reads(self, name: str, start: int, end: int) -> list[int]:
+		"""Where syntax[start:end] reads a name bound just before it, outside the nested functions with a
+		parameter of that name. A name declared or assigned again there is not followed at all."""
+		word = rf"(?<![\w$.]){re.escape(name)}(?![\w$])"
+		if re.compile(rf"\b(?:let|const|var)\s+{word}|{word}\s*=(?![=>])").search(self.syntax, start, end):
+			return []
+		hidden = [
+			(function_start, function_end)
+			for function_start, names, function_end in self.functions
+			if name in names and start <= function_start < end
+		]
+		return [
+			read.start()
+			for read in re.compile(word).finditer(self.syntax, start, end)
+			if not any(low <= read.start() < high for low, high in hidden)
+		]
+
+	def member(self, end: int) -> Literal | None:
+		"""The name read off the expression ending at `end`, by a dot or by a literal in brackets."""
+		if not (access := MEMBER.match(self.syntax, end)):
+			return None
+		if access[1]:
+			return Literal(access.start(1), access[1])
+		closing = self.pairs.get(access.start(2))
+		name = self.value(access.start(2) + 1, closing) if closing else None
+		return name if isinstance(name, Literal) else None
+
+	def method_fields(self, method: str, opening: int) -> list[Literal]:
+		"""The fields of the form's own doctype that a call of a Form method names."""
+		if not (arguments := [self.value(*part) for part in self.passed(opening)]):
+			return []
+		if method in FORM_TABLE_ARGUMENTS:
+			count, table = FORM_TABLE_ARGUMENTS[method]
+			if len(arguments) >= count:
+				return literals(arguments[table])
+		if method in FORM_FIELD_LIST_METHODS:
+			return literals(arguments[0])
+		if method == "set_value" and isinstance(arguments[0], dict):
+			return list(arguments[0])
+		return [arguments[0]] if isinstance(arguments[0], Literal) else []
+
+	def form_fields(self, form: str, start: int, end: int) -> Iterator[Literal]:
+		"""The fields syntax[start:end] reaches through the form parameter."""
+		for read in self.reads(form, start, end):
+			if not (access := MEMBER.match(self.syntax, read + len(form))) or not access[1]:
+				continue
+			if access[1] in ("doc", "fields_dict"):
+				if field := self.member(access.end()):
+					yield field
+			elif access[1] in FORM_FIELD_METHODS and (call := CALL_OPENING.match(self.syntax, access.end())):
+				yield from self.method_fields(access[1], call.end() - 1)
+
+	def row_fields(self, cdt: str, cdn: str, start: int, end: int) -> Iterator[Literal]:
+		"""The fields syntax[start:end] reaches through locals[cdt][cdn], directly or by a name bound to it."""
+		row = re.compile(
+			r"(?:(?:(?<![\w$.])(?:let|const|var)\s+|,\s*)(?P<bound>[A-Za-z_$][\w$]*)\s*=\s*)?"
+			rf"(?<![\w$.])locals\s*\[\s*(?P<cdt>{re.escape(cdt)})\s*\]\s*\[\s*(?P<cdn>{re.escape(cdn)})\s*\]"
+		)
+		visible = {*self.reads(cdt, start, end), *self.reads(cdn, start, end)}
+		for access in row.finditer(self.syntax, start, end):
+			if not {access.start("cdt"), access.start("cdn")} <= visible:
+				continue
+			if field := self.member(access.end()):
+				yield field
+			elif access["bound"] and not EXPRESSION_CONTINUES.match(self.syntax, access.end()):
+				block_end = min(
+					(
+						closing
+						for opening, closing in self.pairs.items()
+						if self.syntax[opening] == "{" and opening < access.start() < closing
+					),
+					default=end,
+				)
+				for read in self.reads(access["bound"], access.end(), min(block_end, end)):
+					if field := self.member(read + len(access["bound"])):
+						yield field
+
+
 def by_name(entries) -> dict:
 	"""An object's entries keyed by the text of their keys."""
 	return {key.text: value for key, value in entries.items()} if isinstance(entries, dict) else {}
@@ -203,6 +405,33 @@ def client_queries(strings: list[tuple[int, str]], syntax: str) -> Iterator[tupl
 			method = method.text
 		if method in QUERY_METHODS:
 			yield method, passed
+
+
+def http_requests(strings: list[tuple[int, str]], syntax: str) -> Iterator[tuple[Literal, str]]:
+	"""Each request the client sends to a literal server method or URL, with its HTTP method, when that is
+	a literal or the API's default."""
+	reader = None
+	for call in HTTP_CALL.finditer(syntax):
+		reader = reader or LiteralReader(strings, syntax)
+		if not (arguments := reader.arguments(call.end() - 1)):
+			continue
+		api = "".join(call.group(1).split())
+		options = by_name(arguments[0])
+		if api == "frappe.call":
+			target, sent = options.get("method"), options.get("type", "POST")
+		elif api == "createResource":
+			target, sent = options.get("url"), options.get("method", "POST")
+		elif api.endswith(".ajax"):
+			target, sent = options.get("url"), options.get("type", options.get("method", "GET"))
+		elif api == "fetch":
+			settings = arguments[1] if len(arguments) > 1 else {}
+			target = arguments[0]
+			sent = by_name(settings).get("method", "GET") if isinstance(settings, dict) else None
+		else:
+			target, sent = arguments[0], "GET"
+		sent = sent.text if isinstance(sent, Literal) else sent
+		if isinstance(target, Literal) and isinstance(sent, str):
+			yield target, sent.upper()
 
 
 def literals(value) -> list[Literal]:
@@ -307,16 +536,19 @@ def lex(source: str, stylesheet: bool = False) -> tuple[str, list[tuple[int, str
 class JSScanner:
 	"""Pattern rules, as one regex each, run over a file's code line by line with its comments blanked,
 	doctype rules as one regex each over the whole of that code, string and import path rules matched
-	against its string literals, and select_field and doctype_field rules matched against the literals
-	its client queries pass."""
+	against its string literals, select_field and doctype_field rules matched against the literals its
+	client queries pass, and doctype_field rules against the fields its form scripts reach."""
 
 	def __init__(self, rules: list[Rule]):
 		self.matchers: list[tuple[re.Pattern, Rule]] = []
 		self.string_rules: list[tuple[str, Rule]] = []
 		self.import_rules: dict[tuple[str, ...], list[Rule]] = {}
 		self.select_field_rules: list[tuple[list[re.Pattern], Rule]] = []
+		self.http_rules: dict[str, list[Rule]] = {}
 		self.doctype_rules = rules_by_doctype(rules)
 		self.field_rules = rules_by_doctype_field(rules)
+		self.field_doctypes = {doctype for doctype, _ in self.field_rules}
+		self.child_doctypes = frozenset(child_doctypes(rules).values())
 		for rule in rules:
 			if rule.match.type == "pattern":
 				self.matchers += [(re.compile(pattern), rule) for pattern in rule.match.patterns]
@@ -326,6 +558,9 @@ class JSScanner:
 				)
 			elif rule.match.type == "string_contains":
 				self.string_rules += [(path, rule) for path in rule.match.paths]
+			elif rule.match.type == "http_method":
+				for path in rule.match.paths:
+					self.http_rules.setdefault(path, []).append(rule)
 			elif rule.match.type == "import_path":
 				for path in rule.match.paths:
 					self.import_rules.setdefault(tuple(path.split(".")), []).append(rule)
@@ -372,6 +607,40 @@ class JSScanner:
 						for rule in self.field_rules.get((field_doctype, fieldname), ())
 					)
 
+	def form_script_hits(self, strings: list[tuple[int, str]], syntax: str) -> Iterator[tuple[int, Rule]]:
+		"""The doctype_field rules the handlers of its form scripts reach, each with the offset of the
+		field reference. A child doctype's handlers get the parent's form, so only their row is its own."""
+		reader = None
+		for call in FORM_SCRIPT.finditer(syntax):
+			reader = reader or FormScriptReader(strings, syntax)
+			parts = reader.passed(call.end() - 1)
+			if len(parts) != 2 or not isinstance(doctype := reader.value(*parts[0]), Literal):
+				continue
+			if doctype.text not in self.field_doctypes:
+				continue
+			for key, parameters, start, end in reader.handlers(*parts[1]):
+				fields = [key]
+				if doctype.text not in self.child_doctypes:
+					if PLAIN_KEY.fullmatch(parameters[0]):
+						fields += reader.form_fields(parameters[0], start, end)
+				elif len(parameters) > 2 and all(map(PLAIN_KEY.fullmatch, parameters[1:3])):
+					fields += reader.row_fields(parameters[1], parameters[2], start, end)
+				for field in fields:
+					yield from (
+						(field.offset, rule) for rule in self.field_rules.get((doctype.text, field.text), ())
+					)
+
+	def http_hits(self, strings: list[tuple[int, str]], syntax: str) -> Iterator[tuple[int, Rule]]:
+		"""The http_method rules the client's requests match, each with the offset of the literal naming
+		the server method."""
+		for target, sent in http_requests(strings, syntax):
+			called = API_METHOD.search(target.text)
+			yield from (
+				(target.offset, rule)
+				for rule in self.http_rules.get(called.group(1) if called else target.text, ())
+				if sent in rule.match.rejected_methods
+			)
+
 	def scan(self, source: str, file: str) -> list[Finding]:
 		code, strings, syntax = lex(source, stylesheet=file.endswith(".scss"))
 		lines = source.split("\n")
@@ -399,6 +668,12 @@ class JSScanner:
 				report(rule, bisect_right(line_starts, offset + index))
 		if self.select_field_rules or self.field_rules:
 			for offset, rule in self.query_hits(strings, syntax):
+				report(rule, bisect_right(line_starts, offset))
+		if self.field_rules:
+			for offset, rule in self.form_script_hits(strings, syntax):
+				report(rule, bisect_right(line_starts, offset))
+		if self.http_rules:
+			for offset, rule in self.http_hits(strings, syntax):
 				report(rule, bisect_right(line_starts, offset))
 		# Last, so a call on the same line that does raise keeps the finding at its error.
 		for rule, line in registrations:

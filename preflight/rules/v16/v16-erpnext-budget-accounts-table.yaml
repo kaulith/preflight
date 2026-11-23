@@ -1,0 +1,22 @@
+id: v16-erpnext-budget-accounts-table
+title: ERPNext Budget accounts table removed
+severity: error
+match:
+  type: doctype_field
+  fields:
+    - Budget.accounts
+message: >
+  ERPNext v16 made a Budget cover one account, so its Budget Accounts table is gone. The migration
+  makes a new Budget for each account row, cancels the submitted original or deletes the draft, and
+  deletes the Budget Account rows. A Budget no longer has accounts: doc.accounts and
+  doc.append("accounts", {...}) raise AttributeError, and doc.get("accounts") returns None, so a
+  loop over it raises TypeError. In a form script frm.doc.accounts is undefined, and frm.set_query
+  and frm.add_child on the table raise TypeError.
+replacement: >
+  Read doc.account and doc.budget_amount on each Budget, and query Budget with a filter on account
+  where the code went through the rows of one.
+fix: with-upgrade
+references:
+  - https://github.com/frappe/erpnext/pull/50286
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/patches/v16_0/migrate_budget_records_to_new_structure.py#L38-L68
+  - https://github.com/frappe/frappe/blob/2df0425571ebbaed878eabc3edc5b7e7c3327ae0/frappe/model/document.py#L2477-L2483

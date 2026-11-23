@@ -5,6 +5,8 @@ match:
   type: doctype_field
   fields:
     - Purchase Order Item.subcontracted_quantity
+  child_tables:
+    Purchase Order.items: Purchase Order Item
 message: >
   ERPNext v16 renamed the Subcontracted Quantity of a Purchase Order Item from
   subcontracted_quantity to subcontracted_qty, when it added subcontracting inward. The

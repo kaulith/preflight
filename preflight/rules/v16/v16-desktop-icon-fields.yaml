@@ -1,0 +1,39 @@
+id: v16-desktop-icon-fields
+title: Desktop Icon lost the fields of the old module grid
+severity: warning
+match:
+  type: doctype_field
+  fields:
+    - Desktop Icon._doctype
+    - Desktop Icon._report
+    - Desktop Icon.blocked
+    - Desktop Icon.category
+    - Desktop Icon.color
+    - Desktop Icon.custom
+    - Desktop Icon.description
+    - Desktop Icon.force_show
+    - Desktop Icon.module_name
+    - Desktop Icon.reverse
+    - Desktop Icon.type
+message: >
+  frappe v16 rebuilt Desktop Icon for its new desktop. An icon is now named by its label and points
+  somewhere through link_type and link_to, and the old grid's module_name, type, _doctype, _report,
+  color, reverse, category, description, custom, blocked and force_show are gone. The upgrade empties
+  the Desktop Icon table, so nothing stored in it on v15 survives, and leaves the old columns behind.
+  On an upgraded site a frappe.get_all filter on them matches nothing; frappe.get_list and the
+  browser's frappe.db.get_value leave the field out of the result, and raise a PermissionError when
+  it filters or sorts the query. On a site installed on v16 the columns do not exist, and
+  frappe.get_all and frappe.db.get_value on them raise, which stops an install step that hides a
+  module's icon.
+  A Custom Field placed after one of them moves to the end of the form.
+replacement: >
+  Remove code that only maintained the old module grid. To hide an icon, find it by label, which
+  both versions have: frappe.db.set_value("Desktop Icon", {"label": "Accounting"}, "hidden", 1). On
+  v16 an app adds an icon by shipping a JSON file in its desktop_icon folder.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/34565
+  - https://github.com/frappe/frappe/commit/7cdfb60797f2faf30c6106903906760186b8c9ab
+  - https://github.com/frappe/frappe/blob/2df0425571ebbaed878eabc3edc5b7e7c3327ae0/frappe/patches.txt#L198
+  - https://github.com/frappe/frappe/blob/2df0425571ebbaed878eabc3edc5b7e7c3327ae0/frappe/desk/doctype/desktop_icon/desktop_icon.json
+  - https://github.com/frappe/frappe/blob/2df0425571ebbaed878eabc3edc5b7e7c3327ae0/frappe/database/query.py#L1020-L1057

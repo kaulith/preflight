@@ -9,6 +9,7 @@
 		"v16-deprecated-gravatar-helpers": 1,
 		"v16-deprecated-show-progress": 1,
 		"v16-deprecated-test-runner": 1,
+		"v16-desktop-icon-fields": 20,
 		"v16-has-permission-hook-returns-none": 2,
 		"v16-has-permission-raise-exception": 4,
 		"v16-moved-desk-permission-helpers": 5,
@@ -52,6 +53,7 @@
 		"v16-deprecated-show-progress": 1,
 		"v16-deprecated-test-runner": 12,
 		"v16-deprecated-tests-utils-helpers": 24,
+		"v16-desktop-icon-fields": 20,
 		"v16-has-permission-hook-returns-none": 2,
 		"v16-has-permission-raise-exception": 4,
 		"v16-moved-desk-permission-helpers": 6,
@@ -132,6 +134,126 @@
 			"frappe/commands/utils.py",
 			789,
 			"ret = frappe.test_runner.main("
+		],
+		[
+			"v16-desktop-icon-fields",
+			"frappe/desk/doctype/desktop_icon/desktop_icon.py",
+			63,
+			"\"module_name\","
+		],
+		[
+			"v16-desktop-icon-fields",
+			"frappe/desk/doctype/desktop_icon/desktop_icon.py",
+			67,
+			"\"type\","
+		],
+		[
+			"v16-desktop-icon-fields",
+			"frappe/desk/doctype/desktop_icon/desktop_icon.py",
+			69,
+			"\"color\","
+		],
+		[
+			"v16-desktop-icon-fields",
+			"frappe/desk/doctype/desktop_icon/desktop_icon.py",
+			70,
+			"\"description\","
+		],
+		[
+			"v16-desktop-icon-fields",
+			"frappe/desk/doctype/desktop_icon/desktop_icon.py",
+			71,
+			"\"category\","
+		],
+		[
+			"v16-desktop-icon-fields",
+			"frappe/desk/doctype/desktop_icon/desktop_icon.py",
+			72,
+			"\"_doctype\","
+		],
+		[
+			"v16-desktop-icon-fields",
+			"frappe/desk/doctype/desktop_icon/desktop_icon.py",
+			73,
+			"\"_report\","
+		],
+		[
+			"v16-desktop-icon-fields",
+			"frappe/desk/doctype/desktop_icon/desktop_icon.py",
+			75,
+			"\"force_show\","
+		],
+		[
+			"v16-desktop-icon-fields",
+			"frappe/desk/doctype/desktop_icon/desktop_icon.py",
+			76,
+			"\"reverse\","
+		],
+		[
+			"v16-desktop-icon-fields",
+			"frappe/desk/doctype/desktop_icon/desktop_icon.py",
+			77,
+			"\"custom\","
+		],
+		[
+			"v16-desktop-icon-fields",
+			"frappe/desk/doctype/desktop_icon/desktop_icon.py",
+			79,
+			"\"blocked\","
+		],
+		[
+			"v16-desktop-icon-fields",
+			"frappe/desk/doctype/desktop_icon/desktop_icon.py",
+			191,
+			"{\"standard\": 1, \"module_name\": userdefined_icon.module},"
+		],
+		[
+			"v16-desktop-icon-fields",
+			"frappe/desk/doctype/desktop_icon/desktop_icon.py",
+			192,
+			"[\"name\", \"icon\", \"color\", \"reverse\"],"
+		],
+		[
+			"v16-desktop-icon-fields",
+			"frappe/desk/doctype/desktop_icon/desktop_icon.py",
+			242,
+			"name = frappe.db.get_value(\"Desktop Icon\", {\"standard\": 1, \"module_name\": module_name})"
+		],
+		[
+			"v16-desktop-icon-fields",
+			"frappe/desk/doctype/desktop_icon/desktop_icon.py",
+			270,
+			"name = frappe.db.get_value(\"Desktop Icon\", {\"module_name\": module_name})"
+		],
+		[
+			"v16-desktop-icon-fields",
+			"frappe/desk/doctype/desktop_icon/desktop_icon.py",
+			327,
+			"icon.db_set(\"blocked\", hidden)"
+		],
+		[
+			"v16-desktop-icon-fields",
+			"frappe/desk/doctype/desktop_icon/desktop_icon.py",
+			332,
+			"d.module_name for d in frappe.get_all(\"Desktop Icon\", filters={\"standard\": 1}, fields=[\"module_name\"])"
+		],
+		[
+			"v16-desktop-icon-fields",
+			"frappe/desk/doctype/desktop_icon/desktop_icon.py",
+			351,
+			"\"Desktop Icon\", {\"module_name\": module_name, \"owner\": user, \"standard\": 0}"
+		],
+		[
+			"v16-desktop-icon-fields",
+			"frappe/desk/doctype/desktop_icon/desktop_icon.py",
+			362,
+			"standard_name = frappe.db.get_value(\"Desktop Icon\", {\"module_name\": module_name, \"standard\": 1})"
+		],
+		[
+			"v16-desktop-icon-fields",
+			"frappe/desk/doctype/desktop_icon/desktop_icon.py",
+			417,
+			"\"Desktop Icon\", {\"module_name\": m[\"module_name\"], \"app\": app, \"standard\": 1}"
 		],
 		[
 			"v16-has-permission-hook-returns-none",

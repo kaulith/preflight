@@ -1,0 +1,26 @@
+id: v16-erpnext-methods-post-only
+title: Seven ERPNext methods no longer accept GET
+severity: error
+match:
+  type: http_method
+  paths:
+    - erpnext.assets.doctype.asset.asset.transfer_asset
+    - erpnext.buying.doctype.purchase_order.purchase_order.update_status
+    - erpnext.buying.doctype.request_for_quotation.request_for_quotation.send_supplier_emails
+    - erpnext.manufacturing.doctype.job_card.job_card.make_time_log
+    - erpnext.selling.doctype.sales_order.sales_order.update_status
+    - erpnext.stock.doctype.warehouse.warehouse.convert_to_group_or_ledger
+    - erpnext.utilities.bulk_transaction.retry
+  rejected_methods:
+    - GET
+message: >
+  ERPNext v16 whitelists these methods for POST only, where v15 took any HTTP method. A GET to one
+  raises a PermissionError. frappe.call sends POST unless told otherwise, and Python calls and
+  background jobs are not checked, so only a caller that asks for GET breaks.
+replacement: >
+  Send the request as POST, with the CSRF token or API key it already needs.
+fix: before
+references:
+  - https://github.com/frappe/frappe/blob/2df0425571ebbaed878eabc3edc5b7e7c3327ae0/frappe/handler.py#L102-L112
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/selling/doctype/sales_order/sales_order.py#L2191-L2192
+  - https://github.com/frappe/erpnext/blob/886ab6ae187244e7f1b852393384ab6019d56264/erpnext/buying/doctype/purchase_order/purchase_order.py#L1084-L1085
