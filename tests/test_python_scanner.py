@@ -170,6 +170,11 @@ def test_v17_clean_file_has_no_findings():
 	assert PythonScanner(load_rules("v17")).scan((FIXTURES / "clean.py").read_text(), "clean.py") == []
 
 
+def test_password_limit_from_frappe_auth_is_not_reported():
+	source = "from frappe.auth import MAX_PASSWORD_SIZE\n"
+	assert PythonScanner(load_rules("v17")).scan(source, "app.py") == []
+
+
 def test_removed_argument_is_caught_when_passed_positionally():
 	source = 'frappe.permissions.has_permission("ToDo", "read", doc, user, False)\n'
 	assert lines_by_rule(source) == {"v16-has-permission-raise-exception": [1]}
