@@ -4,6 +4,7 @@ import re
 from collections import Counter
 from pathlib import Path
 from textwrap import indent
+from urllib.parse import quote
 
 import click
 
@@ -16,7 +17,9 @@ SHIM_HEADING = "Shim that runs on both versions"
 JSON_SCHEMA_VERSION = 1
 SARIF_SCHEMA = "https://json.schemastore.org/sarif-2.1.0.json"
 SARIF_LEVELS = {"error": "error", "warning": "warning", "info": "note"}
-CONTROL_CHARACTER = re.compile(r"[\x00-\x08\x0b-\x1f\x7f-\x9f]")
+# Control characters and line breaks, the marks that reorder text on screen, and the lone surrogates of a
+# file name that is not UTF-8.
+UNPRINTABLE = re.compile(r"[\x00-\x08\x0a-\x1f\x7f-\x9f\u2028-\u202e\u2066-\u2069\ud800-\udfff]")
 
 
 def python_version() -> str:
@@ -26,8 +29,9 @@ def python_version() -> str:
 
 def printable(text: str) -> str:
 	"""Snippets, paths and reasons come from the code and site being scanned; a control character in them is
-	printed escaped, so an escape sequence cannot rewrite the terminal or its clipboard."""
-	return CONTROL_CHARACTER.sub(lambda match: repr(match[0])[1:-1], text)
+	printed escaped, so an escape sequence cannot rewrite the terminal or its clipboard, and a line break
+	cannot forge a line of the report."""
+	return UNPRINTABLE.sub(lambda match: repr(match[0])[1:-1], text)
 
 
 def file_label(finding: Finding) -> str:
@@ -67,7 +71,7 @@ def format_report(report: Report, minimum: str = "info", fail_on: str = "error")
 	lines = [click.style(title, bold=True)]
 	if report.ruleset:
 		lines.append(f"Rules checked {report.ruleset.checked} against {report.ruleset.against}")
-	lines.append(f"Apps scanned: {', '.join(report.apps) or 'none'}")
+	lines.append(f"Apps scanned: {printable(', '.join(report.apps)) or 'none'}")
 
 	findings_by_rule: dict[Rule, list[Finding]] = {}
 	for finding in findings:
@@ -319,7 +323,10 @@ def format_sarif(report: Report, minimum: str = "info", fail_on: str = "error") 
 					{
 						"physicalLocation": {
 							"artifactLocation": {
-								"uri": finding.file if len(report.apps) == 1 else file_label(finding)
+								"uri": quote(
+									finding.file if len(report.apps) == 1 else file_label(finding),
+									errors="surrogateescape",
+								)
 							},
 							"region": {"startLine": finding.line or 1},
 						}
