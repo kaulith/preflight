@@ -212,6 +212,16 @@ def test_hooks_file_that_does_not_parse_hooks_nothing(tmp_path):
 	assert hooked_doctypes(tmp_path) == {}
 
 
+def test_script_hook_on_a_removed_doctype_is_a_warning():
+	source = 'doctype_js = {"Newsletter": "public/js/newsletter.js"}\n'
+	assert [finding.rule.severity for finding in scanner.scan(source, "digest/hooks.py")] == ["warning"]
+
+
+def test_server_hook_on_a_removed_doctype_stays_an_error():
+	source = 'doc_events = {"Newsletter": {"on_update": "digest.api.notify"}}\n'
+	assert [finding.rule.severity for finding in scanner.scan(source, "digest/hooks.py")] == ["error"]
+
+
 def test_invalid_python_raises_syntax_error():
 	with pytest.raises(SyntaxError):
 		scanner.scan("has_permission = {\n", "digest/hooks.py")

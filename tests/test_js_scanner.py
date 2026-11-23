@@ -229,6 +229,19 @@ def test_undeclared_import_is_not_matched_in_client_code():
 	assert lines_matched(match, 'frappe.xcall("bleach.clean", { html });\n') == []
 
 
+@pytest.mark.parametrize(
+	"source",
+	['frappe.ui.form.on("Newsletter", {});', 'frappe.listview_settings["Newsletter"] = {};'],
+)
+def test_script_registered_on_a_removed_doctype_is_a_warning(source):
+	assert [finding.rule.severity for finding in scanner.scan(source, "fixture.js")] == ["warning"]
+
+
+def test_a_call_beside_a_registered_script_keeps_the_error():
+	source = 'frappe.ui.form.on("Newsletter", {}); frappe.db.exists("Newsletter", "Launch");'
+	assert [finding.rule.severity for finding in scanner.scan(source, "fixture.js")] == ["error"]
+
+
 def test_stylesheet_comments_urls_and_slashes_stay_on_their_line():
 	source = (
 		'@import "frappe/public/scss/common";\n'

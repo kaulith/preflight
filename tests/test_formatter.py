@@ -6,7 +6,7 @@ import click
 
 from preflight import __version__
 from preflight.formatter import format_html, format_json, format_report, format_sarif, python_version
-from preflight.models import Finding, Report, RuleSet
+from preflight.models import Finding, Report, RuleSet, script_registration_rule
 from preflight.python_scanner import PythonScanner
 from preflight.rule_loader import load_rules
 
@@ -392,6 +392,21 @@ def test_sarif_places_a_finding_with_no_line_on_the_first_line_of_its_file():
 		"artifactLocation": {"uri": "pyproject.toml"},
 		"region": {"startLine": 1},
 	}
+
+
+def test_sarif_describes_a_rule_with_two_severities_once():
+	rule = next(rule for rule in load_rules("v16") if rule.id == "v16-removed-newsletter-doctypes")
+	error = Finding(
+		rule=rule, file="digest/api.js", line=1, snippet='frappe.db.exists("Newsletter")', app="digest"
+	)
+	warning = replace(error, rule=script_registration_rule(rule), line=2)
+	report = Report(site=None, target="v16", apps=["digest"], findings=[warning, error])
+	run = json.loads(format_sarif(report))["runs"][0]
+	assert [descriptor["id"] for descriptor in run["tool"]["driver"]["rules"]] == [rule.id]
+	assert [(result["ruleIndex"], result["level"]) for result in run["results"]] == [
+		(0, "warning"),
+		(0, "error"),
+	]
 
 
 def test_sarif_leaves_out_a_missing_upstream_branch_and_counts_it():
