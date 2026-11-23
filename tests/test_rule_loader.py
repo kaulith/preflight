@@ -50,6 +50,12 @@ def test_v17_rule_still_on_develop_is_a_warning():
 	assert {rule.severity for rule in rules if rule.id in V17_REMOVALS or "-moved-" in rule.id} == {"error"}
 
 
+def test_v17_rule_id_carries_no_status_word():
+	assert not [
+		rule.id for rule in load_rules("v17") if rule.id.startswith(("v17-deprecated-", "v17-removed-"))
+	]
+
+
 def test_unknown_target_lists_only_released_targets():
 	with pytest.raises(RuleError, match="Available targets: v16$"):
 		load_rules("v99")
