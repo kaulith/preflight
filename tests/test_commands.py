@@ -169,8 +169,16 @@ def test_path_scan_leaves_baselined_patch_findings_out_of_the_count(app_path, tm
 	assert not any(line.startswith("patches:") for line in json.loads(result.output)["not_checked"])
 
 
-def test_a_baseline_that_is_not_a_report_exits_2(app_path, tmp_path):
-	(tmp_path / "baseline.json").write_text('{"findings": [{"rule": "v16-removed-blog"}]}', encoding="utf-8")
+@pytest.mark.parametrize(
+	"baseline",
+	(
+		'{"findings": [{"rule": "v16-removed-blog"}]}',
+		'{"findings": [{"rule": ["v16-removed-blog"], "app": "digest", "file": "api.py", "snippet": ""}]}',
+		"[" * 200000,
+	),
+)
+def test_a_baseline_that_is_not_a_report_exits_2(app_path, tmp_path, baseline):
+	(tmp_path / "baseline.json").write_text(baseline, encoding="utf-8")
 	result = CliRunner().invoke(
 		commands.preflight_command,
 		["--path", str(app_path), "--target", "v16", "--baseline", str(tmp_path / "baseline.json")],

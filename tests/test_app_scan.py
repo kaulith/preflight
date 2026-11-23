@@ -73,6 +73,42 @@ def test_ignore_comments_name_the_rules_they_suppress(line, rule_ids):
 	assert ignored_rules(line) == rule_ids
 
 
+@pytest.mark.parametrize("comment", ("#" * 200000, "# " + "preflight: ignore[" * 20000))
+def test_a_long_comment_with_no_closed_ignore_names_no_rules(comment):
+	assert ignored_rules(comment) == set()
+
+
+def test_a_symlink_to_a_device_is_named_as_unreadable(app_path):
+	(app_path / "totals.py").symlink_to("/dev/null")
+	report = build_path_report(RULES, "v16", [app_path])
+	assert "digest/digest/totals.py: not a regular file" in report.unreadable_files
+
+
+@pytest.mark.parametrize(
+	("file", "content"),
+	(
+		("digest/report/sales/sales.json", '{"report_type": "Query Report", "query": 5}'),
+		(
+			"digest/print_format/sales/sales.json",
+			'{"doctype": "Print Format", "custom_format": 1, "html": 5}',
+		),
+		("digest/notification/sales/sales.json", '{"doctype": "Notification", "subject": 5}'),
+		("digest/doctype/sales/sales.json", '{"fields": [1]}'),
+		("digest/doctype/sales/sales.json", "[" * 200000),
+		("pyproject.toml", "project = 1\n"),
+		("digest/totals.py", "total = " + "-" * 200000 + "1\n"),
+		("digest/public/sales.js", "frappe.call(" + "[\n" * 20000 + "]\n" * 20000 + ")\n"),
+	),
+)
+def test_a_malformed_file_does_not_stop_the_scan(app_path, file, content):
+	path = app_path.parent / file
+	path.parent.mkdir(parents=True, exist_ok=True)
+	path.write_text(content, encoding="utf-8")
+	(app_path / "api.py").write_text('frappe.db.get_value("Blog Post", name)\n', encoding="utf-8")
+	report = build_path_report(RULES, "v16", [app_path])
+	assert [finding.file for finding in report.findings] == ["digest/api.py"]
+
+
 def test_a_suppressed_finding_is_counted_and_not_reported(app_path):
 	(app_path / "api.py").write_text(
 		'frappe.db.get_value("Blog Post", name)  # preflight: ignore[v16-removed-blog-doctypes]\n',

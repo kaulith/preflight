@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 
 from preflight.models import Match, Rule
-from preflight.python_scanner import PythonScanner, call_uses_argument
+from preflight.python_scanner import PythonScanner, call_uses_argument, split_fields
 from preflight.rule_loader import load_rules
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -14,6 +14,17 @@ scanner = PythonScanner(load_rules("v16"))
 
 def call_node(source):
 	return ast.parse(source).body[0].value
+
+
+@pytest.mark.parametrize(
+	("fields", "expected"),
+	(
+		("name, ifnull(rate, 0) as rate", ["name", "ifnull(rate, 0) as rate"]),
+		("," * 200000, [""] * 200001),
+	),
+)
+def test_fields_split_at_the_commas_outside_parentheses(fields, expected):
+	assert [field.strip() for field in split_fields(fields)] == expected
 
 
 def lines_by_rule(source):

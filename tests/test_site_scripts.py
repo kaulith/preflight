@@ -21,6 +21,16 @@ CLIENT_SCRIPT = """frappe.ui.form.on("Blog Post", {
 """
 
 
+def test_a_script_with_bare_carriage_returns_keeps_its_lines(monkeypatch):
+	script = 'total = 1\r\rfrappe.get_test_records("Blog Post")'
+	monkeypatch.setattr(
+		"preflight.scan.site_scripts", lambda: [("Server Script: Digest", "python", script, {})]
+	)
+	report = Report(site="test.localhost", target="v16", apps=[])
+	scan_site_scripts(report, Scanners(RULES))
+	assert {finding.line for finding in report.findings} == {3}
+
+
 @pytest.fixture
 def seeded_scripts(site, require_doctypes):
 	require_doctypes("Blog Post")
