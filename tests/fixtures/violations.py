@@ -90,7 +90,7 @@ def visible_modules(user):
 
 
 def send_statement(doc, writer):
-	from frappe.auth import MAX_PASSWORD_SIZE
+	from frappe.core.doctype.user.user import MAX_PASSWORD_SIZE
 	from frappe.integrations.doctype.slack_webhook_url.slack_webhook_url import send_slack_message
 	from frappe.utils.pdf import get_file_data_from_writer, get_pdf
 

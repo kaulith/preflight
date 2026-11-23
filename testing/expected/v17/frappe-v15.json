@@ -7,7 +7,6 @@
 		"v17-get-pdf-smart-shrinking": 1,
 		"v17-gravatar-helpers": 1,
 		"v17-moved-doctype-layout": 1,
-		"v17-moved-max-password-size": 1,
 		"v17-query-limit-page-length": 17,
 		"v17-query-limit-start": 8,
 		"v17-query-page-length": 1,
@@ -29,7 +28,6 @@
 		"v17-get-test-records": 17,
 		"v17-gravatar-helpers": 1,
 		"v17-moved-doctype-layout": 1,
-		"v17-moved-max-password-size": 1,
 		"v17-query-limit-page-length": 18,
 		"v17-query-limit-start": 9,
 		"v17-query-page-length": 1,
@@ -93,12 +91,6 @@
 			"frappe/custom/doctype/doctype_layout/doctype_layout.py",
 			21,
 			"from frappe.custom.doctype.doctype_layout_field.doctype_layout_field import DocTypeLayoutField"
-		],
-		[
-			"v17-moved-max-password-size",
-			"frappe/core/doctype/user/user.py",
-			15,
-			"from frappe.auth import MAX_PASSWORD_SIZE"
 		],
 		[
 			"v17-query-limit-page-length",
