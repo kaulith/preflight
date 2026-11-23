@@ -41,6 +41,13 @@ def lines_matched(match, source, **scan_arguments):
 PRIVATE_REQUEST = Match(type="call", paths=("frappe.make_get_request",), url_host="private")
 DUE_DATE = Match(type="doctype_field", fields=("Sales Invoice.due_date",))
 PARTY_BALANCE = Match(type="doctype_field", fields=("Payment Entry.party_balance",))
+SUBCONTRACTED_QUANTITY = Match(
+	type="doctype_field",
+	fields=("Purchase Order Item.subcontracted_quantity",),
+	child_tables=(("Purchase Order.items", "Purchase Order Item"),),
+)
+SESSION_ID_SQL = Match(type="sql_text", patterns=(r"(?is)\btabSessions\b.*\bsid\b",))
+POST_ONLY = Match(type="http_method", paths=("digest.api.send_digest",), rejected_methods=("GET",))
 BUILD_XLSX_DATA = Match(type="call", paths=("frappe.desk.query_report.build_xlsx_data",), returns=3)
 
 
@@ -100,6 +107,7 @@ def test_violations_are_reported_on_their_lines():
 		"v16-renamed-is-column-missing": [36],
 		"v16-sanitize-html-strips-tags": [28],
 		"v16-server-script-private-request": [150],
+		"v16-session-id-stored-hashed": [183],
 		"v16-sql-function-string-fields": [122],
 		"v16-unlock-document-args": [179],
 		"v16-value-cache-nested": [31],
@@ -478,6 +486,65 @@ def test_field_of_self_in_a_class_built_on_another_class_is_not_reported():
 
 
 @pytest.mark.parametrize(
+	"statement",
+	[
+		"for row in order.items: row.subcontracted_quantity",
+		'for row in order.get("items"): row.subcontracted_quantity',
+		"for index, row in enumerate(order.items): row.subcontracted_quantity",
+		"quantities = [row.subcontracted_quantity for row in order.items]",
+		"total = sum(row.subcontracted_quantity for row in order.items)",
+		"quantity = order.items[0].subcontracted_quantity",
+		'quantity = order.get("items")[0].get("subcontracted_quantity")',
+		'order.append("items", {"subcontracted_quantity": 1})',
+		'order.append("items", {}).subcontracted_quantity = 1',
+	],
+)
+def test_field_of_a_child_row_is_reported(statement):
+	source = f'order = frappe.get_doc("Purchase Order", name)\n{statement}\n'
+	assert lines_matched(SUBCONTRACTED_QUANTITY, source) == [2]
+
+
+@pytest.mark.parametrize(
+	"statement",
+	[
+		"for row in order.taxes: row.subcontracted_quantity",
+		'order.append("taxes", {"subcontracted_quantity": 1})',
+		"for row in rows: row.subcontracted_quantity",
+	],
+)
+def test_field_of_a_row_of_another_table_is_not_reported(statement):
+	source = f'order = frappe.get_doc("Purchase Order", name)\n{statement}\n'
+	assert lines_matched(SUBCONTRACTED_QUANTITY, source) == []
+
+
+def test_row_of_a_comprehension_ends_with_it():
+	source = (
+		'order = frappe.get_doc("Purchase Order", name)\n'
+		"rows = [row for row in order.items]\n"
+		"row.subcontracted_quantity\n"
+	)
+	assert lines_matched(SUBCONTRACTED_QUANTITY, source) == []
+
+
+def test_comprehension_keeps_the_doc_of_a_name_it_shadows():
+	source = (
+		'payment = frappe.get_doc("Payment Entry", name)\n'
+		"names = [payment.name for payment in payments]\n"
+		"balance = payment.party_balance\n"
+	)
+	assert lines_matched(PARTY_BALANCE, source) == [3]
+
+
+def test_field_of_a_row_of_self_in_a_parent_controller_is_reported():
+	source = (
+		"from erpnext.buying.doctype.purchase_order.purchase_order import PurchaseOrder\n\n\n"
+		"class DigestPurchaseOrder(PurchaseOrder):\n\tdef validate(self):\n"
+		"\t\tfor row in self.items:\n\t\t\trow.subcontracted_quantity = 0\n"
+	)
+	assert lines_matched(SUBCONTRACTED_QUANTITY, source) == [7]
+
+
+@pytest.mark.parametrize(
 	"assignment",
 	[
 		"rows, widths = build_xlsx_data(data, [], 1)[:2]",
@@ -498,6 +565,61 @@ def test_call_whose_result_is_taken_as_it_returns_it_is_not_reported(assignment)
 def test_call_whose_result_is_not_taken_as_it_returns_it_is_reported(assignment):
 	source = f"from frappe.desk.query_report import build_xlsx_data\n\n{assignment}\n"
 	assert lines_matched(BUILD_XLSX_DATA, source) == [3]
+
+
+@pytest.mark.parametrize(
+	"call",
+	[
+		'frappe.db.sql("select user from `tabSessions` where sid = %s", sid)',
+		'frappe.db.sql(query="select user from tabSessions where sid = 1")',
+		'frappe.db.sql(f"select user from `tabSessions` where sid = {sid}")',
+		'frappe.db.multisql({"mariadb": "select sid from tabSessions where sid = 1", "postgres": "select 1"})',
+	],
+)
+def test_sql_text_of_a_query_is_reported(call):
+	assert lines_matched(SESSION_ID_SQL, f"{call}\n") == [1]
+
+
+def test_sql_text_a_local_name_holds_is_reported_at_the_string():
+	source = 'query = "select user from tabSessions where sid = 1"\nfrappe.db.sql(query)\n'
+	assert lines_matched(SESSION_ID_SQL, source) == [1]
+
+
+@pytest.mark.parametrize(
+	"call",
+	[
+		'frappe.db.sql("select user from `tabSessions` where user = %s", user)',
+		'frappe.msgprint("select user from tabSessions where sid = 1")',
+	],
+)
+def test_sql_text_elsewhere_is_not_reported(call):
+	assert lines_matched(SESSION_ID_SQL, f"{call}\n") == []
+
+
+@pytest.mark.parametrize(
+	"call",
+	[
+		'requests.get("https://example.com/api/method/digest.api.send_digest")',
+		'requests.get(f"{site}/api/v2/method/digest.api.send_digest?name={name}")',
+		'requests.request("GET", f"{site}/api/method/digest.api.send_digest")',
+		'frappe.make_get_request(f"{site}/api/method/digest.api.send_digest")',
+	],
+)
+def test_request_by_a_rejected_http_method_is_reported(call):
+	assert lines_matched(POST_ONLY, f"{call}\n") == [1]
+
+
+@pytest.mark.parametrize(
+	"call",
+	[
+		'requests.post(f"{site}/api/method/digest.api.send_digest")',
+		'requests.request("POST", f"{site}/api/method/digest.api.send_digest")',
+		'requests.request(method, f"{site}/api/method/digest.api.send_digest")',
+		'requests.get(f"{site}/api/method/digest.api.send_digest_preview")',
+	],
+)
+def test_request_the_method_accepts_is_not_reported(call):
+	assert lines_matched(POST_ONLY, f"{call}\n") == []
 
 
 def test_undeclared_import_is_matched_like_an_import_path():

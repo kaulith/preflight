@@ -157,6 +157,22 @@ def test_function_in_a_module_hooks_py_does_not_name_is_handed_no_doc(app_path):
 	assert report.findings == []
 
 
+def test_query_report_sql_is_scanned_with_no_line(app_path):
+	report_path = app_path / "digest_module" / "report" / "active_sessions"
+	report_path.mkdir(parents=True)
+	(report_path / "active_sessions.json").write_text(
+		'{"doctype": "Report", "report_type": "Query Report", "query": "select user\\nfrom tabSessions where sid = 1"}',
+		encoding="utf-8",
+	)
+	report = Report(site=None, target="v16", apps=["digest"])
+	scan_app(report, Scanners(RULES), "digest", app_path)
+	(finding,) = [f for f in report.findings if f.rule.id == "v16-session-id-stored-hashed"]
+	assert (finding.file, finding.line) == (
+		"digest/digest_module/report/active_sessions/active_sessions.json",
+		None,
+	)
+
+
 def test_online_checks_get_each_app_root_and_no_frappe_major(monkeypatch, app_path):
 	calls = []
 	online_scanner = types.ModuleType("preflight.online_scanner")

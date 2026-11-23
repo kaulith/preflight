@@ -1,4 +1,5 @@
 import frappe
+import requests
 from erpnext.accounts.doctype.payment_entry.payment_entry import get_party_and_account_balance
 from erpnext.accounts.doctype.pos_closing_entry.pos_closing_entry import get_pos_invoices
 from erpnext.accounts.doctype.repost_accounting_ledger_settings.repost_accounting_ledger_settings import (
@@ -197,3 +198,7 @@ def planning_helpers(args, bom, bin_details, data, columns):
 
 def bom_tree(bom_creator):
 	return frappe.get_all("BOM Creator Item", filters={"parent": bom_creator}, fields=["fg_item"])
+
+
+def reopen_sales_order(site):
+	return requests.get(f"{site}/api/method/erpnext.selling.doctype.sales_order.sales_order.update_status")

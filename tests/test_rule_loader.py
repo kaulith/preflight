@@ -9,6 +9,7 @@ BLOG_DOCTYPES_RULE = (RULES_PATH / "v16" / "v16-removed-blog-doctypes.yaml").rea
 ENQUEUE_JOB_NAME_RULE = (RULES_PATH / "v17" / "v17-deprecated-enqueue-job-name.yaml").read_text()
 DEPENDENCY_PINS_RULE = (RULES_PATH / "v16" / "v16-app-dependency-pins.yaml").read_text()
 REPOST_TYPES_RULE = (RULES_PATH / "v16" / "v16-erpnext-repost-allowed-types.yaml").read_text()
+SUBCONTRACTED_QUANTITY_RULE = (RULES_PATH / "v16" / "v16-erpnext-subcontracted-quantity.yaml").read_text()
 RULESET = 'released: true\nchecked: "2026-10-25"\nagainst: frappe v16.53.0\n'
 
 
@@ -173,6 +174,42 @@ def test_invalid_site_record_rule_names_the_problem(tmp_path, original, broken, 
 	assert original in REPOST_TYPES_RULE
 	write_rule(tmp_path, REPOST_TYPES_RULE.replace(original, broken), "v16-erpnext-repost-allowed-types.yaml")
 	with pytest.raises(RuleError, match=message):
+		load_rules("v16", rules_path=tmp_path)
+
+
+def test_child_tables_load_as_pairs(tmp_path):
+	write_rule(tmp_path, SUBCONTRACTED_QUANTITY_RULE, "v16-erpnext-subcontracted-quantity.yaml")
+	(rule,) = load_rules("v16", rules_path=tmp_path)
+	assert rule.match.child_tables == (("Purchase Order.items", "Purchase Order Item"),)
+	assert rule in {rule}
+
+
+@pytest.mark.parametrize(
+	"broken, message",
+	[
+		("Purchase Order: Purchase Order Item", "must name a doctype and a table field"),
+		("Purchase Order.items: [Purchase Order Item]", "must be non-empty text"),
+	],
+)
+def test_invalid_child_table_names_the_problem(tmp_path, broken, message):
+	content = SUBCONTRACTED_QUANTITY_RULE.replace("Purchase Order.items: Purchase Order Item", broken)
+	write_rule(tmp_path, content, "v16-erpnext-subcontracted-quantity.yaml")
+	with pytest.raises(RuleError, match=message):
+		load_rules("v16", rules_path=tmp_path)
+
+
+def test_child_table_of_a_shipped_rule_names_a_doctype_the_rule_lists():
+	for rule in load_rules("v16"):
+		doctypes = {entry.partition(".")[0] for entry in rule.match.fields}
+		assert {child for _, child in rule.match.child_tables} <= doctypes
+
+
+def test_http_method_rule_with_an_unknown_method_is_rejected(tmp_path):
+	content = (
+		(RULES_PATH / "v16" / "v16-erpnext-methods-post-only.yaml").read_text().replace("- GET", "- FETCH")
+	)
+	write_rule(tmp_path, content, "v16-erpnext-methods-post-only.yaml")
+	with pytest.raises(RuleError, match="match.rejected_methods must name methods"):
 		load_rules("v16", rules_path=tmp_path)
 
 

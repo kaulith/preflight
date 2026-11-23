@@ -177,3 +177,7 @@ def release_lock(payload):
 	from frappe.model.document import unlock_document
 
 	return unlock_document(args=payload)
+
+
+def session_user(session_id):
+	return frappe.db.sql("select user from `tabSessions` where sid = %s", session_id)

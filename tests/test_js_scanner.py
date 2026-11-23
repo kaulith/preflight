@@ -32,6 +32,12 @@ def lines_matched(match, source):
 
 
 DUE_DATE = Match(type="doctype_field", fields=("Sales Invoice.due_date",))
+POST_ONLY = Match(type="http_method", paths=("digest.api.send_digest",), rejected_methods=("GET",))
+ITEM_RATE = Match(
+	type="doctype_field",
+	fields=("Sales Invoice Item.rate",),
+	child_tables=(("Sales Invoice.items", "Sales Invoice Item"),),
+)
 
 
 def test_violations_are_reported_on_their_lines():
@@ -224,6 +230,97 @@ def test_field_named_in_a_client_query_split_at_a_dot_is_reported(call):
 	assert lines_matched(DUE_DATE, call + "\n") == [2]
 
 
+@pytest.mark.parametrize(
+	"reference",
+	[
+		"form.doc.due_date",
+		'form.doc["due_date"]',
+		"form.doc?.due_date",
+		"form.doc.due_date = today",
+		"form.fields_dict.due_date",
+		'form.fields_dict["due_date"]',
+		'form.set_value("due_date", today)',
+		"form.set_value({ due_date: today })",
+		'form.set_df_property("due_date", "read_only", 1)',
+		'form.toggle_reqd(["customer", "due_date"], true)',
+		'form.set_query("due_date", () => ({}))',
+		'form.get_field("due_date")',
+		"items.forEach((row) => form.doc.due_date)",
+	],
+)
+def test_field_a_form_handler_reaches_is_reported(reference):
+	source = f'frappe.ui.form.on("Sales Invoice", {{\n\trefresh(form) {{\n\t\t{reference};\n\t}},\n}});\n'
+	assert lines_matched(DUE_DATE, source) == [3]
+
+
+@pytest.mark.parametrize(
+	"handler",
+	[
+		"due_date(frm) {}",
+		"due_date: function (frm) {}",
+		"due_date: (frm) => {}",
+		"async due_date(frm) {}",
+		'"due_date": function (frm) {}',
+	],
+)
+def test_handler_named_after_a_field_is_reported(handler):
+	assert lines_matched(DUE_DATE, f'frappe.ui.form.on("Sales Invoice", {{\n\t{handler},\n}});\n') == [2]
+
+
+@pytest.mark.parametrize(
+	"source",
+	[
+		"frm.doc.due_date;",
+		'frappe.ui.form.on("Purchase Invoice", { refresh(frm) { frm.doc.due_date; } });',
+		"frappe.ui.form.on(doctype, { refresh(frm) { frm.doc.due_date; } });",
+		'frappe.ui.form.on("Sales Invoice", { refresh(frm) { frm.doc[fieldname]; } });',
+		'frappe.ui.form.on("Sales Invoice", { refresh(frm) { other.doc.due_date; } });',
+		'frappe.ui.form.on("Sales Invoice", { refresh(frm) { this.frm.doc.due_date; } });',
+		'frappe.ui.form.on("Sales Invoice", { refresh(frm) { rows.map((frm) => frm.doc.due_date); } });',
+		'frappe.ui.form.on("Sales Invoice", { refresh(frm) { frm = other; frm.doc.due_date; } });',
+		'frappe.ui.form.on("Sales Invoice", { refresh(frm) { frm.set_query("due_date", "items", query); } });',
+		'frappe.ui.form.on("Sales Invoice", { refresh(frm) { frm.add_fetch("due_date", "a", "b"); } });',
+		'frappe.ui.form.on("Sales Invoice", { due_date: handler });',
+	],
+)
+def test_field_a_form_handler_does_not_reach_is_not_reported(source):
+	assert lines_matched(DUE_DATE, source + "\n") == []
+
+
+def test_set_query_on_a_child_table_reports_the_table():
+	match = Match(type="doctype_field", fields=("Sales Invoice.items",))
+	source = 'frappe.ui.form.on("Sales Invoice", { refresh(frm) { frm.set_query("item_code", "items", query); } });\n'
+	assert lines_matched(match, source) == [1]
+
+
+@pytest.mark.parametrize(
+	"body",
+	[
+		"locals[dt][dn].rate;",
+		"let row = locals[dt][dn];\n\t\trow.rate;",
+		"var a = 1, row = locals[dt][dn];\n\t\trow.rate;",
+	],
+)
+def test_field_of_a_child_row_is_reported(body):
+	source = f'frappe.ui.form.on("Sales Invoice Item", {{\n\tqty(frm, dt, dn) {{\n\t\t{body}\n\t}},\n}});\n'
+	assert lines_matched(ITEM_RATE, source) == [body.count("\n") + 3]
+
+
+@pytest.mark.parametrize(
+	"body",
+	[
+		"frm.doc.rate;",
+		"locals[dn][dt].rate;",
+		"let row = locals[dt][dn].parent;\n\t\trow.rate;",
+		"let row = locals[dt][dn];\n\t\trows.forEach((row) => row.rate);",
+		"let row = locals[dt][dn];\n\t\trow = other;\n\t\trow.rate;",
+	],
+)
+def test_field_off_the_child_row_is_not_reported(body):
+	source = f'frappe.ui.form.on("Sales Invoice Item", {{\n\tqty(frm, dt, dn) {{\n\t\t{body}\n\t}},\n}});\n'
+	assert lines_matched(ITEM_RATE, source) == []
+
+
 def test_undeclared_import_is_not_matched_in_client_code():
 	match = Match(type="undeclared_import", paths=("bleach",), dependencies=("bleach",))
 	assert lines_matched(match, 'frappe.xcall("bleach.clean", { html });\n') == []
@@ -251,3 +348,34 @@ def test_stylesheet_comments_urls_and_slashes_stay_on_their_line():
 		".octicon { display: none; }\n"
 	)
 	assert lines_by_rule(source, "digest/public/scss/digest.scss") == {"v16-removed-octicons": [3, 5]}
+
+
+@pytest.mark.parametrize(
+	"call",
+	[
+		'frappe.call({ method: "digest.api.send_digest", type: "GET" });',
+		'createResource({ url: "digest.api.send_digest", method: "GET" });',
+		'fetch("/api/method/digest.api.send_digest");',
+		'fetch("/api/method/digest.api.send_digest", { method: "GET" });',
+		'$.get("/api/method/digest.api.send_digest");',
+		'$.ajax({ url: "/api/method/digest.api.send_digest" });',
+		'axios.get("/api/method/digest.api.send_digest");',
+	],
+)
+def test_request_by_a_rejected_http_method_is_reported(call):
+	assert lines_matched(POST_ONLY, f"{call}\n") == [1]
+
+
+@pytest.mark.parametrize(
+	"call",
+	[
+		'frappe.call({ method: "digest.api.send_digest" });',
+		'frappe.call({ method: "digest.api.send_digest", type: request_type });',
+		'createResource({ url: "digest.api.send_digest" });',
+		'fetch("/api/method/digest.api.send_digest", { method: "POST" });',
+		'fetch("/api/method/digest.api.send_digest", options);',
+		'$.ajax({ url: "/api/method/digest.api.send_digest", type: "POST" });',
+	],
+)
+def test_request_the_method_accepts_or_that_is_computed_is_not_reported(call):
+	assert lines_matched(POST_ONLY, f"{call}\n") == []

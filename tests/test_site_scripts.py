@@ -5,7 +5,7 @@ frappe = pytest.importorskip("frappe")
 from preflight.app_scan import Scanners
 from preflight.models import Report
 from preflight.rule_loader import load_rules
-from preflight.scan import scan_site_scripts
+from preflight.scan import scan_site_scripts, scan_site_templates
 
 RULES = load_rules("v16")
 
@@ -120,6 +120,84 @@ def test_field_of_the_doc_a_notification_condition_reads_is_reported(site, requi
 		).insert()
 		found = {(finding.rule.id, finding.file, finding.line) for finding in scan(site).findings}
 		assert ("v16-erpnext-utm-fields", "Notification: Lead follow up", 1) in found
+	finally:
+		frappe.db.rollback()
+
+
+def scan_templates(site: str) -> set[tuple[str, str, int | None]]:
+	report = Report(site=site, target="v16", apps=[])
+	scan_site_templates(report, Scanners(RULES).jinja)
+	return {(finding.rule.id, finding.file, finding.line) for finding in report.findings}
+
+
+@pytest.mark.parametrize("disabled, reported", [(0, True), (1, False)])
+def test_field_a_custom_print_format_reads_is_reported(site, require_doctypes, disabled, reported):
+	require_doctypes("Lead")
+	try:
+		frappe.get_doc(
+			doctype="Print Format",
+			name="Lead Summary",
+			doc_type="Lead",
+			custom_format=1,
+			disabled=disabled,
+			html="<p>{{ doc.source }}</p>",
+		).insert()
+		assert (
+			("v16-erpnext-utm-fields", "Print Format: Lead Summary (html)", 1) in scan_templates(site)
+		) == reported
+	finally:
+		frappe.db.rollback()
+
+
+def test_field_a_print_format_layout_names_is_reported(site, require_doctypes):
+	require_doctypes("Lead")
+	try:
+		frappe.get_doc(
+			doctype="Print Format",
+			name="Lead Summary",
+			doc_type="Lead",
+			format_data='[{"fieldname": "source"}]',
+		).insert()
+		assert ("v16-erpnext-utm-fields", "Print Format: Lead Summary (format_data)", None) in scan_templates(
+			site
+		)
+	finally:
+		frappe.db.rollback()
+
+
+def test_field_a_notification_message_reads_is_reported(site, require_doctypes):
+	require_doctypes("Lead")
+	try:
+		frappe.get_doc(
+			doctype="Notification",
+			name="Lead source review",
+			subject="Review the lead",
+			document_type="Lead",
+			event="New",
+			channel="Email",
+			message="<p>{{ doc.source }}</p>",
+		).insert()
+		assert ("v16-erpnext-utm-fields", "Notification: Lead source review (message)", 1) in scan_templates(
+			site
+		)
+	finally:
+		frappe.db.rollback()
+
+
+def test_doc_an_email_template_loads_is_reported(site, require_doctypes):
+	require_doctypes("Blog Post")
+	try:
+		frappe.get_doc(
+			doctype="Email Template",
+			name="Blog Post digest",
+			subject="Weekly digest",
+			response='<p>{{ frappe.get_doc("Blog Post", name).title }}</p>',
+		).insert()
+		assert (
+			"v16-removed-blog-doctypes",
+			"Email Template: Blog Post digest (response)",
+			1,
+		) in scan_templates(site)
 	finally:
 		frappe.db.rollback()
 
