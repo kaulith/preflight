@@ -12,6 +12,7 @@ message: >
 replacement: >
   Subclass frappe.tests.UnitTestCase or frappe.tests.IntegrationTestCase, depending on whether
   the test needs a database.
+fix: before
 references:
   - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/deprecation_dumpster.py#L603
   - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/tests/utils/__init__.py#L93

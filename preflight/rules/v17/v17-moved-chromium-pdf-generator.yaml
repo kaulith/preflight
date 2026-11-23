@@ -14,6 +14,14 @@ message: >
 replacement: >
   Import cdp_connection and page from frappe.utils.chromium, and ChromiumManager from
   frappe.utils.chromium.process.
+fix: with-upgrade
+shim: |
+  try:
+  	from frappe.utils.chromium.cdp_connection import CDPSocketClient
+  	from frappe.utils.chromium.page import Page
+  except ImportError:
+  	from frappe.utils.pdf_generator.cdp_connection import CDPSocketClient
+  	from frappe.utils.pdf_generator.page import Page
 references:
   - https://github.com/frappe/frappe/pull/40089
   - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/utils/chromium/process.py#L19

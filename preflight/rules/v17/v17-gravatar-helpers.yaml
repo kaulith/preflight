@@ -14,6 +14,7 @@ message: >
   removal lands.
 replacement: >
   Call frappe.utils.get_identicon, or drop the avatar lookup.
+fix: before
 references:
   - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/deprecation_dumpster.py#L1023-L1043
   - https://github.com/frappe/frappe/pull/39946

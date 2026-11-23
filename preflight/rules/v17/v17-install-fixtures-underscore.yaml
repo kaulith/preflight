@@ -11,6 +11,7 @@ message: >
   still returns its argument and now emits a deprecation warning.
 replacement: >
   Mark the strings with N_, imported from frappe, instead.
+fix: before
 references:
   - https://github.com/frappe/frappe/pull/42580
   - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/deprecation_dumpster.py#L1055

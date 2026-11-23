@@ -12,6 +12,7 @@ message: >
   scripts. It keeps working with a deprecation warning; the import fails once the removal lands.
 replacement: >
   Use NumberFormat.from_string() from frappe.utils.number_format.
+fix: before
 references:
   - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/deprecation_dumpster.py#L989
   - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/utils/data.py#L1515

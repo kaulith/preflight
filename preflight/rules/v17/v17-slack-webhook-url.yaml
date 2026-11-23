@@ -13,6 +13,7 @@ replacement: >
   Load the webhook with frappe.get_doc("Notification Webhook URL", name) and call its
   send(message, reference_doctype, reference_name). The upgrade renames the existing records, so
   their names carry over; code that names the Slack Webhook URL doctype needs the new name too.
+fix: with-upgrade
 references:
   - https://github.com/frappe/frappe/pull/44113
   - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/patches/v16_0/rename_slack_webhook_url.py#L4-L6

@@ -15,6 +15,7 @@ message: >
 replacement: >
   Drop the argument, and pass {"shrink-to-fit": True} in options to scale content wider than the
   page down to fit it.
+fix: with-upgrade
 references:
   - https://github.com/frappe/frappe/pull/44253
   - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/utils/pdf.py#L87-L93

@@ -11,5 +11,6 @@ message: >
   import fails once the removal lands.
 replacement: >
   Use frappe.geo.country_info.get_translated_countries.
+fix: before
 references:
   - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/deprecation_dumpster.py#L351

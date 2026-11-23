@@ -14,6 +14,7 @@ message: >
   on every call.
 replacement: >
   Drop the argument.
+fix: before
 references:
   - https://github.com/frappe/frappe/pull/44443
   - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/email/__init__.py#L227-L234

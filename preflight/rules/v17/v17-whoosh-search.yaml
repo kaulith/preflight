@@ -11,5 +11,6 @@ message: >
   WebsiteSearch. Importing either module raises ImportError after the upgrade.
 replacement: >
   Build the index on frappe.search.sqlite_search.SQLiteSearch.
+fix: before
 references:
   - https://github.com/frappe/frappe/pull/43318

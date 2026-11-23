@@ -12,6 +12,7 @@ message: >
 replacement: >
   Point the link or the call at frappe.utils.print_format_generator.download_pdf, which takes the
   same arguments and already exists on v16.
+fix: before
 references:
   - https://github.com/frappe/frappe/pull/39406
   - https://github.com/frappe/frappe/blob/e8d41dd0061a32ee781caefe5d0b0d2bb7c15362/frappe/utils/print_format_generator.py#L36-L43

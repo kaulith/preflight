@@ -11,6 +11,7 @@ message: >
   endpoint stops answering once the removal lands.
 replacement: >
   Ship the file as an app asset and load it with frappe.require.
+fix: before
 references:
   - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/deprecation_dumpster.py#L261
   - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/client.py#L362-L364

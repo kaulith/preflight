@@ -14,6 +14,7 @@ replacement: >
   frappe.get_print(doctype, name, print_format, as_pdf=True): it renders with the print format's
   own PDF generator, or the one in Print Settings when the format names none, and the
   frappe.utils.print_format.download_pdf endpoint goes through it too.
+fix: before
 references:
   - https://github.com/frappe/frappe/pull/39406
   - https://github.com/frappe/frappe/blob/e8d41dd0061a32ee781caefe5d0b0d2bb7c15362/frappe/utils/print_format_generator.py#L36-L43

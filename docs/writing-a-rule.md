@@ -49,7 +49,7 @@ references:
 | `match` | What to look for. See the match types below |
 | `message` | What breaks |
 | `replacement` | The fix |
-| `fix` | Optional. `before` or `with-upgrade`: when the fix can go in. Every v16 rule has one |
+| `fix` | Optional. `before` or `with-upgrade`: when the fix can go in. Every rule has one |
 | `shim` | Optional. A snippet that runs on both versions |
 | `references` | At least one link that proves the claim |
 

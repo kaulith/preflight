@@ -13,5 +13,6 @@ message: >
   on develop (checked 2026-10-25) with a deprecation warning on every call.
 replacement: >
   Pass job_id instead.
+fix: before
 references:
   - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/utils/background_jobs.py#L195

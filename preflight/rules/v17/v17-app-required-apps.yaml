@@ -7,6 +7,8 @@ message: >
   The app lists an app in required_apps that this bench does not hold. Installing the app installs
   its required apps first, and stops with "App ... not in apps.txt" when one is missing.
 replacement: >
-  Get the required app onto the bench with bench get-app, on its branch for v17.
+  Get the required app onto the bench with bench get-app, on the branch for the frappe the bench
+  runs now, so the upgrade switches it to v17 with the other apps.
+fix: before
 references:
   - https://github.com/frappe/frappe/blob/191a3e266411b367ac0def129d269671b52f7815/frappe/installer.py

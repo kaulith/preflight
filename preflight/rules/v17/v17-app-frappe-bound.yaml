@@ -12,5 +12,6 @@ message: >
 replacement: >
   Test the app on develop, then widen the bound to take in v17, for example
   frappe = ">=16.0.0,<18.0.0".
+fix: before
 references:
   - https://github.com/frappe/bench/blob/4f56e02d4a07368bb241f48b1aa69d21498984ae/bench/app.py#L497

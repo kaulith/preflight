@@ -12,6 +12,12 @@ message: >
   ImportError after the upgrade.
 replacement: >
   Import from frappe.core.doctype.doctype_layout and frappe.core.doctype.doctype_layout_field.
+fix: with-upgrade
+shim: |
+  try:
+  	from frappe.core.doctype.doctype_layout.doctype_layout import DocTypeLayout
+  except ImportError:
+  	from frappe.custom.doctype.doctype_layout.doctype_layout import DocTypeLayout
 references:
   - https://github.com/frappe/frappe/pull/38679
   - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/core/doctype/doctype_layout/doctype_layout.py

@@ -103,6 +103,7 @@ message: >
 replacement: >
   Widen the pin in the app's [project] dependencies to take in frappe's, which the finding shows,
   and test the app with it.
+fix: before
 references:
   - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/pyproject.toml#L10-L114
   - https://github.com/frappe/bench/blob/4f56e02d4a07368bb241f48b1aa69d21498984ae/bench/app.py#L935-L950

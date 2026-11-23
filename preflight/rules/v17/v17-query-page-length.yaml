@@ -16,6 +16,7 @@ message: >
   with a deprecation warning on every call.
 replacement: >
   Pass limit instead.
+fix: before
 references:
   - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/model/qb_query.py#L178
   - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/__init__.py#L1294-L1296

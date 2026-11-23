@@ -17,6 +17,7 @@ replacement: >
   Import change_settings, patch_hooks, debug_on and timeout from frappe.tests, or use the
   matching helper on the test case; get_dependencies becomes
   frappe.tests.utils.get_missing_records_doctypes.
+fix: before
 references:
   - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/deprecation_dumpster.py#L510-L546
   - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/deprecation_dumpster.py#L895

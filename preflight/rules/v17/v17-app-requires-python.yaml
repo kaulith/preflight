@@ -10,5 +10,6 @@ message: >
   stays on this branch through the upgrade, so this pyproject.toml is the one that gets installed.
 replacement: >
   Widen requires-python in the app's pyproject.toml to take in Python 3.14, and test the app on it.
+fix: before
 references:
   - https://github.com/frappe/frappe/blob/191a3e266411b367ac0def129d269671b52f7815/pyproject.toml

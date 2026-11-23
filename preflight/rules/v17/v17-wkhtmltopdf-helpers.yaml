@@ -24,5 +24,6 @@ replacement: >
   Pass the HTML and the options to frappe.utils.pdf.get_pdf, which reads the page options from
   both itself. Where get_file_data_from_writer turned a PdfWriter into bytes, write the PdfWriter
   into an io.BytesIO buffer and read its value.
+fix: before
 references:
   - https://github.com/frappe/frappe/pull/44253

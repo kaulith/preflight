@@ -9,5 +9,6 @@ message: >
   bench environment runs a Python outside that range, so pip will not install it.
 replacement: >
   Rebuild the environment on Python 3.14 before switching to v17: bench setup env --python python3.14.
+fix: before
 references:
   - https://github.com/frappe/frappe/blob/191a3e266411b367ac0def129d269671b52f7815/pyproject.toml

@@ -12,6 +12,7 @@ message: >
 replacement: >
   Read cls.globalTestRecords["Some Doctype"] inside an IntegrationTestCase, or call
   frappe.tests.utils.load_test_records_for.
+fix: before
 references:
   - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/deprecation_dumpster.py#L940
   - https://github.com/frappe/frappe/blob/c4e97234b4a9556dbebe7db76cbcfd48bfac8355/frappe/__init__.py#L112
