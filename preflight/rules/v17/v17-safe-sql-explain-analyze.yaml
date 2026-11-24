@@ -1,0 +1,19 @@
+id: v17-safe-sql-explain-analyze
+title: EXPLAIN in Query Reports and script SQL can no longer mention analyze
+severity: error
+match:
+  type: sql_text
+  safe_sql_only: true
+  patterns:
+    - (?is)\A\s*explain(?!.*(?:\binto\s+(?:outfile|dumpfile)\b|__auth)).*?(analy[sz]e)
+message: >
+  frappe develop, which becomes v17, rejects a query that starts with EXPLAIN and contains analyze
+  or analyse anywhere, an identifier or literal included. Such a Query Report, Server Script or
+  template query raises PermissionError.
+replacement: >
+  Use plain EXPLAIN, which works on v16 too, or run the analysis outside scripts.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/47287
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/utils/safe_exec.py#L837
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/utils/safe_exec.py#L864

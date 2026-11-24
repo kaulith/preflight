@@ -1,0 +1,23 @@
+id: v17-nestedset-after-insert
+title: NestedSet no longer has after_insert
+severity: error
+match:
+  type: call
+  super_calls: true
+  paths:
+    - frappe.utils.nestedset.NestedSet.after_insert
+message: >
+  frappe develop, which becomes v17, removed NestedSet.after_insert. A tree doctype's controller
+  that calls super().after_insert() raises AttributeError, so inserting the document fails.
+replacement: >
+  Call it only where it exists, as the shim does. On v16 the method still clears the user's
+  permission cache for the new record.
+fix: before
+shim: |
+  after_insert = getattr(super(), "after_insert", None)
+  if after_insert:
+  	after_insert()
+references:
+  - https://github.com/frappe/frappe/commit/66f49847e2c616e917083ff26bedf895888ccfec
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/utils/nestedset.py#L283
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/utils/nestedset.py#L286

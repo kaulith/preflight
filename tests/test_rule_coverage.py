@@ -4,6 +4,7 @@ import pytest
 
 from preflight.compatibility_scanner import CompatibilityScanner
 from preflight.hooks_scanner import HooksScanner
+from preflight.jinja_scanner import JinjaScanner
 from preflight.js_scanner import JSScanner
 from preflight.models import ONLINE_MATCH_TYPES
 from preflight.python_scanner import PythonScanner
@@ -21,6 +22,9 @@ def test_every_shipped_rule_has_a_violation_line(target):
 		findings += python.scan(path.read_text(), path.name)
 	for path in sorted([*FIXTURES.glob("violations*.js"), *FIXTURES.glob("violations*.scss")]):
 		findings += js.scan(path.read_text(), path.name)
+	jinja = JinjaScanner(rules)
+	for path in sorted(FIXTURES.glob("violations*.html")):
+		findings += jinja.scan(path.read_text(), path.name)
 	for path in sorted(FIXTURES.glob("hooks_violations*.py")):
 		findings += hooks.scan(path.read_text(), "hooks.py", FIXTURES / "digest")
 		findings += hooks.missing_hooks(path.read_text(), "hooks.py", FIXTURES / "digest")

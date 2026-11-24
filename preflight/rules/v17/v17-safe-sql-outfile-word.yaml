@@ -1,0 +1,19 @@
+id: v17-safe-sql-outfile-word
+title: Query Reports and script SQL can no longer contain the word outfile or dumpfile
+severity: error
+match:
+  type: sql_text
+  safe_sql_only: true
+  patterns:
+    - (?is)\A\s*(?:select|explain)(?!.*(?:\binto\s+(?:outfile|dumpfile)\b|__auth)).*?(outfile|dumpfile)
+message: >
+  v16 rejects only INTO OUTFILE and INTO DUMPFILE. frappe develop, which becomes v17, rejects either
+  word anywhere in the query, so a Query Report, Server Script or template query with a column,
+  alias or literal containing it raises PermissionError.
+replacement: >
+  Rename the column or alias, or move the query into app code. Both work on v16 too.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/46263
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/utils/safe_exec.py#L837
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/utils/safe_exec.py#L864

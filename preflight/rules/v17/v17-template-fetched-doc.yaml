@@ -1,0 +1,41 @@
+id: v17-template-fetched-doc
+title: A doc a template fetches becomes a dict
+severity: error
+match:
+  type: template_fetched_doc
+  paths:
+    - frappe.get_doc
+    - frappe.get_cached_doc
+    - frappe.get_last_doc
+  keys:
+    - clear
+    - copy
+    - fromkeys
+    - items
+    - keys
+    - pop
+    - popitem
+    - setdefault
+    - update
+    - values
+  allowed_methods:
+    - get
+    - get_formatted
+    - get_label_from_fieldname
+    - in_format_data
+    - is_print_hide
+message: >
+  On v16 frappe.get_doc in a Print Format, Letter Head, Email Template, Web Template or portal page
+  returns a Document. frappe develop, which becomes v17, returns a SafeDoc, a dict. A field named
+  like a dict method, such as `items`, then reads as that method, so looping over it raises
+  TypeError, and calling a Document method such as `get_url()` raises TypeError too.
+replacement: >
+  Read the field with `fetched.get("items")`, which works on both versions. Move a method call into
+  Python: a method in the app's `jinja` hook, a controller, or the page's get_context.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/37924
+  - https://github.com/frappe/frappe/pull/48008
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/utils/safe_exec.py#L647
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/utils/safe_exec.py#L188
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/utils/safe_exec.py#L288

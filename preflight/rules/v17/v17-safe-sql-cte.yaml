@@ -1,0 +1,21 @@
+id: v17-safe-sql-cte
+title: Query Reports and script SQL can no longer start with WITH
+severity: error
+match:
+  type: sql_text
+  safe_sql_only: true
+  patterns:
+    - (?is)\A\s*(with)\b(?!.*(?:\binto\s+(?:outfile|dumpfile)\b|__auth))
+message: >
+  v16 lets a read-only query start with WITH on MariaDB. frappe develop, which becomes v17, accepts
+  only SELECT and EXPLAIN, so a Query Report, Server Script or template query that starts with WITH
+  raises PermissionError.
+replacement: >
+  Rewrite the common table expression as a subquery, which works on v16 too, or move the query into
+  app code.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/37924
+  - https://github.com/frappe/frappe/pull/40002
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/utils/safe_exec.py#L837
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/utils/safe_exec.py#L864

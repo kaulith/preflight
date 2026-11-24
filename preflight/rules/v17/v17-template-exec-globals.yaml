@@ -1,0 +1,46 @@
+id: v17-template-exec-globals
+title: Templates rendered by default lose the functions only scripts may call
+severity: error
+match:
+  type: template_global
+  paths:
+    - FrappeClient
+    - run_script
+    - frappe.attach_print
+    - frappe.call
+    - frappe.copy_doc
+    - frappe.delete_doc
+    - frappe.enqueue
+    - frappe.get_mapped_doc
+    - frappe.get_print
+    - frappe.is_job_queued
+    - frappe.make_delete_request
+    - frappe.make_patch_request
+    - frappe.make_post_request
+    - frappe.make_put_request
+    - frappe.new_doc
+    - frappe.rename_doc
+    - frappe.sendmail
+    - frappe.db.add_index
+    - frappe.db.after_commit
+    - frappe.db.after_rollback
+    - frappe.db.before_commit
+    - frappe.db.before_rollback
+    - frappe.db.commit
+    - frappe.db.rollback
+    - frappe.db.set_value
+message: >
+  On v16 a Print Format, Letter Head, Email Template, Web Template or portal page renders with the
+  same globals as a Server Script. frappe develop, which becomes v17, renders them with the smaller
+  template set, so calling one of these names raises AttributeError or UndefinedError and the page,
+  print or email fails.
+replacement: >
+  Move the call into Python: a method in the app's `jinja` hook, a controller, or the page's
+  get_context. Each of these works on v16 too.
+fix: before
+references:
+  - https://github.com/frappe/frappe/pull/37924
+  - https://github.com/frappe/frappe/pull/48008
+  - https://github.com/frappe/frappe/blob/v16.60.2/frappe/utils/jinja.py#L13
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/utils/jinja.py#L13
+  - https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/utils/safe_exec.py#L670

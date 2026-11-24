@@ -14,7 +14,8 @@
 		"v17-query-limit-start": 14,
 		"v17-query-page-length": 4,
 		"v17-query-start": 1,
-		"v17-read-multi-pdf": 1
+		"v17-read-multi-pdf": 1,
+		"v17-template-fetched-doc": 1
 	},
 	"counts_with_tests": {
 		"v17-country-info-get-translated-dict": 1,
@@ -33,6 +34,7 @@
 		"v17-query-page-length": 4,
 		"v17-query-start": 1,
 		"v17-read-multi-pdf": 1,
+		"v17-template-fetched-doc": 1,
 		"v17-tests-utils-helpers": 48
 	},
 	"unparsable": [],
@@ -402,6 +404,12 @@
 			"erpnext/regional/report/irs_1099/irs_1099.py",
 			12,
 			"from frappe.utils.print_format import read_multi_pdf"
+		],
+		[
+			"v17-template-fetched-doc",
+			"erpnext/templates/includes/address_row.html",
+			10,
+			"{{ frappe.get_doc(doc).get_display() }}"
 		]
 	]
 }

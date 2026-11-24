@@ -22,6 +22,7 @@
 		"v17-sendmail-retry": 2,
 		"v17-show-progress": 1,
 		"v17-slack-webhook-url": 1,
+		"v17-template-fetched-doc": 1,
 		"v17-verify-password": 1,
 		"v17-weasyprint": 3,
 		"v17-weasyprint-download-pdf": 2,
@@ -52,6 +53,7 @@
 		"v17-sendmail-retry": 2,
 		"v17-show-progress": 1,
 		"v17-slack-webhook-url": 1,
+		"v17-template-fetched-doc": 1,
 		"v17-tests-utils-helpers": 24,
 		"v17-verify-password": 1,
 		"v17-weasyprint": 3,
@@ -528,6 +530,12 @@
 			"frappe/email/doctype/notification/notification.py",
 			13,
 			"from frappe.integrations.doctype.slack_webhook_url.slack_webhook_url import send_slack_message"
+		],
+		[
+			"v17-template-fetched-doc",
+			"frappe/www/printpreview.html",
+			9,
+			".get_html(frappe.form_dict.name, frappe.form_dict.letterhead)"
 		],
 		[
 			"v17-verify-password",

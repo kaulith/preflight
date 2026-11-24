@@ -1,0 +1,6 @@
+{{ frappe.sendmail(recipients="test@example.com") }}
+{% set order = frappe.get_doc("Sales Order", name) %}
+{% for row in order.items %}{{ row.item_code }}{% endfor %}
+{{ frappe.db.sql("with totals as (select 1) select * from totals") }}
+{{ frappe.db.sql("select name as outfile_name from tabToDo") }}
+{{ frappe.db.sql("explain analyze select name from tabToDo") }}
