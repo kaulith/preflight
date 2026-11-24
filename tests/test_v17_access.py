@@ -2,7 +2,6 @@ from pathlib import Path
 
 import pytest
 
-from preflight.js_scanner import JSScanner
 from preflight.python_scanner import PythonScanner
 from preflight.rule_loader import load_rules
 
@@ -28,10 +27,10 @@ def lines_by_rule(source):
 
 def test_each_access_rule_reports_its_lines():
 	assert lines_by_rule(FIXTURE.read_text()) == {
-		"v17-erpnext-plaid-link-token-update": [5],
 		"v17-erpnext-get-bank-cash-account": [7],
 		"v17-erpnext-get-company-default": [8],
 		"v17-erpnext-outstanding-reference-documents": [9],
+		"v17-erpnext-plaid-link-token-update": [10],
 		"v17-erpnext-tax-rule-item-filters": [11, 12],
 		"v17-erpnext-buying-show-pay-button": [13],
 	}
@@ -63,10 +62,3 @@ def test_each_access_rule_reports_its_lines():
 )
 def test_code_that_keeps_working_is_not_reported(source):
 	assert lines_by_rule(source) == {}
-
-
-def test_a_browser_call_to_the_plaid_link_method_is_reported():
-	source = 'frappe.xcall("erpnext.erpnext_integrations.doctype.plaid_settings.plaid_settings.get_link_token_for_update");'
-	assert [finding.rule.id for finding in JSScanner(rules).scan(source, "bank.js")] == [
-		"v17-erpnext-plaid-link-token-update"
-	]

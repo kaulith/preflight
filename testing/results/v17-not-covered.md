@@ -221,7 +221,7 @@ Each entry is a real v16 to v17 change that no Preflight match can pin to the co
 `erpnext-integration-secrets-now-password`
 
 - **What changes:** `Bank.plaid_access_token` and `Currency Exchange Settings.access_key` move to the password store, and their columns keep asterisks. A direct read through the field, `get_single_value` or `db.get_value` returns the mask.
-- **Who it affects:** An integration that reads either value sends a wrong credential and fails at the provider. The related `get_link_token_for_update` argument change has its own rule, `v17-erpnext-plaid-link-token-update`.
+- **Who it affects:** An integration that reads either value sends a wrong credential and fails at the provider. `v17-erpnext-plaid-link-token-update` reports a Python call passing `access_token=`; a browser call or a token passed by position needs checking by hand.
 - **Why no match:** A `doctype_field` rule on these fields also fired on writes and truthiness checks that keep working, so it was removed.
 - **Check by hand:** Search for both field names. After the upgrade, read them with `doc.get_password("plaid_access_token")` or `doc.get_password("access_key")`.
 - **Reference:** [v16 field](https://github.com/frappe/erpnext/blob/v16.60.0/erpnext/accounts/doctype/currency_exchange_settings/currency_exchange_settings.json#L94), [develop field](https://github.com/frappe/erpnext/blob/feefe15ca5b57c2601d57a673720f4196bd9ec2e/erpnext/accounts/doctype/bank/bank.json#L99), [develop patch](https://github.com/frappe/erpnext/blob/feefe15ca5b57c2601d57a673720f4196bd9ec2e/erpnext/patches/v16_0/encrypt_bank_plaid_access_token.py#L13)

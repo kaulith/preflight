@@ -9,7 +9,6 @@
 		"v17-erpnext-get-bank-cash-account": 2,
 		"v17-erpnext-get-company-default": 2,
 		"v17-erpnext-grey-letterhead": 3,
-		"v17-erpnext-plaid-link-token-update": 1,
 		"v17-get-number-format-info": 1,
 		"v17-query-limit-page-length": 24,
 		"v17-query-limit-start": 16,
@@ -26,7 +25,6 @@
 		"v17-erpnext-get-company-default": 2,
 		"v17-erpnext-grey-letterhead": 4,
 		"v17-erpnext-outstanding-reference-documents": 4,
-		"v17-erpnext-plaid-link-token-update": 1,
 		"v17-get-number-format-info": 1,
 		"v17-get-test-records": 1,
 		"v17-pdfkit": 2,
@@ -163,12 +161,6 @@
 			"erpnext/setup/install.py",
 			387,
 			"\"is_default\": 1 if name == \"Company Letterhead - Grey\" else 0,"
-		],
-		[
-			"v17-erpnext-plaid-link-token-update",
-			"erpnext/accounts/doctype/bank/bank.js",
-			59,
-			"\"erpnext.erpnext_integrations.doctype.plaid_settings.plaid_settings.get_link_token_for_update\","
 		],
 		[
 			"v17-get-number-format-info",

@@ -5,7 +5,7 @@ match:
   type: pattern
   patterns:
     - 'datepicker\??\.(?:removeDate|today)\('
-    - 'picker\??\.\$datepicker\??\.\w'
+    - 'picker\??\.\$datepicker\??\.(?:find|outerHeight|outerWidth|innerHeight|innerWidth|height|width|offset|position|css|attr|prop|data|addClass|removeClass|toggleClass|hasClass|on|off|show|hide|toggle|html|text|children|parent|parents|siblings|next|prev|trigger)\('
     - '\btimepicker\??\.(?:\$seconds(?:Text)?|_setTime)\b'
     - '\.update_datepicker_position\('
     - 'datepicker\.(?:date|view)\s*=(?![=>])'

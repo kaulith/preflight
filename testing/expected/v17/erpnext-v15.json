@@ -8,7 +8,6 @@
 		"v17-erpnext-buying-show-pay-button": 1,
 		"v17-erpnext-get-bank-cash-account": 1,
 		"v17-erpnext-get-company-default": 2,
-		"v17-erpnext-plaid-link-token-update": 1,
 		"v17-get-number-format-info": 2,
 		"v17-query-limit-page-length": 22,
 		"v17-query-limit-start": 14,
@@ -25,7 +24,6 @@
 		"v17-erpnext-get-bank-cash-account": 1,
 		"v17-erpnext-get-company-default": 2,
 		"v17-erpnext-outstanding-reference-documents": 1,
-		"v17-erpnext-plaid-link-token-update": 1,
 		"v17-frappe-test-case": 163,
 		"v17-get-number-format-info": 2,
 		"v17-get-test-records": 60,
@@ -134,12 +132,6 @@
 			"erpnext/stock/doctype/stock_reconciliation/stock_reconciliation.py",
 			1402,
 			"account = get_company_default(company, \"stock_adjustment_account\")"
-		],
-		[
-			"v17-erpnext-plaid-link-token-update",
-			"erpnext/accounts/doctype/bank/bank.js",
-			59,
-			"\"erpnext.erpnext_integrations.doctype.plaid_settings.plaid_settings.get_link_token_for_update\","
 		],
 		[
 			"v17-get-number-format-info",
