@@ -38,6 +38,7 @@ def test_js_violations_report_on_their_lines():
 		("v17-datepicker-jquery-plugin", "this.$refs.datepicker(value);"),
 		("v17-datepicker-options", 'const options = { language: "de", position: "top", clearButton: true };'),
 		("v17-datepicker-instance-api", "field.datepicker.unselectDate(date);"),
+		("v17-datepicker-instance-api", 'positioned_datepicker?.$datepicker.classList.contains("-active-");'),
 		(
 			"v17-datepicker-update-change-event",
 			"dialog.fields_dict.to_date.datepicker.update({ maxDate: today });",

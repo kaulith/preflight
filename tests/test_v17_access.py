@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pytest
 
+from preflight.js_scanner import JSScanner
 from preflight.python_scanner import PythonScanner
 from preflight.rule_loader import load_rules
 
@@ -62,3 +63,11 @@ def test_each_access_rule_reports_its_lines():
 )
 def test_code_that_keeps_working_is_not_reported(source):
 	assert lines_by_rule(source) == {}
+
+
+def test_a_browser_call_passing_the_bank_is_not_reported():
+	source = (
+		'frappe.xcall("erpnext.erpnext_integrations.doctype.plaid_settings.plaid_settings'
+		'.get_link_token_for_update", { bank: this.bank });'
+	)
+	assert JSScanner(rules).scan(source, "bank.js") == []
