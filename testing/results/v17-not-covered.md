@@ -2,7 +2,7 @@
 
 Checked against frappe develop [`2746cacf9115bec32a06a894d9f69c92457667c0`](https://github.com/frappe/frappe/commit/2746cacf9115bec32a06a894d9f69c92457667c0) and erpnext develop [`feefe15ca5b57c2601d57a673720f4196bd9ec2e`](https://github.com/frappe/erpnext/commit/feefe15ca5b57c2601d57a673720f4196bd9ec2e), compared with frappe v16.60.2 and erpnext v16.60.0.
 
-Each entry is a real v16 to v17 change that no Preflight match can pin to the code it breaks, so a scan stays silent on it and an app owner has to check it by hand. Every entry was read from both trees. None was run on a v17 site, and the two Postgres entries were not run on a Postgres server. v17 is not released, so recheck this list against 17.0.0.
+Each entry is a real v16 to v17 change that no Preflight match can pin to the code it breaks, so a scan stays silent on it and an app owner has to check it by hand. Every entry was read from both trees. None was run on a v17 site, and the Postgres entries were not run on a Postgres server. v17 is not released, so recheck this list against 17.0.0.
 
 ## Endpoints and API calls
 
@@ -110,7 +110,47 @@ Each entry is a real v16 to v17 change that no Preflight match can pin to the co
 - **Check by hand:** Find code that sets `name` before inserting on hash doctypes. Leave it unset for a generated name, or handle `frappe.DuplicateEntryError`.
 - **Reference:** [v16](https://github.com/frappe/frappe/blob/v16.60.2/frappe/model/document.py#L2820-L2822), [develop](https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/model/document.py#L3396-L3398), [develop naming](https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/model/naming.py#L198-L200)
 
+### Attach fields refuse `data:`, `javascript:` and `vbscript:` URLs
+
+`attach-field-rejects-unsafe-url-scheme`
+
+- **What changes:** Every save throws "is not a valid URL" when an Attach or Attach Image field holds one of these schemes.
+- **Who it affects:** A document that already stores a base64 `data:` image can't be saved for any other edit. App code that assigns a data URI to an image field fails too.
+- **Why no match:** Finding the stored values means reading every Attach column of every doctype on the site, and `site_record` names fixed doctypes and compares whole values.
+- **Check by hand:** Query your Attach and Attach Image columns for values starting with `data:`. Save the content as a File and store its `file_url` before upgrading.
+- **Reference:** [v16](https://github.com/frappe/frappe/blob/v16.60.2/frappe/model/document.py#L3172), [develop check](https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/model/document.py#L3804-L3809), [develop schemes](https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/utils/__init__.py#L327-L329)
+
 ## Permissions
+
+### Saving a document after applying read permissions raises
+
+`read-permissions-applied-blocks-save`
+
+- **What changes:** `apply_fieldlevel_read_permissions` now flags the document, and `save()` then throws "has fields removed for reading and can't be saved".
+- **Who it affects:** Code that applies read permissions and saves the same object, for every user except Administrator. A test run as Administrator still passes.
+- **Why no match:** It takes following one object from the apply call to the save, and no match type follows data that way.
+- **Check by hand:** Search for `apply_fieldlevel_read_permissions`. Save a separate `frappe.get_doc` copy, or call `doc.reload()` before saving.
+- **Reference:** [v16](https://github.com/frappe/frappe/blob/v16.60.2/frappe/model/document.py#L1200), [develop save](https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/model/document.py#L1162-L1167), [develop flag](https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/model/document.py#L1592)
+
+### `frappe.db.get_single_value` in the browser applies field permissions
+
+`client-get-single-value-applies-field-permissions`
+
+- **What changes:** The endpoint now reads through `frappe.read_doc`. A field above the user's permlevel returns null, a masked field returns its mask, and an unknown field returns null instead of throwing. The Python call is unchanged.
+- **Who it affects:** Client code that branches on a setting the user can't read takes the empty path with no error. Six standard ERPNext fields qualify (CRM Settings 2, Appointment Booking Settings 4), and permlevels set on a site can add more.
+- **Why no match:** A rule on the endpoint would flag every call, and permlevels set on a site are not visible in code.
+- **Check by hand:** Find browser reads of Single fields that have a permlevel above 0 or are masked. Return the value from a whitelisted method that does its own permission check.
+- **Reference:** [v16](https://github.com/frappe/frappe/blob/v16.60.2/frappe/client.py#L176), [develop](https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/client.py#L171-L173)
+
+### Users with only the Employee role see their own record and reportees
+
+`erpnext-employee-records-scoped`
+
+- **What changes:** ERPNext adds permission hooks for users whose only Employee access is the Employee role and who have no Employee User Permission. `frappe.get_list("Employee")` returns fewer rows, and opening a colleague's record raises `PermissionError`.
+- **Who it affects:** Staff directories and pickers built on `get_list`; hrms has three such calls. `get_all` ignores permissions and is unchanged.
+- **Why no match:** A `call` rule can't filter on the doctype argument, and a `doctype` rule would flag every use of Employee.
+- **Check by hand:** Find `get_list` calls and document reads on Employee made for these users. Give them a role with Employee read, or read only the needed public fields in trusted server code.
+- **Reference:** [v16](https://github.com/frappe/erpnext/blob/v16.60.0/erpnext/hooks.py#L344), [develop hooks](https://github.com/frappe/erpnext/blob/feefe15ca5b57c2601d57a673720f4196bd9ec2e/erpnext/hooks.py#L353-L365), [develop check](https://github.com/frappe/erpnext/blob/feefe15ca5b57c2601d57a673720f4196bd9ec2e/erpnext/setup/doctype/employee/employee.py#L535-L562)
 
 ### List queries check child table fields against the parent
 
@@ -174,6 +214,18 @@ Each entry is a real v16 to v17 change that no Preflight match can pin to the co
 - **Check by hand:** Look at report and list columns that link to User, and return the name as `<fieldname>_full_name`, such as `owner_full_name`. This also works on v16.
 - **Reference:** [v16](https://github.com/frappe/frappe/blob/v16.60.2/frappe/public/js/frappe/form/formatters.js#L480-L483), [develop](https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/public/js/frappe/form/formatters.js#L482-L485)
 
+## ERPNext fields
+
+### Two integration secrets become Password fields
+
+`erpnext-integration-secrets-now-password`
+
+- **What changes:** `Bank.plaid_access_token` and `Currency Exchange Settings.access_key` move to the password store, and their columns keep asterisks. A direct read through the field, `get_single_value` or `db.get_value` returns the mask.
+- **Who it affects:** An integration that reads either value sends a wrong credential and fails at the provider. The related `get_link_token_for_update` argument change has its own rule, `v17-erpnext-plaid-link-token-update`.
+- **Why no match:** A `doctype_field` rule on these fields also fired on writes and truthiness checks that keep working, so it was removed.
+- **Check by hand:** Search for both field names. After the upgrade, read them with `doc.get_password("plaid_access_token")` or `doc.get_password("access_key")`.
+- **Reference:** [v16 field](https://github.com/frappe/erpnext/blob/v16.60.0/erpnext/accounts/doctype/currency_exchange_settings/currency_exchange_settings.json#L94), [develop field](https://github.com/frappe/erpnext/blob/feefe15ca5b57c2601d57a673720f4196bd9ec2e/erpnext/accounts/doctype/bank/bank.json#L99), [develop patch](https://github.com/frappe/erpnext/blob/feefe15ca5b57c2601d57a673720f4196bd9ec2e/erpnext/patches/v16_0/encrypt_bank_plaid_access_token.py#L13)
+
 ## Build
 
 ### `bench build` uses pnpm when an app has a pnpm lockfile
@@ -207,3 +259,23 @@ Each entry is a real v16 to v17 change that no Preflight match can pin to the co
 - **Why no match:** Only values holding a backslash differ, and no match type reports a slice of a call's result.
 - **Check by hand:** Search for slices of `frappe.db.escape`, and pass values as query parameters instead. Review stored values that contain doubled backslashes.
 - **Reference:** [v16](https://github.com/frappe/frappe/blob/v16.60.2/frappe/database/postgres/database.py#L235), [develop](https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/database/postgres/database.py#L439)
+
+### Query values are bound on the server
+
+`postgres-server-side-binding-untyped-params`
+
+- **What changes:** SELECT, INSERT, UPDATE, DELETE and WITH values are now sent as `$n` parameters. `%s IS NULL`, `CONCAT(%s, ...)`, `INTERVAL %s`, `DATE %s` and `TIMESTAMP %s` raise, and a repeated `%(x)s` must fit one type.
+- **Who it affects:** Postgres sites whose apps use these forms in raw SQL. Renaming a Wiki Space route is one known case (`wiki_space.py:282`).
+- **Why no match:** The same forms are valid on MariaDB, and a code scan can't tell which database an app runs on.
+- **Check by hand:** Search raw SQL for these forms. Cast the placeholder on a Postgres branch (`%s::text`, `%s::interval`), or use the query builder.
+- **Reference:** [develop binding](https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/database/postgres/database.py#L458), [develop rewrite](https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/database/postgres/database.py#L1127)
+
+### `NOT IN` with an empty list matches every row
+
+`postgres-not-in-empty-list-matches-all`
+
+- **What changes:** `IN %s` becomes `= ANY(%s)` and `NOT IN %s` becomes `<> ALL(%s)`. An empty list used to stop the statement with a syntax error. Now `IN` matches nothing and `NOT IN` matches every row.
+- **Who it affects:** Postgres code such as `DELETE ... WHERE parent = %s AND name NOT IN %s`, which with an empty list deletes all of that parent's rows.
+- **Why no match:** Whether the list is empty is known only at run time, and the same SQL is valid on MariaDB.
+- **Check by hand:** Search for `NOT IN %s` and guard the empty case before running the statement.
+- **Reference:** [develop](https://github.com/frappe/frappe/blob/2746cacf9115bec32a06a894d9f69c92457667c0/frappe/database/postgres/database.py#L1127)
