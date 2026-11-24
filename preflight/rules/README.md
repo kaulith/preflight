@@ -181,6 +181,18 @@ match:
   returns: 3
 ```
 
+`super_calls: true` on a `call` rule also matches `super().method()` and
+`super(ThisClass, self).method()` in a class whose one base resolves to the path's class. A class
+with several bases is not matched, since another base may define the method.
+
+```yaml
+match:
+  type: call
+  super_calls: true
+  paths:
+    - frappe.utils.nestedset.NestedSet.after_insert
+```
+
 ## `pattern`
 
 A line-based regular expression, run over the app's `.js`, `.mjs`, `.ts`, `.jsx`,
@@ -447,6 +459,54 @@ held in a local name is read with every string the function gives it (`=`,
 passed, as v16 then selects it. In JS, the literal `fields` of `frappe.db.get_list`,
 `frappe.db.get_value` and the `frappe.client` query methods called through
 `frappe.call` are read. A dict (`{"SUM": "qty"}`) and a `frappe.qb` term are not.
+
+## `sql_text`
+
+```yaml
+match:
+  type: sql_text
+  safe_sql_only: true
+  patterns:
+    - (?is)\A\s*(with)\b
+```
+
+Patterns are searched across the whole query. Without `safe_sql_only` the rule reads `frappe.db.sql`
+and `frappe.db.multisql` in Python and the `query` of Query Reports. `safe_sql_only: true` limits it
+to SQL that passes `check_safe_sql_query`: Query Reports, `frappe.db.sql` in Python stored on the
+site, and `frappe.db.sql` with a literal query in a Jinja template. An app's own Python never passes
+that guard, so it is left out.
+
+## `template_global`
+
+```yaml
+match:
+  type: template_global
+  paths:
+    - frappe.sendmail
+```
+
+A call to one of `paths` in a template that renders with frappe's default globals: Print Formats,
+Letter Heads, Email Templates, Web Templates, and HTML under `templates/`, `www/` and a doctype's
+`templates/` folder. A Notification already renders restricted and is left out, and so is a name
+the template binds itself. A read with no call is not matched.
+
+## `template_fetched_doc`
+
+```yaml
+match:
+  type: template_fetched_doc
+  paths:
+    - frappe.get_doc
+  keys:
+    - items
+  allowed_methods:
+    - get
+```
+
+For a target that hands templates a dict in place of a document. `paths` are the APIs that fetch
+it, followed through `set`, `with` and `if`. Reading a name in `keys` is reported, as it resolves to
+a dict method; calling it is not. A call to anything outside `keys` and `allowed_methods` is
+reported. The `doc` a Print Format renders with is a real document and is not matched.
 
 ## `site_record`
 

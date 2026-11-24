@@ -21,16 +21,25 @@ from preflight.sources import MALFORMED_RECORD
 MICROTEMPLATE = re.compile(r"\{%[=~]|\{\s*%\}|\{%\s*\}")
 # The print format builder's fieldtypes whose entry holds a template frappe renders with the doc.
 BUILDER_HTML_FIELDTYPES = ("HTML", "Custom HTML")
+# The match types about how a template renders, rather than the doctypes and fields it names.
+RENDER_MATCH_TYPES = ("template_global", "template_fetched_doc")
 
 
 class Held(NamedTuple):
-	"""What a name or an expression may hold: docs of these doctypes, or a table of rows of these."""
+	"""What a name or an expression may hold: docs of these doctypes, a table of rows of these, or a doc
+	the template fetched through a template_fetched_doc rule's APIs."""
 
 	docs: frozenset[str] = frozenset()
 	rows: frozenset[str] = frozenset()
+	fetched: bool = False
 
 
 NOTHING = Held()
+
+
+def reads_rendering(rule: Rule) -> bool:
+	"""True for a rule about how a template renders or runs its SQL."""
+	return rule.match.type in RENDER_MATCH_TYPES or rule.match.safe_sql_only
 
 
 def renders_html(print_format: Mapping) -> bool:
@@ -110,18 +119,54 @@ def loaded_doctype(node: nodes.Call) -> str | None:
 	return None
 
 
+def global_path(node: nodes.Expr) -> str | None:
+	"""The dotted path of a name and its attributes, `frappe.db.commit`."""
+	attributes = []
+	while isinstance(node, nodes.Getattr):
+		attributes.append(node.attr)
+		node = node.node
+	return ".".join((node.name, *reversed(attributes))) if isinstance(node, nodes.Name) else None
+
+
+def bound_names(tree: nodes.Template) -> set[str]:
+	"""The names the template's macros and imports bind, which hide a render global of that name."""
+	names = set()
+	for node in tree.find_all((nodes.Macro, nodes.Import, nodes.FromImport)):
+		if isinstance(node, nodes.FromImport):
+			names.update(name[1] if isinstance(name, tuple) else name for name in node.names)
+		else:
+			names.add(node.target if isinstance(node, nodes.Import) else node.name)
+	return names
+
+
 class JinjaScanner:
-	"""The doctype and doctype_field rules, as the tables a template visitor reads."""
+	"""The rules a template can match, as the tables a template visitor reads."""
 
 	def __init__(self, rules: list[Rule]):
 		self.environment = Environment()
 		self.doctype_rules = rules_by_doctype(rules)
 		self.field_rules = rules_by_doctype_field(rules)
 		self.child_doctypes = child_doctypes(rules)
+		self.global_rules: dict[str, list[Rule]] = {}
+		self.fetched_doc_rules = [rule for rule in rules if rule.match.type == "template_fetched_doc"]
+		self.fetch_apis = frozenset(path for rule in self.fetched_doc_rules for path in rule.match.paths)
+		self.safe_sql_rules = [
+			([re.compile(pattern) for pattern in rule.match.patterns], rule)
+			for rule in rules
+			if rule.match.safe_sql_only
+		]
+		for rule in rules:
+			if rule.match.type == "template_global":
+				for path in rule.match.paths:
+					self.global_rules.setdefault(path, []).append(rule)
 
-	def scan(self, source: str, file: str, doc_doctypes: Collection[str] = ()) -> list[Finding]:
+	def scan(
+		self, source: str, file: str, doc_doctypes: Collection[str] = (), restricted: bool = False
+	) -> list[Finding]:
 		"""Raises jinja2.TemplateSyntaxError if `source` is not a valid template. A microtemplate is not
-		Jinja, so it has no findings. `doc_doctypes` are the doctypes of the `doc` the template renders with."""
+		Jinja, so it has no findings. `doc_doctypes` are the doctypes of the `doc` the template renders with.
+		`restricted` says frappe already renders it with restrict_globals on the version being left, so
+		the target takes nothing from it."""
 		try:
 			tree = self.environment.parse(source)
 		except TemplateSyntaxError:
@@ -129,7 +174,9 @@ class JinjaScanner:
 				return []
 			raise
 		lines = newline_re.sub("\n", source).split("\n")
-		visitor = TemplateVisitor(self, file, lines, {"doc": Held(docs=frozenset(doc_doctypes))})
+		visitor = TemplateVisitor(
+			self, file, lines, {"doc": Held(docs=frozenset(doc_doctypes))}, restricted, bound_names(tree)
+		)
 		visitor.visit(tree)
 		return list(visitor.findings.values())
 
@@ -165,12 +212,22 @@ class TemplateVisitor(NodeVisitor):
 	"""Walks one template, keeping what each name holds the way Jinja scopes it: a for, with, macro, call,
 	filter or block body binds names of its own, and an if does not."""
 
-	def __init__(self, rules: JinjaScanner, file: str, lines: list[str], names: dict[str, Held]):
+	def __init__(
+		self,
+		rules: JinjaScanner,
+		file: str,
+		lines: list[str],
+		names: dict[str, Held],
+		restricted: bool = False,
+		shadowed: Collection[str] = (),
+	):
 		self.rules = rules
 		self.file = file
 		self.lines = lines
 		self.names = names
 		self.template_names = names
+		self.restricted = restricted
+		self.shadowed = shadowed
 		self.findings: dict[tuple[str, int], Finding] = {}
 
 	def report(self, rules: Iterable[Rule], line: int):
@@ -194,7 +251,7 @@ class TemplateVisitor(NodeVisitor):
 
 	def held(self, node: nodes.Node) -> Held:
 		"""What the expression holds: a bound name, a table of a doc, one row or a slice of a table, or a
-		doc a call loads."""
+		doc a call loads or fetches."""
 		if isinstance(node, nodes.Name):
 			return self.names.get(node.name, NOTHING)
 		if isinstance(node, nodes.Getattr):
@@ -206,11 +263,53 @@ class TemplateVisitor(NodeVisitor):
 				return Held(rows=self.table_rows(node.node, fieldname))
 			return Held(docs=self.held(node.node).rows)
 		if isinstance(node, nodes.Call):
+			fetched = self.fetches_doc(node)
 			if doctype := loaded_doctype(node):
-				return Held(docs=frozenset((doctype,)))
+				return Held(docs=frozenset((doctype,)), fetched=fetched)
+			if fetched:
+				return Held(fetched=True)
 			if isinstance(node.node, nodes.Getattr) and node.node.attr == "get":
 				return Held(rows=self.table_rows(node.node.node, string_value(argument(node, "key"))))
 		return NOTHING
+
+	def is_global(self, name: str) -> bool:
+		"""False when the template binds `name` itself, so it is not frappe's global."""
+		return name not in self.names and name not in self.shadowed
+
+	def fetches_doc(self, node: nodes.Call) -> bool:
+		path = global_path(node.node) if self.rules.fetch_apis else None
+		return path in self.rules.fetch_apis and self.is_global(path.partition(".")[0])
+
+	def report_fetched_doc(self, read: nodes.Getattr, called: bool):
+		"""A read on a fetched doc that lands on a dict method, or a call to a method SafeDoc lacks."""
+		if self.restricted:
+			return
+		for rule in self.rules.fetched_doc_rules:
+			breaks = (
+				read.attr not in (*rule.match.keys, *rule.match.allowed_methods)
+				if called
+				else read.attr in rule.match.keys
+			)
+			if breaks and self.held(read.node).fetched:
+				self.report((rule,), read.lineno)
+
+	def report_global_call(self, node: nodes.Call):
+		"""A call to a global the target takes from this template, and SQL sent through frappe's guard,
+		which every template's `frappe.db.sql` is."""
+		path = global_path(node.node)
+		if not path or not self.is_global(path.partition(".")[0]):
+			return
+		if not self.restricted:
+			self.report(self.rules.global_rules.get(path, ()), node.lineno)
+		if path == "frappe.db.sql" and (query := string_value(argument(node, "query"))) is not None:
+			self.report(
+				(
+					rule
+					for patterns, rule in self.rules.safe_sql_rules
+					if any(pattern.search(query) for pattern in patterns)
+				),
+				node.lineno,
+			)
 
 	def visit_scope(self, body: Iterable[nodes.Node], names: dict[str, Held]):
 		"""Visit `body` in a scope that starts from `names`; what it binds is gone after it."""
@@ -222,6 +321,7 @@ class TemplateVisitor(NodeVisitor):
 
 	def visit_Getattr(self, node: nodes.Getattr):
 		self.report_field(node.node, node.attr, node.lineno)
+		self.report_fetched_doc(node, called=False)
 		self.generic_visit(node)
 
 	def visit_Getitem(self, node: nodes.Getitem):
@@ -234,6 +334,9 @@ class TemplateVisitor(NodeVisitor):
 		method = node.node
 		if isinstance(method, nodes.Getattr) and method.attr == "get":
 			self.report_field(method.node, string_value(argument(node, "key")), node.lineno)
+		if isinstance(method, nodes.Getattr):
+			self.report_fetched_doc(method, called=True)
+		self.report_global_call(node)
 		if rule := self.rules.doctype_rules.get(loaded_doctype(node)):
 			self.report((rule,), node.lineno)
 		self.visit(method.node if isinstance(method, nodes.Getattr) else method)
@@ -269,6 +372,7 @@ class TemplateVisitor(NodeVisitor):
 			outer[name] = Held(
 				frozenset().union(*(each.docs for each in held)),
 				frozenset().union(*(each.rows for each in held)),
+				any(each.fetched for each in held),
 			)
 
 	def visit_For(self, node: nodes.For):

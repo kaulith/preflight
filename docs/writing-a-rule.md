@@ -96,6 +96,8 @@ A moved import is shimmed this way, which Preflight does not report (see `import
 | `doctype_field` | A removed or renamed field on a doctype that stays |
 | `select_field` | A query field the target rejects, such as a SQL function written as a string |
 | `sql_text` | SQL text the target reads differently, in a query an app or a Query Report runs |
+| `template_global` | A call in a template to a global the target no longer gives it |
+| `template_fetched_doc` | A read on a doc a template fetched that breaks once the doc is a dict |
 | `http_method` | A request to a server method by an HTTP method the target refuses |
 | `undeclared_import` | An import of a package the target's frappe no longer installs, when the app does not declare it |
 | `site_record` | Records on the site, chosen by field values, that the target reads differently |
@@ -167,6 +169,17 @@ match:
 - `returns` is for a function the target makes return more values than before.
 - A call whose result is indexed or sliced (`build_xlsx_data(...)[:2]`), unpacked into `returns` names, or unpacked into a starred name and at most `returns` others is not reported.
 - Any other use is reported, a result held in one name included, since the name is not followed to where it is read.
+
+```yaml
+match:
+  type: call
+  super_calls: true
+  paths:
+    - frappe.utils.nestedset.NestedSet.after_insert
+```
+
+- `super_calls: true` also matches `super().after_insert()` and `super(ThisClass, self).after_insert()` in a class whose one base resolves to the path's class.
+- A class with several bases is not matched, since another base may define the method. Neither is a class built on a subclass of the path's class.
 
 ### pattern
 
@@ -334,6 +347,53 @@ match:
 - Reads the query of `frappe.db.sql` and each database's query in `frappe.db.multisql`: a string, an f-string whose substitutions read as plain field names, or a string a local name holds.
 - Reads the `query` of Query Reports, on the site and in the app's report JSON. A finding in the JSON carries no line.
 - A `frappe.qb` query is not read.
+
+```yaml
+match:
+  type: sql_text
+  safe_sql_only: true
+  patterns:
+    - (?is)\A\s*(with)\b
+```
+
+- `safe_sql_only: true` limits the rule to SQL that passes `check_safe_sql_query`: Query Reports, `frappe.db.sql` in the Python stored on the site (Server Scripts, Script Reports, Web Page context scripts, Notification conditions), and `frappe.db.sql` with a literal query in a Jinja template.
+- `frappe.db.sql` in an app's Python never passes the guard, so it is not read. Without the key it is, as above.
+
+### template_global
+
+```yaml
+match:
+  type: template_global
+  paths:
+    - frappe.sendmail
+    - frappe.db.commit
+    - run_script
+```
+
+- Matches a call to one of `paths` in a template that renders with frappe's default globals: Print Formats and their builder HTML, Letter Heads, Email Templates, Web Templates, and the HTML under `templates/`, `www/` and a doctype's `templates/` folder, in the app and on the site.
+- A Notification is left out, since frappe already renders it with the restricted globals.
+- A name the template binds itself (`set`, a macro, an import, a loop) is not the global, so it is not matched.
+- Reading the name without calling it is not matched: frappe's namespace answers a missing name with a function that raises only when called.
+- Letter Heads, Web Templates and doctype templates are read only when a rule of this type, `template_fetched_doc` or `safe_sql_only` is in the rule set.
+
+### template_fetched_doc
+
+```yaml
+match:
+  type: template_fetched_doc
+  paths:
+    - frappe.get_doc
+  keys:
+    - items
+  allowed_methods:
+    - get
+```
+
+- For a target that hands templates a dict in place of a document. Reads the same templates as `template_global`.
+- `paths` are the APIs that fetch the doc. The doc is followed through `set` and `with`, and an `if` that may leave it in a name. The `doc` a Print Format renders with is a real document and is not matched.
+- `keys` are the names that resolve to a method of the dict: reading one is reported, and calling it is not (`order.items()` works, `order.items` does not).
+- `allowed_methods` are the other methods the dict has. A call to any method outside `keys` and `allowed_methods` is reported.
+- A field read any other way (`order["items"]`, `order.get("items")`, `order.customer`) is not matched.
 
 ### http_method
 

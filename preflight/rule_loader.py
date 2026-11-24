@@ -151,6 +151,10 @@ def invalid_db_type(key: str, value) -> str | None:
 	return None if value in DB_TYPES else f"{key} must be one of {DB_TYPES}, got {value!r}"
 
 
+def invalid_flag(key: str, value) -> str | None:
+	return None if value is True else f"{key} must be true, or left out"
+
+
 def invalid_fix(key: str, value) -> str | None:
 	return None if value in FIX_TIMINGS else f"{key} must be one of {FIX_TIMINGS}, got {value!r}"
 
@@ -183,11 +187,16 @@ MATCH_KEY_CHECKS = {
 	"branch": invalid_text,
 	"dependencies": invalid_requirements,
 	"db_type": invalid_db_type,
+	"safe_sql_only": invalid_flag,
+	"super_calls": invalid_flag,
+	"allowed_methods": invalid_string_list,
 }
 
 MATCH_TYPE_KEYS = {
 	"import_path": MatchKeys(("paths",)),
-	"call": MatchKeys(("paths",), ("with_kwargs", "with_positional_args", "url_host", "returns")),
+	"call": MatchKeys(
+		("paths",), ("with_kwargs", "with_positional_args", "url_host", "returns", "super_calls")
+	),
 	"pattern": MatchKeys(("patterns",)),
 	"string_contains": MatchKeys(("paths",)),
 	"hook_key": MatchKeys(("keys",)),
@@ -198,7 +207,9 @@ MATCH_TYPE_KEYS = {
 	"doctype": MatchKeys(("doctypes",)),
 	"doctype_field": MatchKeys(("fields",), ("child_tables",)),
 	"select_field": MatchKeys(("patterns",)),
-	"sql_text": MatchKeys(("patterns",)),
+	"sql_text": MatchKeys(("patterns",), ("safe_sql_only",)),
+	"template_global": MatchKeys(("paths",)),
+	"template_fetched_doc": MatchKeys(("paths", "keys", "allowed_methods")),
 	"http_method": MatchKeys(("paths", "rejected_methods")),
 	"undeclared_import": MatchKeys(("paths", "dependencies")),
 	"site_record": MatchKeys(("doctypes",), ("filters", "title_field")),

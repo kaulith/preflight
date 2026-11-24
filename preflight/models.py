@@ -15,6 +15,8 @@ MATCH_TYPES = (
 	"doctype_field",
 	"select_field",
 	"sql_text",
+	"template_global",
+	"template_fetched_doc",
 	"http_method",
 	"undeclared_import",
 	"site_record",
@@ -63,6 +65,9 @@ class Match:
 	child_tables: tuple[tuple[str, str], ...] = ()
 	rejected_methods: tuple[str, ...] = ()
 	db_type: str = ""
+	safe_sql_only: bool = False
+	super_calls: bool = False
+	allowed_methods: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)

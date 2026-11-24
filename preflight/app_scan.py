@@ -13,7 +13,13 @@ from packaging.utils import canonicalize_name
 
 from preflight.compatibility_scanner import CompatibilityScanner, declared_dependencies
 from preflight.hooks_scanner import HooksScanner, hooked_doctypes
-from preflight.jinja_scanner import JinjaScanner, renders_html, renders_layout, renders_subject
+from preflight.jinja_scanner import (
+	JinjaScanner,
+	reads_rendering,
+	renders_html,
+	renders_layout,
+	renders_subject,
+)
 from preflight.js_scanner import JSScanner
 from preflight.models import Finding, Report, Rule
 from preflight.python_scanner import PYTHON_PARSE_ERRORS, PythonScanner
@@ -50,6 +56,8 @@ class Scanners:
 		self.python = PythonScanner(rules)
 		self.js = JSScanner(rules)
 		self.jinja = JinjaScanner(rules)
+		rendering = [rule for rule in rules if reads_rendering(rule)]
+		self.rendering = JinjaScanner(rendering) if rendering else None
 		self.hooks = HooksScanner(rules)
 		self.schema = SchemaScanner(rules)
 		self.compatibility = CompatibilityScanner(rules)
@@ -189,7 +197,7 @@ def scan_app(report: Report, scanners: Scanners, app: str, app_path: Path, skip_
 		source = read_source(path, f"{app}/{file}", report.unreadable_files)
 		if source is not None and not is_bundle(source):
 			add_findings(report, scan_js(report, scanners.js, file, source, app), source, app)
-	scan_templates(report, scanners.jinja, app, app_path, skip_tests)
+	scan_templates(report, scanners.jinja, app, app_path, skip_tests, scanners.rendering)
 	scan_query_reports(report, scanners.python, app, app_path, skip_tests)
 	scan_patches(report, scanners.python, app, app_path, declared)
 	report.findings += [
@@ -206,12 +214,14 @@ def scan_template(
 	app: str | None = None,
 	source: str = "app",
 	embedded: bool = False,
+	restricted: bool = False,
 ) -> bool:
 	"""Count the template's findings into the report, False when it does not parse. One `embedded` in a
-	JSON file has no line there, so its findings carry the template's line as their snippet alone."""
+	JSON file has no line there, so its findings carry the template's line as their snippet alone.
+	`restricted` is JinjaScanner.scan's."""
 	template = newline_re.sub("\n", template)
 	try:
-		findings = scanner.scan(template, file, doc_doctypes)
+		findings = scanner.scan(template, file, doc_doctypes, restricted)
 	except (TemplateSyntaxError, RecursionError):
 		return False
 	if embedded:
@@ -234,11 +244,14 @@ def scan_template_file(
 	app_root: Path,
 	path: Path,
 	doc_doctypes: Collection[str] = (),
+	restricted: bool = False,
 ) -> bool:
 	"""False when the file holds a template that does not parse. One that cannot be read is listed as such."""
 	file = str(path.relative_to(app_root))
 	template = read_source(path, f"{app}/{file}", report.unreadable_files)
-	return template is None or scan_template(report, scanner, template, file, doc_doctypes, app)
+	return template is None or scan_template(
+		report, scanner, template, file, doc_doctypes, app, restricted=restricted
+	)
 
 
 def scan_print_format(
@@ -278,17 +291,61 @@ def scan_notification(
 	if record.get("subject") and renders_subject(record):
 		file = str(path.relative_to(app_root))
 		unparsed += not scan_template(
-			report, scanner, record["subject"], file, doc_doctypes, app, embedded=True
+			report, scanner, record["subject"], file, doc_doctypes, app, embedded=True, restricted=True
 		)
 	body = path.with_suffix(NOTIFICATION_BODY_SUFFIXES.get(record.get("message_type"), ".md"))
 	if body.is_file():
-		unparsed += not scan_template_file(report, scanner, app, app_root, body, doc_doctypes)
+		unparsed += not scan_template_file(
+			report, scanner, app, app_root, body, doc_doctypes, restricted=True
+		)
 	return unparsed
 
 
-def scan_templates(report: Report, scanner: JinjaScanner, app: str, app_path: Path, skip_tests: bool = False):
+def scan_rendered_records(
+	report: Report, scanner: JinjaScanner, app: str, app_path: Path, skip_tests: bool = False
+) -> int:
+	"""How many of the app's Web Templates, website doctype templates and Letter Heads do not parse. Only
+	the rules on how a template renders read them."""
+	app_root = app_path.parent
+	unparsed = 0
+	for path in source_files(app_path, ".html", skip_tests):
+		parts = path.relative_to(app_path).parts
+		if parts[0] not in ("templates", "www") and (
+			(path.stem == path.parent.name and path.parents[1].name == "web_template")
+			or (len(parts) > 4 and parts[1] == "doctype" and parts[3] == "templates")
+		):
+			unparsed += not scan_template_file(report, scanner, app, app_root, path)
+	for path in source_files(app_path, ".json", skip_tests):
+		if path.stem != path.parent.name or path.parents[1].name != "letter_head":
+			continue
+		file = str(path.relative_to(app_root))
+		source = read_source(path, f"{app}/{file}", report.unreadable_files)
+		if source is None:
+			continue
+		try:
+			record = json.loads(source)
+			if isinstance(record, dict) and record.get("doctype") == "Letter Head":
+				for field in ("content", "footer"):
+					if template := record.get(field):
+						unparsed += not isinstance(template, str) or not scan_template(
+							report, scanner, template, file, app=app, embedded=True
+						)
+		except MALFORMED_RECORD:
+			unparsed += 1
+	return unparsed
+
+
+def scan_templates(
+	report: Report,
+	scanner: JinjaScanner,
+	app: str,
+	app_path: Path,
+	skip_tests: bool = False,
+	rendering: JinjaScanner | None = None,
+):
 	"""The app's print formats and notifications, each with the doctype it renders, and the HTML under
-	templates/ and www/, which renders with no doc the file can name."""
+	templates/ and www/, which renders with no doc the file can name. With `rendering`, its Web Templates,
+	website doctype templates and Letter Heads too."""
 	app_root = app_path.parent
 	unparsed = 0
 	for directory in ("templates", "www"):
@@ -310,6 +367,8 @@ def scan_templates(report: Report, scanner: JinjaScanner, app: str, app_path: Pa
 				unparsed += scan_notification(report, scanner, app, app_root, path, record)
 		except MALFORMED_RECORD:
 			unparsed += 1
+	if rendering:
+		unparsed += scan_rendered_records(report, rendering, app, app_path, skip_tests)
 	note_unparsed_templates(report, app, unparsed)
 
 
@@ -391,12 +450,13 @@ def scan_python(
 	app: str | None = None,
 	hooked: Mapping[str, Collection[str]] = {},
 	docs: Mapping[str, Collection[str]] = {},
+	safe_sql: bool = False,
 ) -> list[Finding] | None:
 	"""The file's findings, or None when it does not parse, with the file named in the report's lists,
-	under `app` when it is one of an app's. `hooked` and `docs` are PythonScanner.scan's."""
+	under `app` when it is one of an app's. `hooked`, `docs` and `safe_sql` are PythonScanner.scan's."""
 	listed = f"{app}/{file}" if app else file
 	try:
-		return scanner.scan(source, file, hooked, docs)
+		return scanner.scan(source, file, hooked, docs, safe_sql)
 	except SyntaxError:
 		report.unparsable_files.append(listed)
 	except (ValueError, RecursionError, MemoryError) as error:

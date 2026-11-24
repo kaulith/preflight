@@ -355,19 +355,21 @@ class PythonScanner:
 		file: str,
 		hooked: Mapping[str, Collection[str]] = {},
 		docs: Mapping[str, Collection[str]] = {},
+		safe_sql: bool = False,
 	) -> list[Finding]:
 		"""Raises SyntaxError if `source` is not valid Python.
 
 		`hooked` holds the doctypes hooks.py hooks each top-level function and class of the file to, and
 		`docs` the doctypes of each doc the code runs with under a name of its own, such as the `doc` of a
-		DocType Event server script."""
+		DocType Event server script. `safe_sql` says the code is a script whose `frappe.db.sql` is frappe's
+		read_sql, which sends each query through check_safe_sql_query."""
 		tree = ast.parse(source, filename=file)
 		hooked_nodes = {
 			node: hooked[node.name]
 			for node in tree.body
 			if isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef | ast.ClassDef) and node.name in hooked
 		}
-		visitor = FileVisitor(self, file, source.splitlines(), hooked_nodes, docs)
+		visitor = FileVisitor(self, file, source.splitlines(), hooked_nodes, docs, safe_sql)
 		visitor.visit(tree)
 		return list(visitor.findings.values())
 
@@ -380,6 +382,7 @@ class FileVisitor(ast.NodeVisitor):
 		lines: list[str],
 		hooked: Mapping[ast.AST, Collection[str]] = {},
 		docs: Mapping[str, Collection[str]] = {},
+		safe_sql: bool = False,
 	):
 		self.rules = rules
 		self.file = file
@@ -395,6 +398,9 @@ class FileVisitor(ast.NodeVisitor):
 		self.controller_doctypes: Collection[str] = ()
 		self.result_targets: dict[ast.Call, list[ast.expr]] = {}
 		self.indexed_calls: set[ast.Call] = set()
+		self.safe_sql = safe_sql
+		self.class_name: str | None = None
+		self.sole_base: tuple[str, ...] | None = None
 
 	def report(self, rules: Iterable[Rule], line: int):
 		if self.version_guarded:
@@ -512,7 +518,11 @@ class FileVisitor(ast.NodeVisitor):
 			parts = self.resolve(base) or ()
 			if (doctype := self.rules.controllers.get(parts[-2:])) and parts[-4:-2] == ("doctype", parts[-2]):
 				doctypes.add(doctype)
+		outer = self.class_name, self.sole_base
+		self.class_name = node.name
+		self.sole_base = self.resolve(node.bases[0]) if len(node.bases) == 1 else None
 		self.visit_scope(node, {}, doctypes)
+		self.class_name, self.sole_base = outer
 
 	def doc_doctypes(self, node: ast.expr | None) -> Collection[str]:
 		"""The doctypes of the doc `node` is: a name bound to one, a row of a doc's table, `doc.items[0]` or
@@ -744,7 +754,8 @@ class FileVisitor(ast.NodeVisitor):
 			matching = (
 				rule
 				for patterns, rule in self.rules.sql_rules
-				if any(pattern.search(field_text(text)) for pattern in patterns)
+				if (not rule.match.safe_sql_only or (self.safe_sql and api == "frappe.db.sql"))
+				and any(pattern.search(field_text(text)) for pattern in patterns)
 			)
 			self.report(matching, text.lineno)
 
@@ -779,9 +790,31 @@ class FileVisitor(ast.NodeVisitor):
 			bool(targets) and all(unpacks_result(target, returns) for target in targets)
 		)
 
+	def inherited_method(self, node: ast.Call) -> tuple[str, ...] | None:
+		"""The path of the method `super().method()` or `super(ThisClass, self).method()` calls, in a class
+		with one base. With more, another base may define the method."""
+		method = node.func
+		if not (
+			self.sole_base
+			and isinstance(method, ast.Attribute)
+			and isinstance(method.value, ast.Call)
+			and isinstance(method.value.func, ast.Name)
+			and method.value.func.id == "super"
+		):
+			return None
+		arguments = method.value.args
+		if arguments and not (isinstance(arguments[0], ast.Name) and arguments[0].id == self.class_name):
+			return None
+		return (*self.sole_base, method.attr)
+
 	def visit_Call(self, node: ast.Call):
 		self.hold_appended_strings(node)
 		method = node.func
+		if inherited := self.inherited_method(node):
+			self.report(
+				(rule for rule in self.rules.call_rules.get(inherited, ()) if rule.match.super_calls),
+				node.lineno,
+			)
 		if isinstance(method, ast.Attribute) and method.attr in DOC_FIELD_METHODS:
 			fieldname = string_value(argument(node, 0, DOC_FIELD_METHODS[method.attr]))
 			self.report_doc_field(method.value, fieldname, method.end_lineno)

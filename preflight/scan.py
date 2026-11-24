@@ -98,7 +98,7 @@ def build_report(
 		app_paths[app] = app_path
 		scan_app(report, scanners, app, app_path, skip_tests)
 	scan_site_scripts(report, scanners)
-	scan_site_templates(report, scanners.jinja)
+	scan_site_templates(report, scanners.jinja, scanners.rendering)
 	scan_site_queries(report, scanners.python)
 	report.findings += [replace(finding, source="site") for finding in scanners.schema.scan(site_schema())]
 	report.findings += site_records(rules)
@@ -231,16 +231,16 @@ def scan_site_scripts(report: Report, scanners: Scanners):
 	for label, language, script, docs in site_scripts():
 		script = newline_re.sub("\n", script)
 		if language == "python":
-			findings = scan_python(report, scanners.python, label, script, docs=docs) or []
+			findings = scan_python(report, scanners.python, label, script, docs=docs, safe_sql=True) or []
 		else:
 			findings = scan_js(report, scanners.js, label, script)
 		add_findings(report, findings, script, source="site")
 
 
-def scan_site_templates(report: Report, scanner: JinjaScanner):
+def scan_site_templates(report: Report, scanner: JinjaScanner, rendering: JinjaScanner | None = None):
 	"""The Jinja stored on the site that can render. A standard print format or notification renders from
 	its app's files, which the app's scan reads. Print Format is read whole, as v15.0.0 has no
-	print_format_for column to name."""
+	print_format_for column to name. With `rendering`, Letter Heads and custom Web Templates too."""
 	unparsed = 0
 	for row in frappe.get_all(
 		"Print Format", fields=["*"], filters={"disabled": 0, "standard": "No"}, order_by="name"
@@ -271,6 +271,7 @@ def scan_site_templates(report: Report, scanner: JinjaScanner):
 					f"Notification: {row.name} ({field})",
 					doc_doctypes,
 					source="site",
+					restricted=True,
 				)
 	for row in frappe.get_all(
 		"Email Template",
@@ -282,6 +283,17 @@ def scan_site_templates(report: Report, scanner: JinjaScanner):
 				unparsed += not scan_template(
 					report, scanner, row[field], f"Email Template: {row.name} ({field})", source="site"
 				)
+	if rendering:
+		for doctype, fields, filters in (
+			("Letter Head", ("content", "footer"), {}),
+			("Web Template", ("template",), {"standard": 0}),
+		):
+			for row in frappe.get_all(doctype, fields=["name", *fields], filters=filters, order_by="name"):
+				for field in fields:
+					if row[field]:
+						unparsed += not scan_template(
+							report, rendering, row[field], f"{doctype}: {row.name} ({field})", source="site"
+						)
 	note_unparsed_templates(report, "site", unparsed)
 
 
